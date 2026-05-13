@@ -71,19 +71,19 @@ export const LAND_TYPES: LandType[] = [
 ];
 
 export const PRICE_RANGES = [
-  { label: 'Under $10,000',   max: 10000 },
-  { label: 'Under $25,000',   max: 25000 },
-  { label: 'Under $50,000',   max: 50000 },
-  { label: 'Under $100,000',  max: 100000 },
-  { label: 'Under $250,000',  max: 250000 },
-  { label: 'Any Price',       max: null },
+  { label: 'Under $10,000',   value: '0-10000' },
+  { label: 'Under $25,000',   value: '0-25000' },
+  { label: 'Under $50,000',   value: '0-50000' },
+  { label: 'Under $100,000',  value: '0-100000' },
+  { label: 'Under $250,000',  value: '0-250000' },
+  { label: '$250k+',          value: '250000-' },
 ];
 
 export const ACREAGE_OPTIONS = [
-  { label: '1+ Acres',   min: 1 },
-  { label: '5+ Acres',   min: 5 },
-  { label: '10+ Acres',  min: 10 },
-  { label: '20+ Acres',  min: 20 },
-  { label: '50+ Acres',  min: 50 },
-  { label: '100+ Acres', min: 100 },
+  { label: '1+ Acres',    value: '1-' },
+  { label: '5+ Acres',    value: '5-' },
+  { label: '10+ Acres',   value: '10-' },
+  { label: '20+ Acres',   value: '20-' },
+  { label: '50+ Acres',   value: '50-' },
+  { label: '100+ Acres',  value: '100-' },
 ];
