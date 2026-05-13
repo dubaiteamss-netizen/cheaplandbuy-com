@@ -1,68 +1,155 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Menu, X, PlusCircle, LogOut, LayoutDashboard, User } from 'lucide-react';
+import { createClient } from '../lib/supabase';
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const router   = useRouter();
+  const [open, setOpen]   = useState(false);
+  const [user, setUser]   = useState<any>(null);
+  const [loaded, setLoaded] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setLoaded(true);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    router.push('/');
+    router.refresh();
+  }
+
+  const navLinks = [
+    { href: '/listings',         label: 'Browse Land' },
+    { href: '/sell',             label: 'Sell Land' },
+    { href: '/listings?type=Hunting Land', label: 'Hunting Land' },
+    { href: '/listings?type=Ranch Land',   label: 'Ranch Land' },
+  ];
+
+  function isActive(href: string) {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href.split('?')[0]);
+  }
 
   return (
-    <nav className="bg-brand-700 sticky top-0 z-50 shadow-lg">
+    <nav className="bg-brand-800 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl tracking-tight hover:opacity-90 transition-opacity flex-shrink-0">
             <span className="text-2xl">🏕️</span>
-            <span className="text-white font-extrabold text-xl tracking-tight">
-              CheapLandBuy<span className="text-gold font-light">.com</span>
-            </span>
+            <span><span className="text-white">CheapLandBuy</span><span className="text-gold">.com</span></span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/listings" className="text-white/85 hover:text-white text-sm font-medium transition-colors">
-              Browse Land
-            </Link>
-            <Link href="/sell" className="text-white/85 hover:text-white text-sm font-medium transition-colors">
-              Sell Land
-            </Link>
-            <Link href="/listings?type=Hunting+Land" className="text-white/85 hover:text-white text-sm font-medium transition-colors">
-              Hunting Land
-            </Link>
-            <Link href="/listings?type=Ranch+Land" className="text-white/85 hover:text-white text-sm font-medium transition-colors">
-              Ranch Land
-            </Link>
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive(href)
+                    ? 'bg-white/15 text-white'
+                    : 'text-white/75 hover:text-white hover:bg-white/10'
+                }`}>
+                {label}
+              </Link>
+            ))}
           </div>
 
-          {/* Desktop actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/auth/login"
-              className="text-white/90 hover:text-white border border-white/40 hover:border-white px-4 py-1.5 rounded-md text-sm font-medium transition-all">
-              Sign In
-            </Link>
-            <Link href="/auth/register"
-              className="bg-gold hover:bg-gold-dark text-brand-900 font-bold px-4 py-1.5 rounded-md text-sm transition-all hover:-translate-y-px">
-              + List Your Land
-            </Link>
+          {/* Desktop auth */}
+          <div className="hidden md:flex items-center gap-2">
+            {!loaded ? (
+              <div className="w-24 h-8 bg-white/10 rounded-lg animate-pulse" />
+            ) : user ? (
+              <>
+                <Link href="/dashboard"
+                  className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                  <LayoutDashboard size={14} /> Dashboard
+                </Link>
+                <Link href="/dashboard/new-listing"
+                  className="btn-gold text-sm flex items-center gap-1.5 py-2">
+                  <PlusCircle size={14} /> Post Listing
+                </Link>
+                <button onClick={signOut}
+                  className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                  title="Sign out">
+                  <LogOut size={16} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login"
+                  className="text-white/80 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-colors border border-white/20 hover:border-white/40">
+                  Sign In
+                </Link>
+                <Link href="/auth/register" className="btn-gold text-sm py-2">
+                  + List Your Land
+                </Link>
+              </>
+            )}
           </div>
 
-          {/* Mobile menu button */}
-          <button className="md:hidden text-white p-1" onClick={() => setOpen(!open)}>
-            {open ? <X size={24} /> : <Menu size={24} />}
+          {/* Mobile hamburger */}
+          <button onClick={() => setOpen(!open)}
+            className="md:hidden p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-brand-800 border-t border-white/10 px-4 py-4 space-y-3">
-          <Link href="/listings" className="block text-white/85 hover:text-white font-medium py-1" onClick={() => setOpen(false)}>Browse Land</Link>
-          <Link href="/sell" className="block text-white/85 hover:text-white font-medium py-1" onClick={() => setOpen(false)}>Sell Land</Link>
-          <Link href="/auth/login" className="block text-white/85 hover:text-white font-medium py-1" onClick={() => setOpen(false)}>Sign In</Link>
-          <Link href="/auth/register" className="block bg-gold text-brand-900 font-bold text-center py-2 rounded-md" onClick={() => setOpen(false)}>
-            + List Your Land
-          </Link>
+        <div className="md:hidden bg-brand-900 border-t border-white/10 pb-4">
+          <div className="px-4 pt-3 space-y-1">
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href} onClick={() => setOpen(false)}
+                className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive(href) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
+                }`}>
+                {label}
+              </Link>
+            ))}
+            <div className="border-t border-white/10 pt-3 mt-3 space-y-1">
+              {user ? (
+                <>
+                  <Link href="/dashboard" onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
+                    <LayoutDashboard size={15} /> Dashboard
+                  </Link>
+                  <Link href="/dashboard/new-listing" onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 bg-gold text-brand-900 rounded-lg text-sm font-bold">
+                    <PlusCircle size={15} /> Post New Listing
+                  </Link>
+                  <button onClick={() => { signOut(); setOpen(false); }}
+                    className="flex items-center gap-2 px-3 py-2.5 text-white/60 hover:text-white w-full text-left text-sm">
+                    <LogOut size={15} /> Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/login" onClick={() => setOpen(false)}
+                    className="block px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
+                    Sign In
+                  </Link>
+                  <Link href="/auth/register" onClick={() => setOpen(false)}
+                    className="block px-3 py-2.5 bg-gold text-brand-900 rounded-lg text-sm font-bold text-center">
+                    + List Your Land Free
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </nav>

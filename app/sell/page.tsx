@@ -1,125 +1,138 @@
 import Link from 'next/link';
-import { CheckCircle, Users, TrendingUp, Star, DollarSign } from 'lucide-react';
+import { CheckCircle, DollarSign, Users, Zap, Globe, Camera, MessageSquare } from 'lucide-react';
+
+const FAQS = [
+  { q: 'How much does it cost to list my land?',
+    a: 'Completely free. We charge zero listing fees. You keep 100% of the sale price.' },
+  { q: 'How long does review take?',
+    a: 'Most listings are reviewed and live within 24 hours, often faster.' },
+  { q: 'How do buyers contact me?',
+    a: 'Buyers fill out an inquiry form on your listing page. You receive an email with their contact info and message — then you connect directly.' },
+  { q: 'Can I edit my listing after it goes live?',
+    a: 'Yes — update price, photos, description, and details anytime from your dashboard.' },
+  { q: 'What types of land can I list?',
+    a: 'All types — raw land, farmland, ranches, hunting land, timber land, waterfront, mountain lots, residential lots, and more.' },
+  { q: 'Do I need a real estate license?',
+    a: 'No. We welcome private sellers listing their own property.' },
+];
 
 export default function SellPage() {
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-brand-800 to-brand-600 py-20 px-4 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 tracking-tight">
-          Sell Your Land on<br /><span className="text-gold">CheapLandBuy.com</span>
+    <div className="min-h-screen bg-white">
+
+      {/* ── HERO ── */}
+      <section className="bg-gradient-to-br from-brand-800 to-brand-600 py-20 text-center px-4">
+        <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
+          🆓 100% Free to List — No Commission
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight mb-5">
+          Sell Your Land Faster with <span className="text-gold">CheapLandBuy.com</span>
         </h1>
-        <p className="text-white/75 text-xl mb-10 max-w-xl mx-auto">
-          Reach 50,000+ motivated land buyers every month. List your land free and start getting inquiries within 48 hours.
+        <p className="text-white/75 text-xl max-w-xl mx-auto mb-10">
+          Reach thousands of motivated land buyers nationwide. List your property in minutes, completely free.
         </p>
-        <Link href="/auth/register" className="btn-gold text-lg px-10 py-4">
-          List Your Land Free →
-        </Link>
-        <p className="text-white/50 text-sm mt-4">No credit card required. No commissions taken.</p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link href="/auth/register" className="btn-gold text-base px-10 py-4">
+            List Your Land Free →
+          </Link>
+          <Link href="/auth/login" className="border-2 border-white/40 hover:border-white text-white font-bold px-10 py-4 rounded-lg transition-all text-base">
+            Already a Seller? Sign In
+          </Link>
+        </div>
       </section>
 
-      {/* Stats */}
-      <div className="bg-brand-800 py-6">
-        <div className="max-w-4xl mx-auto px-4 flex flex-wrap justify-center gap-10">
+      {/* ── TRUST STATS ── */}
+      <div className="bg-brand-800 py-4">
+        <div className="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8">
           {[
-            { n: '50,000+', l: 'Monthly Buyers' },
-            { n: '48 hrs',  l: 'Avg. First Inquiry' },
-            { n: '$0',      l: 'Listing Fee' },
-            { n: '0%',      l: 'Commission' },
-          ].map(s => (
-            <div key={s.l} className="text-center">
-              <div className="text-gold font-extrabold text-2xl">{s.n}</div>
-              <div className="text-white/55 text-xs uppercase tracking-wide">{s.l}</div>
+            { n: '12,400+', l: 'Listings Posted' },
+            { n: '8,200+',  l: 'Buyers Monthly' },
+            { n: '48 hrs',  l: 'Avg First Inquiry' },
+            { n: '$0',      l: 'Cost to List' },
+          ].map((s, i, arr) => (
+            <div key={s.l} className="flex items-center gap-8">
+              <div className="text-center">
+                <div className="text-gold font-extrabold text-2xl">{s.n}</div>
+                <div className="text-white/55 text-xs uppercase tracking-wider">{s.l}</div>
+              </div>
+              {i < arr.length - 1 && <div className="h-8 w-px bg-white/10" />}
             </div>
           ))}
         </div>
       </div>
 
-      {/* How it works */}
-      <section className="max-w-4xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-extrabold text-brand-900 text-center mb-12">How Selling Works</h2>
-        <div className="space-y-8">
+      {/* ── HOW IT WORKS ── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-extrabold text-brand-900">How Selling Works</h2>
+          <p className="text-brand-400 mt-2">Go from signup to live listing in under 10 minutes</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { n: 1, icon: '👤', t: 'Create Your Free Account', d: 'Sign up in 2 minutes. Just your name, email, and a password. No fees, no contracts.' },
-            { n: 2, icon: '📸', t: 'Post Your Listing',        d: 'Fill out our simple form — title, acreage, price, location, description, and up to 20 photos. Takes about 10 minutes.' },
-            { n: 3, icon: '🔍', t: 'Buyers Find Your Land',    d: 'Your listing shows up in search results immediately. Buyers filter by state, type, price and acreage.' },
-            { n: 4, icon: '💬', t: 'Receive Inquiries',        d: 'Interested buyers fill out a contact form. You get their info directly to your email — no middleman.' },
-            { n: 5, icon: '🤝', t: 'Close the Deal',           d: 'Communicate directly with buyers and close on your own terms. We never take a commission.' },
-          ].map(s => (
-            <div key={s.n} className="flex gap-6 items-start">
-              <div className="flex-shrink-0 w-10 h-10 bg-brand-700 text-white rounded-full flex items-center justify-center font-black text-lg">
-                {s.n}
+            { icon: '👤', step: 1, title: 'Create Free Account', desc: 'Sign up with your email. No credit card, no fees. Takes about 2 minutes.' },
+            { icon: '📋', step: 2, title: 'Fill Out Listing Form', desc: 'Add your property details, upload photos, set your price. Our 3-step form makes it easy.' },
+            { icon: '📬', step: 3, title: 'Receive Buyer Inquiries', desc: 'Once approved, buyers contact you directly. You negotiate and close the deal yourself.' },
+          ].map((s) => (
+            <div key={s.step} className="card relative text-center border-t-4 border-brand-700">
+              <div className="w-8 h-8 bg-brand-700 text-white rounded-full flex items-center justify-center text-sm font-black mx-auto mb-4">
+                {s.step}
               </div>
-              <div>
-                <div className="text-2xl mb-1">{s.icon}</div>
-                <h3 className="font-bold text-brand-900 text-lg mb-1">{s.t}</h3>
-                <p className="text-brand-500 text-sm leading-relaxed">{s.d}</p>
-              </div>
+              <div className="text-4xl mb-3">{s.icon}</div>
+              <h3 className="font-bold text-brand-900 text-lg mb-2">{s.title}</h3>
+              <p className="text-brand-400 text-sm leading-relaxed">{s.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="bg-brand-50 border-y border-brand-100 py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-extrabold text-brand-900 mb-4">Simple, Free Pricing</h2>
-          <p className="text-brand-400 mb-10">No tricks, no hidden fees. List your land and keep 100% of the sale price.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
-            <div className="card border-2 border-brand-200">
-              <div className="text-3xl font-extrabold text-brand-800 mb-1">Free</div>
-              <p className="text-brand-400 text-sm mb-5">Forever. No credit card needed.</p>
-              <ul className="space-y-3">
-                {[
-                  'Unlimited listings',
-                  'Buyer inquiries to your email',
-                  'Listing management dashboard',
-                  'Up to 10 photos per listing',
-                  'Visible to all buyers',
-                ].map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-brand-700">
-                    <CheckCircle size={16} className="text-green-500 flex-shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/auth/register" className="btn-primary w-full text-center mt-6 block">
-                Get Started Free
-              </Link>
-            </div>
-            <div className="card border-2 border-gold bg-gradient-to-br from-white to-brand-50">
-              <div className="inline-block bg-gold text-brand-900 text-xs font-bold px-3 py-1 rounded-full mb-3">Coming Soon</div>
-              <div className="text-3xl font-extrabold text-brand-800 mb-1">Pro <span className="text-lg text-brand-400">$19/mo</span></div>
-              <p className="text-brand-400 text-sm mb-5">For serious sellers.</p>
-              <ul className="space-y-3">
-                {[
-                  'Everything in Free',
-                  'Featured listing placement',
-                  'Up to 50 photos per listing',
-                  'Priority buyer inbox',
-                  'Analytics dashboard',
-                  'Social media promotion',
-                ].map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-brand-700">
-                    <CheckCircle size={16} className="text-gold flex-shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <button disabled className="btn-secondary w-full text-center mt-6 opacity-60 cursor-not-allowed">
-                Coming Soon
-              </button>
-            </div>
+      {/* ── FEATURES ── */}
+      <section className="bg-brand-50 border-y border-brand-100 py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-brand-900 text-center mb-12">Everything You Need to Sell</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: <DollarSign size={22} />,    title: 'Zero Fees Forever',     desc: 'Free to list, free to sell. No hidden charges, ever.' },
+              { icon: <Users size={22} />,          title: 'Huge Buyer Audience',   desc: '50,000+ land buyers searching every month.' },
+              { icon: <Camera size={22} />,         title: 'Photo Gallery',         desc: 'Upload up to 20 photos. Listings with photos get 5× more inquiries.' },
+              { icon: <Globe size={22} />,          title: 'SEO Optimized',         desc: 'Listings show up on Google for local searches.' },
+              { icon: <Zap size={22} />,            title: 'Fast Approval',         desc: 'Most listings reviewed and live within 24 hours.' },
+              { icon: <MessageSquare size={22} />,  title: 'Direct Buyer Contact',  desc: 'Buyers email you directly. No middlemen on your deal.' },
+            ].map(f => (
+              <div key={f.title} className="card flex gap-4">
+                <div className="text-brand-600 mt-0.5 flex-shrink-0">{f.icon}</div>
+                <div>
+                  <h4 className="font-bold text-brand-900 mb-1">{f.title}</h4>
+                  <p className="text-brand-400 text-sm leading-relaxed">{f.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-brand-700 py-16 text-center px-4">
-        <h2 className="text-3xl font-extrabold text-white mb-4">Ready to Sell Your Land?</h2>
-        <p className="text-white/70 mb-8 text-lg">Create your free account and post your first listing today.</p>
-        <Link href="/auth/register" className="btn-gold text-base px-10 py-4">
-          Start Listing Free →
+      {/* ── FAQ ── */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="text-3xl font-extrabold text-brand-900 text-center mb-10">Frequently Asked Questions</h2>
+        <div className="space-y-4">
+          {FAQS.map(({ q, a }) => (
+            <div key={q} className="card">
+              <h3 className="font-bold text-brand-900 mb-2 flex items-start gap-2">
+                <span className="text-brand-500 mt-0.5 flex-shrink-0">Q.</span> {q}
+              </h3>
+              <p className="text-brand-500 text-sm leading-relaxed pl-5">{a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="bg-gradient-to-r from-brand-800 to-brand-600 py-16 text-center px-4">
+        <h2 className="text-3xl font-extrabold text-white mb-4">Ready to List Your Land?</h2>
+        <p className="text-white/75 text-lg mb-8 max-w-md mx-auto">
+          Join thousands of sellers reaching motivated buyers every day. It takes less than 10 minutes to go live.
+        </p>
+        <Link href="/auth/register" className="btn-gold text-base px-10 py-4 inline-block">
+          Create Free Account →
         </Link>
       </section>
     </div>

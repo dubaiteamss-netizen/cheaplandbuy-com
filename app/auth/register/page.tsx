@@ -2,189 +2,139 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, Phone } from 'lucide-react';
 import { createClient } from '../../../lib/supabase';
+import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirm: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [showPw, setShowPw]   = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [done, setDone] = useState(false);
+  const [error, setError]     = useState('');
+  const [done, setDone]       = useState(false);
+  const supabase = createClient();
 
-  function set(k: keyof typeof form) {
-    return (e: React.ChangeEvent<HTMLInputElement>) =>
-      setForm(f => ({ ...f, [k]: e.target.value }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    setError('');
+    if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    setLoading(true); setError('');
 
-    if (form.password !== form.confirm) {
-      setError('Passwords do not match.');
-      return;
-    }
-    if (form.password.length < 8) {
-      setError('Password must be at least 8 characters.');
-      return;
+    const { data, error } = await supabase.auth.signUp({
+      email:    form.email.trim().toLowerCase(),
+      password: form.password,
+      options:  { data: { full_name: form.name.trim() } },
+    });
+
+    if (error) {
+      setError(error.message); setLoading(false); return;
     }
 
-    setLoading(true);
+    // Send welcome email
     try {
-      const supabase = createClient();
-
-      // 1 — Create Supabase auth account
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: form.email,
-        password: form.password,
-        options: {
-          data: { full_name: form.name, phone: form.phone },
-        },
-      });
-
-      if (signUpError) throw new Error(signUpError.message);
-
-      // 2 — Send welcome email
       await fetch('/api/send-welcome', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email }),
+        body: JSON.stringify({ name: form.name.trim(), email: form.email.trim().toLowerCase() }),
       });
+    } catch {}
 
-      setDone(true);
-    } catch (err: any) {
-      setError(err.message ?? 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    setDone(true);
   }
 
-  // ── Success screen ──
-  if (done) return (
-    <div className="min-h-screen bg-brand-50 flex items-center justify-center px-4">
-      <div className="card max-w-md w-full text-center shadow-md py-12">
-        <div className="text-6xl mb-4">🎉</div>
-        <h2 className="text-2xl font-extrabold text-brand-900 mb-3">
-          Welcome to CheapLandBuy.com!
-        </h2>
-        <p className="text-brand-500 mb-2 text-sm">
-          Your account is created. We sent a welcome email to:
-        </p>
-        <p className="font-bold text-brand-700 mb-6">{form.email}</p>
-        <p className="text-brand-400 text-xs mb-8">
-          Check your inbox (and spam folder) for a confirmation link before signing in.
-        </p>
-        <div className="flex flex-col gap-3">
-          <Link href="/auth/login" className="btn-primary text-center">
-            Sign In Now →
-          </Link>
-          <Link href="/listings" className="btn-secondary text-center text-sm">
-            Browse Listings First
-          </Link>
+  if (done) {
+    return (
+      <div className="min-h-screen bg-brand-50 flex items-center justify-center px-4">
+        <div className="w-full max-w-md text-center">
+          <CheckCircle size={56} className="mx-auto text-green-500 mb-5" />
+          <h1 className="text-2xl font-extrabold text-brand-900 mb-2">Check Your Email!</h1>
+          <p className="text-brand-500 mb-6 leading-relaxed">
+            We sent a confirmation link to <strong>{form.email}</strong>.<br />
+            Click it to activate your account, then sign in.
+          </p>
+          <Link href="/auth/login" className="btn-primary">Sign In Now →</Link>
+          <p className="text-brand-300 text-xs mt-4">Check your spam folder if you don't see it.</p>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-brand-50 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-brand-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
+
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block text-3xl font-extrabold text-brand-700 mb-2">
-            🏕️ CheapLandBuy.com
+          <Link href="/" className="inline-flex items-center gap-2 text-brand-800 font-extrabold text-2xl mb-6">
+            <span className="text-3xl">🏕️</span> CheapLandBuy<span className="text-gold">.com</span>
           </Link>
-          <h1 className="text-2xl font-extrabold text-brand-900">Create your free account</h1>
-          <p className="text-brand-400 text-sm mt-1">Start listing your land in minutes</p>
+          <h1 className="text-2xl font-extrabold text-brand-900">Create Free Account</h1>
+          <p className="text-brand-400 mt-1 text-sm">Start listing your land in minutes</p>
+        </div>
+
+        {/* Benefits */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {['Free to list', 'No commission', 'Buyers waiting'].map(b => (
+            <div key={b} className="bg-green-50 border border-green-100 rounded-lg py-2 px-1 text-center">
+              <span className="text-green-600 text-base">✓</span>
+              <p className="text-green-700 font-semibold text-xs mt-0.5">{b}</p>
+            </div>
+          ))}
         </div>
 
         <div className="card shadow-md">
-          {/* Benefits */}
-          <div className="bg-brand-50 rounded-lg p-4 mb-6 border border-brand-100">
-            <p className="text-xs font-bold text-brand-700 uppercase tracking-wide mb-2">
-              What you get — FREE
-            </p>
-            <ul className="space-y-1 text-sm text-brand-600">
-              <li>✓ Unlimited land listings</li>
-              <li>✓ Buyer inquiries directly to your email</li>
-              <li>✓ Seller dashboard to manage listings</li>
-              <li>✓ Visible to 50,000+ monthly buyers</li>
-            </ul>
-          </div>
-
-          {/* Error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-5">
               ⚠️ {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="label">Full Name *</label>
-              <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-300" />
-                <input type="text" required value={form.name} onChange={set('name')}
-                  className="input pl-9" placeholder="Jane Smith" />
-              </div>
+              <label className="label">Full Name</label>
+              <input type="text" value={form.name} required className="input"
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                placeholder="John Smith" autoComplete="name" />
             </div>
-
             <div>
-              <label className="label">Email Address *</label>
-              <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-300" />
-                <input type="email" required value={form.email} onChange={set('email')}
-                  className="input pl-9" placeholder="jane@email.com" />
-              </div>
+              <label className="label">Email Address</label>
+              <input type="email" value={form.email} required className="input"
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                placeholder="you@example.com" autoComplete="email" />
             </div>
-
             <div>
-              <label className="label">Phone Number <span className="text-brand-300 font-normal">(optional)</span></label>
+              <label className="label">Password</label>
               <div className="relative">
-                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-300" />
-                <input type="tel" value={form.phone} onChange={set('phone')}
-                  className="input pl-9" placeholder="(555) 000-0000" />
+                <input type={showPw ? 'text' : 'password'} value={form.password} required className="input pr-10"
+                  onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                  placeholder="Minimum 8 characters" autoComplete="new-password" />
+                <button type="button" onClick={() => setShowPw(!showPw)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-400 hover:text-brand-600">
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">Password *</label>
-                <div className="relative">
-                  <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-300" />
-                  <input type="password" required value={form.password} onChange={set('password')}
-                    className="input pl-9" placeholder="Min. 8 chars" minLength={8} />
+              {form.password && (
+                <div className={`mt-1 text-xs font-medium ${form.password.length >= 8 ? 'text-green-600' : 'text-red-500'}`}>
+                  {form.password.length >= 8 ? '✓ Good password' : `${8 - form.password.length} more characters needed`}
                 </div>
-              </div>
-              <div>
-                <label className="label">Confirm *</label>
-                <div className="relative">
-                  <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-300" />
-                  <input type="password" required value={form.confirm} onChange={set('confirm')}
-                    className="input pl-9" placeholder="Repeat" />
-                </div>
-              </div>
+              )}
             </div>
 
-            <p className="text-xs text-brand-400">
-              By creating an account you agree to our{' '}
-              <Link href="/terms" className="text-brand-600 underline">Terms</Link> and{' '}
-              <Link href="/privacy" className="text-brand-600 underline">Privacy Policy</Link>.
-            </p>
-
-            <button type="submit" disabled={loading}
-              className="btn-gold w-full justify-center text-base disabled:opacity-60 disabled:cursor-not-allowed">
-              {loading ? 'Creating account...' : 'Create Free Account →'}
+            <button type="submit" disabled={loading || !form.name || !form.email || form.password.length < 8}
+              className="btn-gold w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed">
+              {loading ? '⏳ Creating account...' : 'Create Free Account →'}
             </button>
-          </form>
 
-          <div className="border-t border-brand-100 mt-6 pt-5 text-center text-sm text-brand-400">
-            Already have an account?{' '}
-            <Link href="/auth/login" className="text-brand-600 font-semibold hover:underline">
-              Sign in →
-            </Link>
-          </div>
+            <p className="text-center text-brand-300 text-xs">
+              By signing up, you agree to our{' '}
+              <Link href="/terms" className="underline hover:text-brand-500">Terms</Link> and{' '}
+              <Link href="/privacy" className="underline hover:text-brand-500">Privacy Policy</Link>
+            </p>
+          </form>
         </div>
+
+        <p className="text-center text-brand-500 text-sm mt-6">
+          Already have an account?{' '}
+          <Link href="/auth/login" className="font-bold text-brand-700 hover:text-brand-900">Sign in →</Link>
+        </p>
       </div>
     </div>
   );
