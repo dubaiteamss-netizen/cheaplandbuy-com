@@ -8,17 +8,17 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [state, setState]   = useState(params.get('state') ?? '');
-  const [type,  setType]    = useState(params.get('type')  ?? '');
-  const [price, setPrice]   = useState(params.get('maxPrice') ?? '');
-  const [acres, setAcres]   = useState(params.get('minAcres') ?? '');
+  const [state, setState] = useState(params.get('state') ?? '');
+  const [type,  setType]  = useState(params.get('type')  ?? '');
+  const [price, setPrice] = useState(params.get('price') ?? '');
+  const [acres, setAcres] = useState(params.get('acres') ?? '');
 
   function handleSearch() {
     const q = new URLSearchParams();
-    if (state) q.set('state',    state);
-    if (type)  q.set('type',     type);
-    if (price) q.set('maxPrice', price);
-    if (acres) q.set('minAcres', acres);
+    if (state) q.set('state', state);
+    if (type)  q.set('type',  type);
+    if (price) q.set('price', price);
+    if (acres) q.set('acres', acres);
     router.push(`/listings?${q.toString()}`);
   }
 
@@ -70,7 +70,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
           <select value={price} onChange={e => setPrice(e.target.value)}
             className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
             <option value="">Any Price</option>
-            {PRICE_RANGES.map(p => <option key={p.label} value={p.max ?? ''}>{p.label}</option>)}
+            {PRICE_RANGES.map(p => <option key={p.label} value={p.value}>{p.label}</option>)}
           </select>
         </div>
         {/* Acres */}
@@ -79,7 +79,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
           <select value={acres} onChange={e => setAcres(e.target.value)}
             className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
             <option value="">Any Size</option>
-            {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.min}>{a.label}</option>)}
+            {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.value}>{a.label}</option>)}
           </select>
         </div>
         {/* Search button */}
