@@ -30,13 +30,20 @@ export interface Listing {
 export type LandType =
   | 'Ranch Land'
   | 'Hunting Land'
+  | 'Recreational Land'
+  | 'Farmland / Agricultural'
   | 'Residential Lots'
+  | 'Wooded / Timber Land'
+  | 'Waterfront Property'
   | 'Mountain Property'
-  | 'Wooded Land'
   | 'Desert Land'
-  | 'Farmland'
-  | 'Commercial'
-  | 'Recreational';
+  | 'Horse Property'
+  | 'Homestead'
+  | 'Raw / Undeveloped Land'
+  | 'Commercial Land'
+  | 'Mobile Home Lots'
+  | 'Orchard / Vineyard'
+  | 'Conservation Land';
 
 export interface SellerProfile {
   id: string;
