@@ -43,3 +43,35 @@
     @apply bg-white rounded-xl border border-brand-100 shadow-sm p-6;
   }
 }
+
+/* Hero slider animations */
+@keyframes heroGradShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+@keyframes heroOrb {
+  0%, 100% { opacity: 0.18; transform: scale(1); }
+  50%       { opacity: 0.32; transform: scale(1.08); }
+}
+.hero-anim-bg {
+  background: linear-gradient(135deg, #0a3d2f, #1e3a5f, #0a4a2f, #1a5276, #0d3b2a);
+  background-size: 400% 400%;
+  animation: heroGradShift 10s ease infinite;
+}
+.hero-float {
+  animation: heroFloat 3s ease-in-out infinite;
+}
+.hero-orb-gold {
+  background: radial-gradient(circle, rgba(255,209,102,0.35), transparent 70%);
+  animation: heroOrb 5s ease-in-out infinite;
+}
+.hero-orb-green {
+  background: radial-gradient(circle, rgba(74,222,128,0.28), transparent 70%);
+  animation: heroOrb 5s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
