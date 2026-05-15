@@ -2,20 +2,21 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, PlusCircle, LogOut, LayoutDashboard, User } from 'lucide-react';
+import { Menu, X, PlusCircle, LogOut, LayoutDashboard } from 'lucide-react';
 import { createClient } from '../lib/supabase';
+
+const supabase = createClient();
 
 export default function Navbar() {
   const pathname = usePathname();
   const router   = useRouter();
-  const [open, setOpen]   = useState(false);
-  const [user, setUser]   = useState<any>(null);
+  const [open, setOpen]     = useState(false);
+  const [user, setUser]     = useState<any>(null);
   const [loaded, setLoaded] = useState(false);
-  const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
       setLoaded(true);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
@@ -31,10 +32,10 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { href: '/listings',         label: 'Browse Land' },
-    { href: '/sell',             label: 'Sell Land' },
-    { href: '/listings?type=Hunting Land', label: 'Hunting Land' },
-    { href: '/listings?type=Ranch Land',   label: 'Ranch Land' },
+    { href: '/listings',                       label: 'Browse Land' },
+    { href: '/sell',                           label: 'Sell Land' },
+    { href: '/listings?type=Hunting%20Land',   label: 'Hunting Land' },
+    { href: '/listings?type=Ranch%20Land',     label: 'Ranch Land' },
   ];
 
   function isActive(href: string) {
@@ -58,9 +59,7 @@ export default function Navbar() {
             {navLinks.map(({ href, label }) => (
               <Link key={href} href={href}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(href)
-                    ? 'bg-white/15 text-white'
-                    : 'text-white/75 hover:text-white hover:bg-white/10'
+                  isActive(href) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
                 }`}>
                 {label}
               </Link>

@@ -2,14 +2,16 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { createClient } from '../../../lib/supabase';
+
 import { ArrowLeft, MailCheck } from 'lucide-react';
+
+const supabase = createClient();
 
 export default function ForgotPasswordPage() {
   const [email, setEmail]     = useState('');
   const [loading, setLoading] = useState(false);
   const [done, setDone]       = useState(false);
   const [error, setError]     = useState('');
-  const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

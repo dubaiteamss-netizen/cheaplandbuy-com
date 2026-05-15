@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '../../../lib/supabase';
+
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
+
+const supabase = createClient();
 
 export default function ResetPasswordPage() {
   const router   = useRouter();
@@ -13,7 +16,6 @@ export default function ResetPasswordPage() {
   const [loading,  setLoading]    = useState(false);
   const [error,    setError]      = useState('');
   const [done,     setDone]       = useState(false);
-  const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

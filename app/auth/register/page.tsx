@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '../../../lib/supabase';
+
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
+
+const supabase = createClient();
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,7 +15,6 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
   const [done, setDone]       = useState(false);
-  const supabase = createClient();
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();

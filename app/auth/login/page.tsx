@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '../../../lib/supabase';
+
 import { Eye, EyeOff } from 'lucide-react';
+
+const supabase = createClient();
 
 function LoginForm() {
   const router = useRouter();
@@ -12,7 +15,6 @@ function LoginForm() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const supabase = createClient();
 
   useEffect(() => {
     if (searchParams.get('error') === 'link_expired') {

@@ -6,6 +6,8 @@ import { US_STATES, LAND_TYPES } from '../../../../types';
 import { ChevronLeft, Save } from 'lucide-react';
 import { createClient } from '../../../../lib/supabase';
 
+const supabase = createClient();
+
 const FEATURES = [
   'Road Access','Electricity Available','Water Well','Creek / Stream',
   'Pond','Hunting','Timber','Mountain Views','Owner Financing',
@@ -23,8 +25,6 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
     state: '', county: '', zip: '', type: '',
     features: [] as string[], status: 'pending',
   });
-
-  const supabase = createClient();
 
   useEffect(() => {
     loadListing();
