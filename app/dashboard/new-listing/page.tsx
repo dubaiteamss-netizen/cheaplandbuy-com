@@ -213,44 +213,41 @@ export default function NewListingPage() {
                   <input value={form.zip} onChange={set('zip')} className="input" placeholder="e.g. 76457" />
                 </div>
                 <div>
-                  <label className="label">Parcel Number <span className="text-brand-300 font-normal">(optional)</span></label>
-                  <input value={form.parcel} onChange={set('parcel')} className="input" placeholder="e.g. 12-345-678-000" />
-                  <p className="text-xs text-brand-400 mt-1">APN or tax parcel ID — helps buyers locate the exact property</p>
-                </div>
-                {/* Taxes + Zoning row */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="label">Annual Property Tax <span className="text-brand-300 font-normal">(optional)</span></label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-400 font-bold">$</span>
-                      <input type="number" value={form.taxes} onChange={set('taxes')} className="input pl-7" placeholder="e.g. 450" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="label">Zoning <span className="text-brand-300 font-normal">(optional)</span></label>
-                    <input value={form.zoning} onChange={set('zoning')} className="input" placeholder="e.g. Agricultural, Residential" />
-                  </div>
-                </div>
-                {/* Owner Financing Toggle */}
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-green-800">💰 Owner Financing Available</p>
-                    <p className="text-green-600 text-xs mt-0.5">Listings with owner financing get 3x more inquiries</p>
-                  </div>
-                  <button type="button"
-                    onClick={() => setOwnerFinancing(v => !v)}
-                    className={`relative w-12 h-6 rounded-full transition-colors ${ownerFinancing ? 'bg-green-500' : 'bg-gray-300'}`}>
-                    <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${ownerFinancing ? 'left-6' : 'left-0.5'}`} />
-                  </button>
-                </div>
-                </div>
-                <div>
                   <label className="label">Land Type *</label>
                   <select value={form.type} onChange={set('type')} className="input">
                     <option value="">Select Type</option>
                     {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
                   </select>
                 </div>
+              </div>
+              <div>
+                <label className="label">Parcel Number (APN) <span className="text-brand-300 font-normal">(optional)</span></label>
+                <input value={form.parcel} onChange={set('parcel')} className="input" placeholder="e.g. 12-345-678-000" />
+                <p className="text-xs text-brand-400 mt-1">Helps buyers locate the exact property at the county assessor</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Annual Property Tax <span className="text-brand-300 font-normal">(optional)</span></label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-400 font-bold">$</span>
+                    <input type="number" value={form.taxes} onChange={set('taxes')} className="input pl-7" placeholder="e.g. 450" />
+                  </div>
+                </div>
+                <div>
+                  <label className="label">Zoning <span className="text-brand-300 font-normal">(optional)</span></label>
+                  <input value={form.zoning} onChange={set('zoning')} className="input" placeholder="e.g. Agricultural, Residential" />
+                </div>
+              </div>
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-green-800">💰 Owner Financing Available</p>
+                  <p className="text-green-600 text-xs mt-0.5">Listings with owner financing get 3x more inquiries</p>
+                </div>
+                <button type="button"
+                  onClick={() => setOwnerFinancing(v => !v)}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${ownerFinancing ? 'bg-green-500' : 'bg-gray-300'}`}>
+                  <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${ownerFinancing ? 'left-6' : 'left-0.5'}`} />
+                </button>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
