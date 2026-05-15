@@ -179,6 +179,27 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                     <p className="font-semibold text-brand-800 font-mono">{listing.parcel_number}</p>
                   </div>
                 )}
+                {listing.zoning && (
+                  <div>
+                    <p className="text-brand-400 text-xs uppercase tracking-wide mb-1">Zoning</p>
+                    <p className="font-semibold text-brand-800">{listing.zoning}</p>
+                  </div>
+                )}
+                {listing.taxes_per_year && (
+                  <div>
+                    <p className="text-brand-400 text-xs uppercase tracking-wide mb-1">Annual Property Tax</p>
+                    <p className="font-semibold text-brand-800">${listing.taxes_per_year.toLocaleString()}/yr</p>
+                  </div>
+                )}
+                {listing.owner_financing && (
+                  <div className="col-span-2 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-2">
+                    <span className="text-xl">💰</span>
+                    <div>
+                      <p className="font-bold text-green-800 text-sm">Owner Financing Available</p>
+                      <p className="text-green-600 text-xs">Contact seller for terms and down payment details</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

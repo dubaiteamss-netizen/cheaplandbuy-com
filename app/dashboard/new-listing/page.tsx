@@ -7,9 +7,22 @@ import { Upload, ChevronLeft, CheckCircle, X, ImageIcon } from 'lucide-react';
 import { createClient } from '../../../lib/supabase';
 
 const FEATURES = [
-  'Road Access','Electricity Available','Water Well','Creek / Stream',
-  'Pond','Hunting','Timber','Mountain Views','Owner Financing',
-  'No HOA','Fenced','Utilities Nearby','Mineral Rights','Survey Available',
+  // Access & Utilities
+  'Paved Road Access','Dirt Road Access','Electricity Available','Water Well',
+  'City Water','Septic System','Natural Gas','Internet / Cell Service',
+  // Water Features
+  'Creek / Stream','River Frontage','Pond','Lake Access','Wetlands',
+  // Land Features
+  'Timber','Hunting','Mineral Rights Included','Agricultural Exemption',
+  'Fenced','Cross Fenced','Irrigated','Food Plot','Deer Stand',
+  // Views & Setting
+  'Mountain Views','Hill Country Views','Open Pasture','Wooded',
+  'Backs to Public Land','No HOA','Survey Available',
+  // Financials
+  'Owner Financing','1031 Exchange Eligible','Hunting Lease Income',
+  // Improvements
+  'Barn / Storage','Well House','Mobile Home Allowed','Build Site Ready',
+  'Horse Facilities','ATV / OHV Trails',
 ];
 
 const supabase = createClient();
@@ -42,6 +55,7 @@ export default function NewListingPage() {
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
     state: '', county: '', zip: '', type: '', parcel: '',
+    taxes: '', zoning: '', owner_financing: false as boolean,
     features: [] as string[],
   });
 
@@ -109,8 +123,11 @@ export default function NewListingPage() {
         state:        form.state,
         county:       form.county.trim(),
         zip_code:      form.zip.trim(),
-        parcel_number: form.parcel.trim() || null,
-        type:          form.type,
+        parcel_number:   form.parcel.trim() || null,
+        taxes_per_year:  form.taxes ? parseInt(form.taxes) : null,
+        zoning:          form.zoning.trim() || null,
+        owner_financing: form.owner_financing,
+        type:            form.type,
         features:     form.features,
         images:       imageUrls,
         status:       'active',
@@ -198,6 +215,33 @@ export default function NewListingPage() {
                   <label className="label">Parcel Number <span className="text-brand-300 font-normal">(optional)</span></label>
                   <input value={form.parcel} onChange={set('parcel')} className="input" placeholder="e.g. 12-345-678-000" />
                   <p className="text-xs text-brand-400 mt-1">APN or tax parcel ID — helps buyers locate the exact property</p>
+                </div>
+                {/* Taxes + Zoning row */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="label">Annual Property Tax <span className="text-brand-300 font-normal">(optional)</span></label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-400 font-bold">$</span>
+                      <input type="number" value={form.taxes} onChange={set('taxes')} className="input pl-7" placeholder="e.g. 450" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="label">Zoning <span className="text-brand-300 font-normal">(optional)</span></label>
+                    <input value={form.zoning} onChange={set('zoning')} className="input" placeholder="e.g. Agricultural, Residential" />
+                  </div>
+                </div>
+                {/* Owner Financing Toggle */}
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-green-800">💰 Owner Financing Available</p>
+                    <p className="text-green-600 text-xs mt-0.5">Listings with owner financing get 3x more inquiries</p>
+                  </div>
+                  <button type="button"
+                    onClick={() => setForm(f => ({ ...f, owner_financing: !f.owner_financing }))}
+                    className={`relative w-12 h-6 rounded-full transition-colors ${form.owner_financing ? 'bg-green-500' : 'bg-gray-300'}`}>
+                    <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${form.owner_financing ? 'left-6' : 'left-0.5'}`} />
+                  </button>
+                </div>
                 </div>
                 <div>
                   <label className="label">Land Type *</label>
