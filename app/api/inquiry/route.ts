@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { createClient } from '@supabase/supabase-js';
 import { createServerSupabaseClient } from '../../../lib/supabase-server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM   = process.env.FROM_EMAIL ?? 'hello@cheaplandbuy.com';
+
+// Admin client to look up seller email from auth.users
+const adminSupabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { auth: { autoRefreshToken: false, persistSession: false } }
+);
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +26,7 @@ export async function POST(req: NextRequest) {
     // Fetch listing + seller profile
     const { data: listing, error: listingErr } = await supabase
       .from('listings')
-      .select('*, profiles(full_name, email)')
+      .select('*, profiles(full_name)')
       .eq('id', listing_id)
       .single();
 
@@ -35,8 +43,14 @@ export async function POST(req: NextRequest) {
       message:     message.trim(),
     });
 
-    const sellerName  = (listing as any).profiles?.full_name ?? 'Seller';
-    const sellerEmail = (listing as any).profiles?.email;
+    const sellerName = (listing as any).profiles?.full_name ?? 'Seller';
+
+    // Get seller email from auth.users via admin client
+    let sellerEmail: string | null = null;
+    try {
+      const { data: authUser } = await adminSupabase.auth.admin.getUserById(listing.seller_id);
+      sellerEmail = authUser?.user?.email ?? null;
+    } catch {}
 
     // Email to seller (if we have their email)
     if (sellerEmail) {

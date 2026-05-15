@@ -31,8 +31,9 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   }, []);
 
   async function loadListing() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push('/auth/login'); return; }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) { router.push('/auth/login'); return; }
+    const user = session.user;
 
     const { data, error } = await supabase
       .from('listings')

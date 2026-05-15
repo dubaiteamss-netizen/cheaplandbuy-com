@@ -5,27 +5,27 @@ import { createClient } from '../../lib/supabase';
 import { Listing } from '../../types';
 import { PlusCircle, Eye, Edit, Trash2, TrendingUp, MessageSquare, List, LogOut, AlertCircle } from 'lucide-react';
 
+const supabase = createClient();
+
 export default function DashboardPage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading]   = useState(true);
   const [user, setUser]         = useState<any>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const supabase = createClient();
-
   useEffect(() => {
     loadData();
   }, []);
 
   async function loadData() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { window.location.href = '/auth/login'; return; }
-    setUser(user);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) { window.location.href = '/auth/login'; return; }
+    setUser(session.user);
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('listings')
       .select('*')
-      .eq('seller_id', user.id)
+      .eq('seller_id', session.user.id)
       .order('created_at', { ascending: false });
 
     setListings(data ?? []);
@@ -46,10 +46,10 @@ export default function DashboardPage() {
   }
 
   const stats = [
-    { icon: <List size={20} />,         n: listings.length,                          label: 'Total Listings' },
-    { icon: <Eye size={20} />,          n: listings.filter(l=>l.status==='active').length,  label: 'Active' },
-    { icon: <AlertCircle size={20} />,  n: listings.filter(l=>l.status==='pending').length, label: 'Pending Review' },
-    { icon: <TrendingUp size={20} />,   n: listings.filter(l=>l.status==='sold').length,    label: 'Sold' },
+    { icon: <List size={20} />,         n: listings.length,                                   label: 'Total Listings' },
+    { icon: <Eye size={20} />,          n: listings.filter(l => l.status === 'active').length,  label: 'Active' },
+    { icon: <AlertCircle size={20} />,  n: listings.filter(l => l.status === 'pending').length, label: 'Pending Review' },
+    { icon: <TrendingUp size={20} />,   n: listings.filter(l => l.status === 'sold').length,    label: 'Sold' },
   ];
 
   if (loading) return (
@@ -147,9 +147,9 @@ export default function DashboardPage() {
                       <td className="py-4 px-4 text-brand-500 text-xs">{l.type}</td>
                       <td className="py-4 px-4">
                         <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                          l.status === 'active'   ? 'bg-green-100 text-green-700' :
-                          l.status === 'pending'  ? 'bg-yellow-100 text-yellow-700' :
-                          l.status === 'sold'     ? 'bg-blue-100 text-blue-700' :
+                          l.status === 'active'  ? 'bg-green-100 text-green-700' :
+                          l.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                          l.status === 'sold'    ? 'bg-blue-100 text-blue-700' :
                           'bg-red-100 text-red-600'
                         }`}>
                           {l.status}
@@ -182,6 +182,25 @@ export default function DashboardPage() {
               </table>
             </div>
           )}
+        </div>
+
+        {/* Quick links */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          <Link href="/listings" className="card hover:shadow-md transition-all text-center py-6 group">
+            <div className="text-3xl mb-2">🏡</div>
+            <p className="font-bold text-brand-800 group-hover:text-brand-600">Browse All Listings</p>
+            <p className="text-brand-400 text-xs mt-1">See how your listing looks to buyers</p>
+          </Link>
+          <Link href="/dashboard/new-listing" className="card hover:shadow-md transition-all text-center py-6 group">
+            <div className="text-3xl mb-2">➕</div>
+            <p className="font-bold text-brand-800 group-hover:text-brand-600">Post New Listing</p>
+            <p className="text-brand-400 text-xs mt-1">Free to list, no commission</p>
+          </Link>
+          <Link href="/contact" className="card hover:shadow-md transition-all text-center py-6 group">
+            <div className="text-3xl mb-2">💬</div>
+            <p className="font-bold text-brand-800 group-hover:text-brand-600">Get Support</p>
+            <p className="text-brand-400 text-xs mt-1">We're here to help you sell</p>
+          </Link>
         </div>
       </div>
     </div>
