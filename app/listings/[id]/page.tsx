@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '../../../lib/supabase-server';
 import { mockListings } from '../../../lib/mock-listings';
 import ContactForm from '../../../components/ContactForm';
 import ListingCard from '../../../components/ListingCard';
+import PhotoGallery from '../../../components/PhotoGallery';
 import { MapPin, Ruler, DollarSign, Tag, Calendar, ChevronLeft, Share2 } from 'lucide-react';
 
 async function getListing(id: string) {
@@ -61,31 +62,8 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           <div className="flex-1 min-w-0 space-y-6">
 
             {/* Photo Gallery */}
-            <div className="card p-0 overflow-hidden">
-              {images.length > 0 ? (
-                <div>
-                  <img src={images[0]} alt={listing.title}
-                    className="w-full h-72 sm:h-96 object-cover" />
-                  {images.length > 1 && (
-                    <div className="grid grid-cols-4 gap-1 p-1">
-                      {images.slice(1, 5).map((src: string, i: number) => (
-                        <div key={i} className="relative">
-                          <img src={src} alt="" className="w-full h-20 object-cover rounded" />
-                          {i === 3 && images.length > 5 && (
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
-                              <span className="text-white font-bold text-sm">+{images.length - 5}</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="h-64 bg-gradient-to-br from-brand-100 to-brand-200 flex items-center justify-center">
-                  <span className="text-7xl">🌾</span>
-                </div>
-              )}
+            <div className="card p-3">
+              <PhotoGallery images={images} title={listing.title} />
             </div>
 
             {/* Title & Key Stats */}
