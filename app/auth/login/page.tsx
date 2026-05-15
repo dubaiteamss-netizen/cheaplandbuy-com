@@ -1,17 +1,24 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '../../../lib/supabase';
 import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [form, setForm]   = useState({ email: '', password: '' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const supabase = createClient();
+
+  useEffect(() => {
+    if (searchParams.get('error') === 'link_expired') {
+      setError('This link has expired or is invalid. Please try again.');
+    }
+  }, [searchParams]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -61,9 +68,9 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="label mb-0">Password</label>
-                <button type="button" className="text-xs text-brand-500 hover:text-brand-700">
+                <Link href="/auth/forgot-password" className="text-xs text-brand-500 hover:text-brand-700">
                   Forgot password?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <input type={showPw ? 'text' : 'password'} value={form.password} required className="input pr-10"
