@@ -22,7 +22,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
-    state: '', county: '', zip: '', type: '',
+    state: '', county: '', zip: '', type: '', parcel: '',
     features: [] as string[], status: 'pending',
   });
 
@@ -52,6 +52,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
       state: data.state,
       county: data.county,
       zip: data.zip_code ?? '',
+      parcel: data.parcel_number ?? '',
       type: data.type,
       features: data.features ?? [],
       status: data.status,
@@ -86,7 +87,8 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
           price:       parseInt(form.price),
           state:       form.state,
           county:      form.county.trim(),
-          zip_code:    form.zip.trim(),
+          zip_code:      form.zip.trim(),
+          parcel_number: form.parcel.trim() || null,
           type:        form.type,
           features:    form.features,
           updated_at:  new Date().toISOString(),
@@ -164,6 +166,11 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
             <div>
               <label className="label">ZIP Code</label>
               <input value={form.zip} onChange={set('zip')} className="input" placeholder="e.g. 76457" />
+            </div>
+            <div>
+              <label className="label">Parcel Number <span className="text-brand-300 font-normal">(optional)</span></label>
+              <input value={form.parcel} onChange={set('parcel')} className="input" placeholder="e.g. 12-345-678-000" />
+              <p className="text-xs text-brand-400 mt-1">APN or tax parcel ID</p>
             </div>
             <div>
               <label className="label">Land Type *</label>

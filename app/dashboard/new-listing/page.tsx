@@ -41,7 +41,7 @@ export default function NewListingPage() {
   }, []);
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
-    state: '', county: '', zip: '', type: '',
+    state: '', county: '', zip: '', type: '', parcel: '',
     features: [] as string[],
   });
 
@@ -108,8 +108,9 @@ export default function NewListingPage() {
         price,
         state:        form.state,
         county:       form.county.trim(),
-        zip_code:     form.zip.trim(),
-        type:         form.type,
+        zip_code:      form.zip.trim(),
+        parcel_number: form.parcel.trim() || null,
+        type:          form.type,
         features:     form.features,
         images:       imageUrls,
         status:       'active',
@@ -192,6 +193,11 @@ export default function NewListingPage() {
                 <div>
                   <label className="label">ZIP Code</label>
                   <input value={form.zip} onChange={set('zip')} className="input" placeholder="e.g. 76457" />
+                </div>
+                <div>
+                  <label className="label">Parcel Number <span className="text-brand-300 font-normal">(optional)</span></label>
+                  <input value={form.parcel} onChange={set('parcel')} className="input" placeholder="e.g. 12-345-678-000" />
+                  <p className="text-xs text-brand-400 mt-1">APN or tax parcel ID — helps buyers locate the exact property</p>
                 </div>
                 <div>
                   <label className="label">Land Type *</label>

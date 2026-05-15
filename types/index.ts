@@ -11,6 +11,7 @@ export interface Listing {
   state: string;
   county: string;
   zip_code?: string;
+  parcel_number?: string;
   type: LandType;
   status: ListingStatus;
   images: string[];       // array of Supabase storage URLs

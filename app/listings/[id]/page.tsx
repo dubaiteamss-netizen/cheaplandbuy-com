@@ -173,6 +173,12 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                     <p className="font-semibold text-brand-800">{listing.zip_code}</p>
                   </div>
                 )}
+                {listing.parcel_number && (
+                  <div>
+                    <p className="text-brand-400 text-xs uppercase tracking-wide mb-1">Parcel Number (APN)</p>
+                    <p className="font-semibold text-brand-800 font-mono">{listing.parcel_number}</p>
+                  </div>
+                )}
               </div>
             </div>
 
