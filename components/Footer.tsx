@@ -79,9 +79,13 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10 py-4 px-4 text-center">
-        <p className="text-white/30 text-xs">
-          CheapLandBuy.com is an independent land marketplace. We are not real estate agents or brokers.
+      <div className="border-t border-white/10 py-5 px-4 text-center space-y-1">
+        <p className="text-white/50 text-xs font-semibold">
+          © {new Date().getFullYear()} CheapLandBuy.com — Online Land Marketplace Platform.
+        </p>
+        <p className="text-white/30 text-xs max-w-3xl mx-auto leading-relaxed">
+          Buyers and sellers are solely responsible for verifying all property information and conducting their own due diligence before transactions.
+          CheapLandBuy.com is not a real estate broker, agent, lender, or title company.
         </p>
       </div>
     </footer>
