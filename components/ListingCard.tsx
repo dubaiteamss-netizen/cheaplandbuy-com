@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { MapPin, Maximize2, DollarSign } from 'lucide-react';
-import { Listing } from '../types';
+import { MapPin, Maximize2 } from 'lucide-react';
 
 const LAND_GRADIENTS: Record<string, string> = {
   'Ranch Land':              'linear-gradient(180deg,#87CEEB 38%,#A8D5A2 38%,#6B8F5E 58%,#8B7355 75%,#C4A882 100%)',
