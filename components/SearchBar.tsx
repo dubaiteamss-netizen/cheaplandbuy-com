@@ -44,50 +44,90 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-2xl overflow-hidden max-w-3xl mx-auto">
-      <div className="flex items-stretch">
-        {/* State */}
-        <div className="flex-1 px-4 py-3 border-r border-brand-100">
-          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
-          <select value={state} onChange={e => setState(e.target.value)}
-            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-            <option value="">All States</option>
-            {US_STATES.map(s => <option key={s}>{s}</option>)}
-          </select>
+    <>
+      {/* ── MOBILE: stacked layout ── */}
+      <div className="sm:hidden bg-white rounded-2xl shadow-2xl overflow-hidden max-w-sm mx-auto">
+        <div className="grid grid-cols-2 divide-x divide-y divide-brand-100">
+          <div className="px-4 py-3">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
+            <select value={state} onChange={e => setState(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">All States</option>
+              {US_STATES.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </div>
+          <div className="px-4 py-3">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Land Type</label>
+            <select value={type} onChange={e => setType(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Type</option>
+              {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="px-4 py-3">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Max Price</label>
+            <select value={price} onChange={e => setPrice(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Price</option>
+              {PRICE_RANGES.map(p => <option key={p.label} value={p.value}>{p.label}</option>)}
+            </select>
+          </div>
+          <div className="px-4 py-3">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Min Acres</label>
+            <select value={acres} onChange={e => setAcres(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Size</option>
+              {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.value}>{a.label}</option>)}
+            </select>
+          </div>
         </div>
-        {/* Type */}
-        <div className="flex-1 px-4 py-3 border-r border-brand-100">
-          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Land Type</label>
-          <select value={type} onChange={e => setType(e.target.value)}
-            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-            <option value="">Any Type</option>
-            {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
-          </select>
-        </div>
-        {/* Price */}
-        <div className="flex-1 px-4 py-3 border-r border-brand-100">
-          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Max Price</label>
-          <select value={price} onChange={e => setPrice(e.target.value)}
-            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-            <option value="">Any Price</option>
-            {PRICE_RANGES.map(p => <option key={p.label} value={p.value}>{p.label}</option>)}
-          </select>
-        </div>
-        {/* Acres */}
-        <div className="flex-1 px-4 py-3 border-r border-brand-100">
-          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Min Acres</label>
-          <select value={acres} onChange={e => setAcres(e.target.value)}
-            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-            <option value="">Any Size</option>
-            {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.value}>{a.label}</option>)}
-          </select>
-        </div>
-        {/* Search button */}
         <button onClick={handleSearch}
-          className="bg-brand-600 hover:bg-brand-700 text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
-          <Search size={16} /> Search
+          className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 font-bold text-sm transition-colors flex items-center justify-center gap-2">
+          <Search size={16} /> Search Land
         </button>
       </div>
-    </div>
+
+      {/* ── DESKTOP: horizontal layout ── */}
+      <div className="hidden sm:block bg-white rounded-xl shadow-2xl overflow-hidden max-w-3xl mx-auto">
+        <div className="flex items-stretch">
+          <div className="flex-1 px-4 py-3 border-r border-brand-100">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
+            <select value={state} onChange={e => setState(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">All States</option>
+              {US_STATES.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </div>
+          <div className="flex-1 px-4 py-3 border-r border-brand-100">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Land Type</label>
+            <select value={type} onChange={e => setType(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Type</option>
+              {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="flex-1 px-4 py-3 border-r border-brand-100">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Max Price</label>
+            <select value={price} onChange={e => setPrice(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Price</option>
+              {PRICE_RANGES.map(p => <option key={p.label} value={p.value}>{p.label}</option>)}
+            </select>
+          </div>
+          <div className="flex-1 px-4 py-3 border-r border-brand-100">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Min Acres</label>
+            <select value={acres} onChange={e => setAcres(e.target.value)}
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
+              <option value="">Any Size</option>
+              {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.value}>{a.label}</option>)}
+            </select>
+          </div>
+          <button onClick={handleSearch}
+            className="bg-brand-600 hover:bg-brand-700 text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
+            <Search size={16} /> Search
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

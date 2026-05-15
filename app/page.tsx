@@ -49,17 +49,27 @@ export default async function HomePage() {
             Find Affordable Land<br />
             <span className="text-gold">Anywhere in America</span>
           </h1>
-          <p className="text-white/75 text-lg sm:text-xl mb-10 max-w-xl mx-auto">
+          <p className="text-white/75 text-base sm:text-xl mb-8 max-w-xl mx-auto">
             Browse thousands of land listings from verified sellers across all 50 states.
           </p>
           <Suspense>
             <SearchBar />
           </Suspense>
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-sm">
+          {/* Popular tags — hidden on very small screens to keep hero clean */}
+          <div className="hidden sm:flex flex-wrap items-center justify-center gap-2 mt-5 text-sm">
             <span className="text-white/50">Popular:</span>
             {['Texas Ranch Land','Florida Lots','Hunting Land','Mountain Property','Farmland'].map(tag => (
               <Link key={tag} href={`/listings?q=${encodeURIComponent(tag)}`}
                 className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/85 hover:text-white px-3 py-1 rounded-full transition-all text-xs">
+                {tag}
+              </Link>
+            ))}
+          </div>
+          {/* Mobile quick-links */}
+          <div className="flex sm:hidden gap-2 mt-5 overflow-x-auto scrollbar-hide pb-1 justify-start px-4 -mx-4">
+            {['Hunting Land','Ranch Land','Farmland','Mountain Property','Wooded Land'].map(tag => (
+              <Link key={tag} href={`/listings?type=${encodeURIComponent(tag)}`}
+                className="flex-shrink-0 bg-white/15 border border-white/25 text-white/90 px-3 py-1.5 rounded-full text-xs font-semibold">
                 {tag}
               </Link>
             ))}

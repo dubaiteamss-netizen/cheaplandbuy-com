@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BottomNav from '../components/BottomNav';
 
 export const metadata: Metadata = {
   title: 'CheapLandBuy.com – Find Affordable Land For Sale Nationwide',
@@ -20,8 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <Navbar />
-        <main>{children}</main>
-        <Footer />
+        {/* pb-16 on mobile so content isn't hidden behind bottom nav */}
+        <main className="pb-16 md:pb-0">{children}</main>
+        <div className="pb-16 md:pb-0">
+          <Footer />
+        </div>
+        <BottomNav />
       </body>
     </html>
   );

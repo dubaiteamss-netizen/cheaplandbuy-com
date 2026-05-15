@@ -26,7 +26,7 @@ export default function ListingCard({ listing }: { listing: any }) {
       <div className="bg-white rounded-xl overflow-hidden border border-brand-100 shadow-sm
                       hover:shadow-xl hover:-translate-y-1 transition-all duration-250">
         {/* Image */}
-        <div className="relative h-44 overflow-hidden bg-brand-100"
+        <div className="relative h-48 sm:h-44 overflow-hidden bg-brand-100"
           style={{ background: images[0] ? undefined : gradient }}>
           {images[0] ? (
             <img src={images[0]} alt={listing.title}
