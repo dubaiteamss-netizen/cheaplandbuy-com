@@ -90,7 +90,7 @@ export default function NewListingPage() {
         type:         form.type,
         features:     form.features,
         images:       imageUrls,
-        status:       'pending',
+        status:       'active',
       }).select().single();
 
       if (insertErr) throw new Error(insertErr.message);
@@ -298,7 +298,7 @@ export default function NewListingPage() {
                   <div><span className="text-brand-400">Features: </span><span className="font-medium text-brand-700">{form.features.length} selected</span></div>
                 </div>
                 <p className="text-xs text-brand-400 mt-3">
-                  ℹ️ Your listing will be reviewed and go live within 24 hours.
+                  ✅ Your listing goes live immediately after submitting.
                 </p>
               </div>
 
