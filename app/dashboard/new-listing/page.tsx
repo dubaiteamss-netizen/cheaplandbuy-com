@@ -36,6 +36,7 @@ export default function NewListingPage() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [ownerFinancing, setOwnerFinancing] = useState(false);
 
   // Grab the session on mount — fixes "not logged in" on submit
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function NewListingPage() {
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
     state: '', county: '', zip: '', type: '', parcel: '',
-    taxes: '', zoning: '', owner_financing: false as boolean,
+    taxes: '', zoning: '',
     features: [] as string[],
   });
 
@@ -126,7 +127,7 @@ export default function NewListingPage() {
         parcel_number:   form.parcel.trim() || null,
         taxes_per_year:  form.taxes ? parseInt(form.taxes) : null,
         zoning:          form.zoning.trim() || null,
-        owner_financing: form.owner_financing,
+        owner_financing: ownerFinancing,
         type:            form.type,
         features:     form.features,
         images:       imageUrls,
@@ -237,9 +238,9 @@ export default function NewListingPage() {
                     <p className="text-green-600 text-xs mt-0.5">Listings with owner financing get 3x more inquiries</p>
                   </div>
                   <button type="button"
-                    onClick={() => setForm(f => ({ ...f, owner_financing: !f.owner_financing }))}
-                    className={`relative w-12 h-6 rounded-full transition-colors ${form.owner_financing ? 'bg-green-500' : 'bg-gray-300'}`}>
-                    <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${form.owner_financing ? 'left-6' : 'left-0.5'}`} />
+                    onClick={() => setOwnerFinancing(v => !v)}
+                    className={`relative w-12 h-6 rounded-full transition-colors ${ownerFinancing ? 'bg-green-500' : 'bg-gray-300'}`}>
+                    <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${ownerFinancing ? 'left-6' : 'left-0.5'}`} />
                   </button>
                 </div>
                 </div>
