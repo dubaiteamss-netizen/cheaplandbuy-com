@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { US_STATES, LAND_TYPES } from '../../../types';
 import { Upload, ChevronLeft, CheckCircle, X, ImageIcon } from 'lucide-react';
@@ -12,6 +12,8 @@ const FEATURES = [
   'No HOA','Fenced','Utilities Nearby','Mineral Rights','Survey Available',
 ];
 
+const supabase = createClient();
+
 export default function NewListingPage() {
   const router  = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -20,6 +22,23 @@ export default function NewListingPage() {
   const [error, setError]   = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  // Grab the session on mount — fixes "not logged in" on submit
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.replace('/auth/login?next=/dashboard/new-listing');
+      } else {
+        setCurrentUser(session.user);
+      }
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      if (!session) router.replace('/auth/login?next=/dashboard/new-listing');
+      else setCurrentUser(session.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
     state: '', county: '', zip: '', type: '',
@@ -57,9 +76,12 @@ export default function NewListingPage() {
     setError('');
     setSaving(true);
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not logged in. Please sign in again.');
+      // Use the session loaded on mount — avoids a redundant network call
+      const user = currentUser;
+      if (!user) {
+        router.replace('/auth/login?next=/dashboard/new-listing');
+        return;
+      }
 
       // Upload photos to Supabase Storage
       const imageUrls: string[] = [];
