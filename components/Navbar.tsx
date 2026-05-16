@@ -49,9 +49,13 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl tracking-tight hover:opacity-90 transition-opacity flex-shrink-0">
-            <span className="text-2xl">🏕️</span>
-            <span><span className="text-white">CheapLandBuy</span><span className="text-gold">.com</span></span>
+          <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+            {/* SVG icon mark */}
+            <img src="/icon.svg" alt="" width={36} height={36} className="flex-shrink-0" />
+            {/* Wordmark */}
+            <span className="font-extrabold text-xl tracking-tight">
+              <span className="text-white">CheapLandBuy</span><span className="text-gold">.com</span>
+            </span>
           </Link>
 
           {/* Desktop nav */}

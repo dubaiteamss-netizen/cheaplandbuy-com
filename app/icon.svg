@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <!-- Background rounded square -->
+  <rect width="36" height="36" rx="8" fill="#083670"/>
+  <!-- Back hill (lighter, smaller) -->
+  <polygon points="26,15 33,27 19,27" fill="#FFD166" opacity="0.35"/>
+  <!-- Main mountain / land shape -->
+  <polygon points="18,7 30,27 6,27" fill="#FFD166"/>
+  <!-- Ground base line fill -->
+  <rect x="4" y="27" width="28" height="5" rx="1" fill="#FFD166" opacity="0.18"/>
+  <!-- Sun above peak -->
+  <circle cx="18" cy="7" r="2.8" fill="#ffffff" opacity="0.92"/>
+</svg>

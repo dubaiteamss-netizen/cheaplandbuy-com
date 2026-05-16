@@ -35,13 +35,13 @@ export const metadata: Metadata = {
     siteName: 'CheapLandBuy.com',
     title: 'CheapLandBuy.com – Affordable Land For Sale Across America',
     description: 'Find affordable land for sale anywhere in America. Ranch land, hunting land, farmland, waterfront & more. Owner financing available.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'CheapLandBuy.com - Affordable Land For Sale' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'CheapLandBuy.com - Affordable Land For Sale' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'CheapLandBuy.com – Affordable Land For Sale',
     description: 'Browse affordable land listings across all 50 states. Ranch, hunting, farm, waterfront & more.',
-    images: ['/og-image.png'],
+    images: ['/opengraph-image'],
   },
   alternates: {
     canonical: 'https://cheaplandbuy.com',

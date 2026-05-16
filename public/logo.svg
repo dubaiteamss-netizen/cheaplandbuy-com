@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 44" role="img" aria-label="CheapLandBuy.com logo">
+  <!-- Icon square -->
+  <rect width="44" height="44" rx="9" fill="#083670"/>
+  <!-- Back hill -->
+  <polygon points="32,18 39,32 25,32" fill="#FFD166" opacity="0.35"/>
+  <!-- Main mountain -->
+  <polygon points="22,9 35,32 9,32" fill="#FFD166"/>
+  <!-- Ground -->
+  <rect x="5" y="32" width="34" height="5" rx="1.5" fill="#FFD166" opacity="0.18"/>
+  <!-- Sun at peak -->
+  <circle cx="22" cy="9" r="3.2" fill="#ffffff" opacity="0.92"/>
+  <!-- Wordmark: CheapLandBuy -->
+  <text
+    x="56"
+    y="28"
+    font-family="'Arial Black', Arial, sans-serif"
+    font-weight="900"
+    font-size="19"
+    letter-spacing="-0.5"
+    fill="#083670">CheapLandBuy</text>
+  <!-- .com in gold -->
+  <text
+    x="194"
+    y="28"
+    font-family="'Arial Black', Arial, sans-serif"
+    font-weight="900"
+    font-size="19"
+    fill="#FFD166">.com</text>
+</svg>

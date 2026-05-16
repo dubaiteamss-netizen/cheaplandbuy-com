@@ -9,8 +9,8 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl mb-4">
-              <span className="text-2xl">🏕️</span>
+            <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl mb-4 hover:opacity-90 transition-opacity">
+              <img src="/icon.svg" alt="" width={34} height={34} className="flex-shrink-0" />
               <span>CheapLandBuy<span className="text-gold">.com</span></span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-4">
