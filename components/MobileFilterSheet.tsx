@@ -93,7 +93,7 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
               <select
                 value={state}
                 onChange={e => setState(e.target.value)}
-                className="w-full border border-brand-200 rounded-xl px-4 py-3 text-sm text-brand-800 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-500 bg-brand-50"
+                className="w-full border border-brand-200 rounded-xl px-4 py-3 text-base text-brand-800 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-500 bg-brand-50"
               >
                 <option value="">All States</option>
                 {US_STATES.map(s => <option key={s}>{s}</option>)}
@@ -104,13 +104,13 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
 
           {/* Type */}
           <div>
-            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-1.5 block">Land Type</label>
+            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-2 block">Land Type</label>
             <div className="grid grid-cols-2 gap-2">
               {LAND_TYPES.map(t => (
                 <button
                   key={t}
                   onClick={() => setType(type === t ? '' : t)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all
+                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all active:scale-95
                     ${type === t
                       ? 'bg-brand-700 text-white border-brand-700'
                       : 'bg-white text-brand-700 border-brand-200'
@@ -124,13 +124,13 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
 
           {/* Price */}
           <div>
-            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-1.5 block">Price Range</label>
+            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-2 block">Price Range</label>
             <div className="grid grid-cols-2 gap-2">
               {PRICE_RANGES.map(r => (
                 <button
                   key={r.value}
                   onClick={() => setPrice(price === r.value ? '' : r.value)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all
+                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all active:scale-95
                     ${price === r.value
                       ? 'bg-brand-700 text-white border-brand-700'
                       : 'bg-white text-brand-700 border-brand-200'
@@ -144,13 +144,13 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
 
           {/* Acres */}
           <div>
-            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-1.5 block">Acreage</label>
+            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-2 block">Acreage</label>
             <div className="grid grid-cols-2 gap-2">
               {ACREAGE_OPTIONS.map(r => (
                 <button
                   key={r.value}
                   onClick={() => setAcres(acres === r.value ? '' : r.value)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all
+                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all active:scale-95
                     ${acres === r.value
                       ? 'bg-brand-700 text-white border-brand-700'
                       : 'bg-white text-brand-700 border-brand-200'

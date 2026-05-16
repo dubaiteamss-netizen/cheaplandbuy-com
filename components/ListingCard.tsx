@@ -40,7 +40,7 @@ export default function ListingCard({ listing }: { listing: any }) {
       <div className="bg-white rounded-xl overflow-hidden border border-brand-100 shadow-sm
                       hover:shadow-xl hover:-translate-y-1 transition-all duration-250">
         {/* Image */}
-        <div className="relative h-48 sm:h-44 overflow-hidden bg-brand-100"
+        <div className="relative h-52 overflow-hidden bg-brand-100"
           style={{ background: images[0] ? undefined : gradient }}>
           {images[0] ? (
             <img src={images[0]} alt={listing.title}
@@ -52,19 +52,19 @@ export default function ListingCard({ listing }: { listing: any }) {
           )}
 
           {/* Top badges */}
-          <div className="absolute top-2.5 left-2.5 right-2.5 flex items-start justify-between gap-1.5">
+          <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
             <div className="flex flex-wrap gap-1.5">
-              <span className="bg-white/95 text-brand-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide">
+              <span className="bg-white/95 text-brand-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
                 {listing.type}
               </span>
               {isNew && (
-                <span className="bg-blue-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide">
+                <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
                   ✦ New
                 </span>
               )}
             </div>
             {listing.status === 'sold' && (
-              <span className="bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide flex-shrink-0">
+              <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide flex-shrink-0">
                 SOLD
               </span>
             )}
@@ -72,8 +72,8 @@ export default function ListingCard({ listing }: { listing: any }) {
 
           {/* Bottom badges */}
           {hasOwnerFin && (
-            <div className="absolute bottom-2.5 left-2.5">
-              <span className="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow flex items-center gap-1">
+            <div className="absolute bottom-3 left-3">
+              <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow flex items-center gap-1.5">
                 💰 Owner Financing
               </span>
             </div>
@@ -83,42 +83,42 @@ export default function ListingCard({ listing }: { listing: any }) {
         {/* Body */}
         <div className="p-4">
           {/* Price */}
-          <div className="flex items-baseline justify-between mb-1">
-            <p className="text-brand-700 font-extrabold text-xl tracking-tight">
+          <div className="flex items-baseline justify-between mb-1.5">
+            <p className="text-brand-700 font-extrabold text-2xl tracking-tight">
               ${price.toLocaleString()}
             </p>
-            <span className="text-xs text-brand-400 bg-brand-50 px-2 py-0.5 rounded-full font-semibold border border-brand-100">
+            <span className="text-sm text-brand-400 bg-brand-50 px-2.5 py-0.5 rounded-full font-semibold border border-brand-100">
               ${pricePerAc.toLocaleString()}/ac
             </span>
           </div>
 
           {/* Title */}
-          <h3 className="text-brand-900 font-semibold text-sm mb-2.5 leading-snug line-clamp-2">
+          <h3 className="text-brand-900 font-semibold text-base mb-3 leading-snug line-clamp-2">
             {listing.title}
           </h3>
 
           {/* Acres + Location */}
-          <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-1 text-brand-700 font-bold bg-brand-50 px-2 py-1 rounded-full">
-              <Maximize2 size={11} />
+          <div className="flex items-center justify-between text-sm">
+            <span className="flex items-center gap-1.5 text-brand-700 font-bold bg-brand-50 px-3 py-1.5 rounded-full">
+              <Maximize2 size={13} />
               {acres.toLocaleString()} Acres
             </span>
-            <span className="flex items-center gap-1 text-brand-400">
-              <MapPin size={11} />
+            <span className="flex items-center gap-1.5 text-brand-400">
+              <MapPin size={13} />
               {listing.county ? `${listing.county}, ` : ''}{listing.state}
             </span>
           </div>
 
           {/* Feature pills (top 3) */}
           {listing.features?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2.5">
+            <div className="flex flex-wrap gap-1.5 mt-3">
               {listing.features.slice(0, 3).map((f: string) => (
-                <span key={f} className="text-[10px] bg-brand-50 text-brand-500 px-2 py-0.5 rounded-full border border-brand-100">
+                <span key={f} className="text-xs bg-brand-50 text-brand-500 px-2.5 py-1 rounded-full border border-brand-100">
                   {f}
                 </span>
               ))}
               {listing.features.length > 3 && (
-                <span className="text-[10px] text-brand-400 px-1">+{listing.features.length - 3} more</span>
+                <span className="text-xs text-brand-400 px-1 py-1">+{listing.features.length - 3} more</span>
               )}
             </div>
           )}

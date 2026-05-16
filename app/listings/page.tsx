@@ -90,7 +90,7 @@ export default async function ListingsPage({ searchParams }: Props) {
               name="q"
               defaultValue={searchParams.q ?? ''}
               placeholder="Search land..."
-              className="flex-1 text-sm text-brand-800 bg-transparent outline-none placeholder:text-brand-300"
+              className="flex-1 text-base text-brand-800 bg-transparent outline-none placeholder:text-brand-300"
             />
           </div>
           <Suspense>
@@ -102,7 +102,7 @@ export default async function ListingsPage({ searchParams }: Props) {
         </form>
 
         {/* Result count */}
-        <p className="text-white/70 text-xs">
+        <p className="text-white/70 text-sm">
           {total.toLocaleString()} {total === 1 ? 'property' : 'properties'} found
           {searchParams.state ? ` in ${searchParams.state}` : ''}
         </p>
@@ -113,7 +113,7 @@ export default async function ListingsPage({ searchParams }: Props) {
         <div className="flex gap-2 px-4 py-2.5 overflow-x-auto scrollbar-hide">
           <Link
             href={searchParams.q ? `/listings?q=${searchParams.q}` : '/listings'}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all
+            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all
               ${!searchParams.type
                 ? 'bg-brand-700 text-white border-brand-700'
                 : 'bg-white text-brand-600 border-brand-200'
@@ -128,7 +128,7 @@ export default async function ListingsPage({ searchParams }: Props) {
               <Link
                 key={t}
                 href={`/listings?${params.toString()}`}
-                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all whitespace-nowrap
+                className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all whitespace-nowrap
                   ${searchParams.type === t
                     ? 'bg-brand-700 text-white border-brand-700'
                     : 'bg-white text-brand-600 border-brand-200'

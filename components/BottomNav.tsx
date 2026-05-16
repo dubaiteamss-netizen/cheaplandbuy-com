@@ -43,25 +43,25 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-50"
+      className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-50 shadow-[0_-2px_12px_rgba(0,0,0,0.08)]"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-4 h-[72px]">
         {tabs.map(({ href, label, icon: Icon, gold }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href.split('?')[0]);
           return (
             <Link key={label} href={href}
-              className={`flex flex-col items-center justify-center gap-0.5 transition-colors active:opacity-70
-                ${gold ? 'text-yellow-500' : active ? 'text-brand-700' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors active:scale-95
+                ${gold ? 'text-brand-700' : active ? 'text-brand-700' : 'text-gray-400'}`}
             >
               {gold ? (
-                <span className="bg-brand-700 rounded-full p-1.5 -mt-1">
-                  <Icon size={20} strokeWidth={2.5} className="text-white" />
+                <span className="bg-brand-700 rounded-full p-2 -mt-1 shadow-md">
+                  <Icon size={22} strokeWidth={2.5} className="text-white" />
                 </span>
               ) : (
-                <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                <Icon size={24} strokeWidth={active ? 2.5 : 1.8} />
               )}
-              <span className={`text-[10px] font-semibold ${gold ? 'text-brand-700' : ''}`}>{label}</span>
+              <span className={`text-[11px] font-semibold leading-none ${gold ? 'text-brand-700' : active ? 'text-brand-700' : 'text-gray-400'}`}>{label}</span>
             </Link>
           );
         })}

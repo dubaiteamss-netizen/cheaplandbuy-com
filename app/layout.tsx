@@ -54,8 +54,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Navbar />
         {/* pb-16 on mobile so content isn't hidden behind bottom nav */}
-        <main className="pb-16 md:pb-0">{children}</main>
-        <div className="pb-16 md:pb-0">
+        <main className="pb-[72px] md:pb-0">{children}</main>
+        <div className="pb-[72px] md:pb-0">
           <Footer />
         </div>
         <BottomNav />
