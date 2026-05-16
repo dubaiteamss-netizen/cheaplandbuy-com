@@ -1,0 +1,22 @@
+# CheapLandBuy.com
+
+> America's affordable land marketplace. Find and sell ranch land, hunting land, farmland, waterfront property, residential lots and more across all 50 US states.
+
+## About
+CheapLandBuy.com is a multi-seller land marketplace where individual landowners list properties directly for sale. Listings start under $5,000. Many offer owner financing.
+
+## Key Features
+- Land listings in all 50 US states
+- Types: Ranch Land, Hunting Land, Farmland, Waterfront, Mountain Property, Residential Lots, Wooded/Timber Land, Horse Property, Homestead, Desert Land, and more
+- Owner financing available on many listings
+- Free to browse, free inquiry to sellers
+- Sellers post listings directly (multi-seller marketplace)
+
+## URLs
+- Homepage: https://cheaplandbuy.com
+- Browse listings: https://cheaplandbuy.com/listings
+- Sell land: https://cheaplandbuy.com/sell
+- Contact: https://cheaplandbuy.com/contact
+
+## Contact
+Email: hello@cheaplandbuy.com

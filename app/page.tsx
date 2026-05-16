@@ -33,11 +33,54 @@ async function getFeaturedListings() {
   return mockListings.slice(0, 6);
 }
 
+export const metadata = {
+  title: 'Affordable Land For Sale Across America – Ranch, Farm, Hunting & More',
+  description: 'Find cheap land for sale in all 50 states. Browse ranch land, hunting land, farmland, waterfront lots & residential parcels. Owner financing available. Search free.',
+  alternates: { canonical: 'https://cheaplandbuy.com' },
+};
+
+const homepageJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://cheaplandbuy.com/#organization',
+      name: 'CheapLandBuy.com',
+      url: 'https://cheaplandbuy.com',
+      logo: 'https://cheaplandbuy.com/logo.png',
+      contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'hello@cheaplandbuy.com' },
+      sameAs: [],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://cheaplandbuy.com/#website',
+      url: 'https://cheaplandbuy.com',
+      name: 'CheapLandBuy.com',
+      publisher: { '@id': 'https://cheaplandbuy.com/#organization' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: 'https://cheaplandbuy.com/listings?q={search_term_string}' },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: 'How do I buy cheap land in the USA?', acceptedAnswer: { '@type': 'Answer', text: 'Browse CheapLandBuy.com to find affordable land listings in all 50 states. Filter by state, land type, price, and acreage. Contact sellers directly or use owner financing options.' } },
+        { '@type': 'Question', name: 'What is the cheapest state to buy land in?', acceptedAnswer: { '@type': 'Answer', text: 'States like New Mexico, Texas, Arizona, Wyoming, and Montana typically offer the cheapest land per acre. CheapLandBuy.com lists affordable parcels starting under $5,000.' } },
+        { '@type': 'Question', name: 'Can I buy land with owner financing?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Many listings on CheapLandBuy.com offer owner financing with low down payments and flexible terms, so you can buy land without a bank loan.' } },
+        { '@type': 'Question', name: 'How do I sell my land online?', acceptedAnswer: { '@type': 'Answer', text: 'Create a free account on CheapLandBuy.com and post your listing in minutes. Add photos, description, parcel number, and price. Your listing goes live immediately to thousands of buyers.' } },
+      ],
+    },
+  ],
+};
+
 export default async function HomePage() {
   const featured = await getFeaturedListings();
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }} />
       {/* ── HERO ── */}
       <HeroSlider />
 

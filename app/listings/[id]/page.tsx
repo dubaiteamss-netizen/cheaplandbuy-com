@@ -27,6 +27,28 @@ async function getSimilar(id: string, state: string, type: string) {
   return mockListings.filter(l => l.id !== id && (l.state === state || l.type === type)).slice(0, 3);
 }
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const listing = await getListing(params.id);
+  if (!listing) return {};
+  const pricePerAcre = listing.acres > 0 ? Math.round(listing.price / listing.acres) : 0;
+  const title = `${listing.title} – ${listing.acres} Acres in ${listing.county ? listing.county + ', ' : ''}${listing.state}`;
+  const description = `${listing.acres} acres of ${listing.type.toLowerCase()} for sale in ${listing.state} for $${listing.price.toLocaleString()} ($${pricePerAcre.toLocaleString()}/acre).${listing.owner_financing ? ' Owner financing available.' : ''} ${listing.description?.slice(0, 100) ?? ''}`;
+  const image = listing.images?.[0] ?? 'https://cheaplandbuy.com/og-image.png';
+  return {
+    title,
+    description,
+    alternates: { canonical: `https://cheaplandbuy.com/listings/${listing.id}` },
+    openGraph: {
+      title,
+      description,
+      url: `https://cheaplandbuy.com/listings/${listing.id}`,
+      images: [{ url: image, width: 1200, height: 630, alt: listing.title }],
+      type: 'website',
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
+}
+
 export default async function ListingDetailPage({ params }: { params: { id: string } }) {
   const listing = await getListing(params.id);
   if (!listing) notFound();
@@ -39,8 +61,42 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
     ? new Date(listing.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     : null;
 
+  const listingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: listing.title,
+    description: listing.description,
+    url: `https://cheaplandbuy.com/listings/${listing.id}`,
+    image: listing.images ?? [],
+    datePosted: listing.created_at,
+    price: listing.price,
+    priceCurrency: 'USD',
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: listing.state,
+      addressLocality: listing.county ?? '',
+      postalCode: listing.zip_code ?? '',
+      addressCountry: 'US',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: listing.price,
+      priceCurrency: 'USD',
+      availability: listing.status === 'sold' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+    },
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Listings', item: 'https://cheaplandbuy.com/listings' },
+        { '@type': 'ListItem', position: 2, name: listing.state, item: `https://cheaplandbuy.com/listings?state=${listing.state}` },
+        { '@type': 'ListItem', position: 3, name: listing.title, item: `https://cheaplandbuy.com/listings/${listing.id}` },
+      ],
+    },
+  };
+
   return (
     <div className="min-h-screen bg-brand-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listingJsonLd) }} />
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-brand-100">
