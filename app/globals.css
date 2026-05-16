@@ -80,6 +80,18 @@
   animation-delay: 2.5s;
 }
 
+/* ── Scroll AnimateIn ────────────────────────────────────────────────────── */
+.anim-out {
+  opacity: 0;
+  transform: translateY(var(--anim-y, 28px));
+  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+  will-change: opacity, transform;
+}
+.anim-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ── Blog animations ───────────────────────────────────────────────────────── */
 @keyframes blogKenBurns {
   0%   { transform: scale(1.0); }
