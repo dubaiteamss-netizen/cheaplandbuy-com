@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '../lib/supabase-server';
+import { BLOG_POSTS } from '../lib/blog-data';
 
 const BASE = 'https://cheaplandbuy.com';
 
@@ -27,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE,                  lastModified: new Date(), changeFrequency: 'daily',   priority: 1.0 },
     { url: `${BASE}/listings`,    lastModified: new Date(), changeFrequency: 'hourly',  priority: 0.9 },
     { url: `${BASE}/sell`,        lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/blog`,        lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
     { url: `${BASE}/faq`,         lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/about`,       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${BASE}/contact`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
@@ -68,5 +70,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {}
 
-  return [...staticPages, ...statePages, ...typePages, ...listingPages];
+  // Blog post pages
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map(post => ({
+    url: `${BASE}/blog/${post.slug}`,
+    lastModified: new Date(post.dateISO),
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }));
+
+  return [...staticPages, ...statePages, ...typePages, ...blogPages, ...listingPages];
 }

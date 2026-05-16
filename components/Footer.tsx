@@ -58,9 +58,10 @@ export default function Footer() {
             <h4 className="text-white/90 font-bold text-sm uppercase tracking-wider mb-4">Company</h4>
             <ul className="space-y-2.5">
               {[
+                { label: 'Blog',               href: '/blog' },
+                { label: 'FAQ',                href: '/faq' },
                 { label: 'About Us',           href: '/about' },
                 { label: 'Contact',            href: '/contact' },
-                { label: 'FAQ',                href: '/faq' },
                 { label: 'Privacy Policy',     href: '/privacy' },
                 { label: 'Terms of Service',   href: '/terms' },
               ].map(({ label, href }) => (
