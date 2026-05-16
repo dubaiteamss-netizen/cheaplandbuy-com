@@ -5,7 +5,23 @@ import { mockListings } from '../../../lib/mock-listings';
 import ContactForm from '../../../components/ContactForm';
 import ListingCard from '../../../components/ListingCard';
 import PhotoGallery from '../../../components/PhotoGallery';
-import { MapPin, Ruler, DollarSign, Tag, Calendar, ChevronLeft, Share2 } from 'lucide-react';
+import FavoriteButton from '../../../components/FavoriteButton';
+import OwnerFinancingCalculator from '../../../components/OwnerFinancingCalculator';
+import ViewTracker from '../../../components/ViewTracker';
+import { MapPin, Ruler, DollarSign, Tag, Calendar, ChevronLeft, Share2, TrendingDown, Play } from 'lucide-react';
+
+// Extract YouTube or Vimeo embed URL from any share/watch link
+function getEmbedUrl(url: string): string | null {
+  try {
+    // YouTube
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`;
+    // Vimeo
+    const vmMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vmMatch) return `https://player.vimeo.com/video/${vmMatch[1]}`;
+    return null;
+  } catch { return null; }
+}
 
 async function getListing(id: string) {
   try {
@@ -61,6 +77,11 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
     ? new Date(listing.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     : null;
 
+  const videoEmbed  = listing.video_url ? getEmbedUrl(listing.video_url) : null;
+  const prevPrice   = listing.previous_price ?? 0;
+  const hasPriceDrop = prevPrice > 0 && prevPrice > listing.price;
+  const dropPct     = hasPriceDrop ? Math.round(((prevPrice - listing.price) / prevPrice) * 100) : 0;
+
   const listingJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
@@ -97,6 +118,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
   return (
     <div className="min-h-screen bg-brand-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listingJsonLd) }} />
+      <ViewTracker listingId={params.id} />
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-brand-100">
@@ -125,25 +147,33 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
             {/* Title & Key Stats */}
             <div className="card">
               <div className="flex items-start justify-between gap-4 mb-4">
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="bg-brand-100 text-brand-700 text-xs font-bold px-2.5 py-1 rounded-full">{listing.type}</span>
-                    {listing.status === 'active' && (
-                      <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">Active</span>
-                    )}
-                    {listing.status === 'sold' && (
-                      <span className="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full">SOLD</span>
-                    )}
-                  </div>
-                  <h1 className="text-2xl font-extrabold text-brand-900 leading-tight">{listing.title}</h1>
-                  <p className="text-brand-500 mt-1 flex items-center gap-1 text-sm">
-                    <MapPin size={14} /> {listing.county}, {listing.state} {listing.zip_code && `· ${listing.zip_code}`}
-                  </p>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className="bg-brand-100 text-brand-700 text-xs font-bold px-2.5 py-1 rounded-full">{listing.type}</span>
+                  {listing.status === 'active' && (
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">Active</span>
+                  )}
+                  {listing.status === 'sold' && (
+                    <span className="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full">SOLD</span>
+                  )}
+                  {hasPriceDrop && (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <TrendingDown size={11} /> Price Reduced {dropPct}%
+                    </span>
+                  )}
                 </div>
-                <button className="p-2 text-brand-400 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors flex-shrink-0">
+                <h1 className="text-2xl font-extrabold text-brand-900 leading-tight">{listing.title}</h1>
+                <p className="text-brand-500 mt-1 flex items-center gap-1 text-sm">
+                  <MapPin size={14} /> {listing.county}, {listing.state} {listing.zip_code && `· ${listing.zip_code}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <FavoriteButton listingId={params.id} size="md" />
+                <button className="p-2 text-brand-400 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors">
                   <Share2 size={18} />
                 </button>
               </div>
+            </div>
 
               {/* Key metrics */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
@@ -187,6 +217,32 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                   ))}
                 </div>
               </div>
+            )}
+
+            {/* Video Tour */}
+            {videoEmbed && (
+              <div className="card">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Play size={15} className="text-red-600 fill-red-600" />
+                  </div>
+                  <h2 className="font-extrabold text-brand-900 text-lg">Property Video Tour</h2>
+                </div>
+                <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={videoEmbed}
+                    title="Property video tour"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Owner Financing Calculator */}
+            {(listing.owner_financing || listing.features?.includes('Owner Financing')) && (
+              <OwnerFinancingCalculator price={listing.price} />
             )}
 
             {/* Location Info */}
@@ -246,8 +302,16 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               <div className="card bg-brand-700 text-white text-center">
                 <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Asking Price</p>
                 <p className="text-4xl font-extrabold">${listing.price.toLocaleString()}</p>
+                {hasPriceDrop && (
+                  <p className="text-red-300 text-sm line-through mt-0.5">${prevPrice.toLocaleString()}</p>
+                )}
                 <p className="text-white/60 text-sm mt-1">{listing.acres} acres · ${pricePerAcre.toLocaleString()}/ac</p>
-                {listing.features?.includes('Owner Financing') && (
+                {hasPriceDrop && (
+                  <div className="mt-2 bg-red-500/20 border border-red-400/40 text-red-300 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                    <TrendingDown size={11} /> Price Reduced {dropPct}%
+                  </div>
+                )}
+                {(listing.owner_financing || listing.features?.includes('Owner Financing')) && (
                   <div className="mt-3 bg-gold/20 border border-gold/40 text-gold text-xs font-bold px-3 py-1.5 rounded-full inline-block">
                     💰 Owner Financing Available
                   </div>

@@ -23,6 +23,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
     state: '', county: '', zip: '', type: '', parcel: '',
+    video_url: '', previous_price: '',
     features: [] as string[], status: 'pending',
   });
 
@@ -53,6 +54,8 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
       county: data.county,
       zip: data.zip_code ?? '',
       parcel: data.parcel_number ?? '',
+      video_url: data.video_url ?? '',
+      previous_price: data.previous_price ? String(data.previous_price) : '',
       type: data.type,
       features: data.features ?? [],
       status: data.status,
@@ -88,10 +91,12 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
           state:       form.state,
           county:      form.county.trim(),
           zip_code:      form.zip.trim(),
-          parcel_number: form.parcel.trim() || null,
-          type:        form.type,
-          features:    form.features,
-          updated_at:  new Date().toISOString(),
+          parcel_number:  form.parcel.trim() || null,
+          video_url:      form.video_url.trim() || null,
+          previous_price: form.previous_price ? parseFloat(form.previous_price) : null,
+          type:           form.type,
+          features:       form.features,
+          updated_at:     new Date().toISOString(),
         })
         .eq('id', params.id);
 
@@ -190,6 +195,32 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
               <label className="label">Asking Price ($) *</label>
               <input type="number" value={form.price} onChange={set('price')} className="input" min="1" />
             </div>
+          </div>
+
+          {/* Previous price for Price Drop badge */}
+          <div>
+            <label className="label">Previous Price ($) <span className="text-brand-300 font-normal">(optional — shows "Price Reduced" badge)</span></label>
+            <input
+              type="number"
+              value={form.previous_price}
+              onChange={set('previous_price')}
+              className="input"
+              placeholder="e.g. 95000 — leave blank if price never changed"
+              min="1"
+            />
+            <p className="text-xs text-brand-400 mt-1">If you lower your price, enter the old price here to show a "Price Reduced" badge to buyers.</p>
+          </div>
+
+          {/* Video URL */}
+          <div>
+            <label className="label">📹 Property Video <span className="text-brand-300 font-normal">(optional)</span></label>
+            <input
+              value={form.video_url}
+              onChange={set('video_url')}
+              className="input"
+              placeholder="YouTube or Vimeo link — e.g. https://youtube.com/watch?v=..."
+              type="url"
+            />
           </div>
 
           {pricePerAcre && (

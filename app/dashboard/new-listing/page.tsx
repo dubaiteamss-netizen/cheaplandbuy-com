@@ -56,7 +56,7 @@ export default function NewListingPage() {
   const [form, setForm] = useState({
     title: '', description: '', acres: '', price: '',
     state: '', county: '', zip: '', type: '', parcel: '',
-    taxes: '', zoning: '',
+    taxes: '', zoning: '', video_url: '',
     features: [] as string[],
   });
 
@@ -127,6 +127,7 @@ export default function NewListingPage() {
         parcel_number:   form.parcel.trim() || null,
         taxes_per_year:  form.taxes ? parseInt(form.taxes) : null,
         zoning:          form.zoning.trim() || null,
+        video_url:       form.video_url.trim() || null,
         owner_financing: ownerFinancing,
         type:            form.type,
         features:     form.features,
@@ -237,6 +238,18 @@ export default function NewListingPage() {
                   <label className="label">Zoning <span className="text-brand-300 font-normal">(optional)</span></label>
                   <input value={form.zoning} onChange={set('zoning')} className="input" placeholder="e.g. Agricultural, Residential" />
                 </div>
+              </div>
+              {/* Video URL */}
+              <div>
+                <label className="label">📹 Property Video <span className="text-brand-300 font-normal">(optional)</span></label>
+                <input
+                  value={form.video_url}
+                  onChange={set('video_url')}
+                  className="input"
+                  placeholder="Paste YouTube or Vimeo link — e.g. https://youtube.com/watch?v=..."
+                  type="url"
+                />
+                <p className="text-xs text-brand-400 mt-1">Listings with a video tour get significantly more inquiries.</p>
               </div>
               <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
                 <div>

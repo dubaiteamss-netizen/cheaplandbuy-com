@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { MapPin, Maximize2 } from 'lucide-react';
+import { MapPin, Maximize2, TrendingDown } from 'lucide-react';
+import FavoriteButton from './FavoriteButton';
 
 const LAND_GRADIENTS: Record<string, string> = {
   'Ranch Land':              'linear-gradient(180deg,#87CEEB 38%,#A8D5A2 38%,#6B8F5E 58%,#8B7355 75%,#C4A882 100%)',
@@ -27,50 +28,69 @@ function isNewListing(createdAt: string) {
 }
 
 export default function ListingCard({ listing }: { listing: any }) {
-  const gradient   = LAND_GRADIENTS[listing.type] ?? LAND_GRADIENTS['Ranch Land'];
+  const gradient    = LAND_GRADIENTS[listing.type] ?? LAND_GRADIENTS['Ranch Land'];
   const images: string[] = listing.images ?? [];
-  const price      = listing.price ?? 0;
-  const acres      = listing.acres ?? 0;
-  const pricePerAc = acres > 0 ? Math.round(price / acres) : (listing.price_per_acre ?? 0);
-  const isNew      = listing.created_at ? isNewListing(listing.created_at) : false;
+  const price       = listing.price ?? 0;
+  const acres       = listing.acres ?? 0;
+  const pricePerAc  = acres > 0 ? Math.round(price / acres) : (listing.price_per_acre ?? 0);
+  const isNew       = listing.created_at ? isNewListing(listing.created_at) : false;
   const hasOwnerFin = listing.owner_financing || listing.features?.includes('Owner Financing');
+
+  // Price drop badge
+  const prevPrice   = listing.previous_price ?? 0;
+  const hasPriceDrop = prevPrice > 0 && prevPrice > price;
+  const dropPct     = hasPriceDrop ? Math.round(((prevPrice - price) / prevPrice) * 100) : 0;
 
   return (
     <Link href={`/listings/${listing.id}`} className="group block">
       <div className="bg-white rounded-xl overflow-hidden border border-brand-100 shadow-sm
-                      hover:shadow-xl hover:-translate-y-1 transition-all duration-250">
+                      hover:shadow-xl hover:-translate-y-1 transition-all duration-250 relative">
+
         {/* Image */}
-        <div className="relative h-52 overflow-hidden bg-brand-100"
-          style={{ background: images[0] ? undefined : gradient }}>
+        <div
+          className="relative h-52 overflow-hidden bg-brand-100"
+          style={{ background: images[0] ? undefined : gradient }}
+        >
           {images[0] ? (
-            <img src={images[0]} alt={listing.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <img
+              src={images[0]}
+              alt={listing.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-5xl opacity-30">🌾</span>
             </div>
           )}
 
-          {/* Top badges */}
-          <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
-            <div className="flex flex-wrap gap-1.5">
-              <span className="bg-white/95 text-brand-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
-                {listing.type}
+          {/* Top-left badges */}
+          <div className="absolute top-3 left-3 right-12 flex flex-wrap items-start gap-1.5">
+            <span className="bg-white/95 text-brand-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
+              {listing.type}
+            </span>
+            {isNew && (
+              <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
+                ✦ New
               </span>
-              {isNew && (
-                <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
-                  ✦ New
-                </span>
-              )}
-            </div>
+            )}
+            {hasPriceDrop && (
+              <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <TrendingDown size={11} /> -{dropPct}% Price Drop
+              </span>
+            )}
             {listing.status === 'sold' && (
-              <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide flex-shrink-0">
+              <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
                 SOLD
               </span>
             )}
           </div>
 
-          {/* Bottom badges */}
+          {/* Favorite button - top right */}
+          <div className="absolute top-3 right-3">
+            <FavoriteButton listingId={listing.id} size="sm" />
+          </div>
+
+          {/* Owner financing badge - bottom left */}
           {hasOwnerFin && (
             <div className="absolute bottom-3 left-3">
               <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow flex items-center gap-1.5">
@@ -84,9 +104,16 @@ export default function ListingCard({ listing }: { listing: any }) {
         <div className="p-4">
           {/* Price */}
           <div className="flex items-baseline justify-between mb-1.5">
-            <p className="text-brand-700 font-extrabold text-2xl tracking-tight">
-              ${price.toLocaleString()}
-            </p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-brand-700 font-extrabold text-2xl tracking-tight">
+                ${price.toLocaleString()}
+              </p>
+              {hasPriceDrop && (
+                <p className="text-brand-300 text-sm line-through">
+                  ${prevPrice.toLocaleString()}
+                </p>
+              )}
+            </div>
             <span className="text-sm text-brand-400 bg-brand-50 px-2.5 py-0.5 rounded-full font-semibold border border-brand-100">
               ${pricePerAc.toLocaleString()}/ac
             </span>

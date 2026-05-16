@@ -4,11 +4,11 @@ import ListingCard from '../../components/ListingCard';
 import MobileFilterSheet from '../../components/MobileFilterSheet';
 import { createServerSupabaseClient } from '../../lib/supabase-server';
 import { mockListings } from '../../lib/mock-listings';
-import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS } from '../../types';
+import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../../types';
 import { SlidersHorizontal, MapPin, Search } from 'lucide-react';
 
 interface Props {
-  searchParams: { q?: string; state?: string; type?: string; price?: string; acres?: string; page?: string };
+  searchParams: { q?: string; state?: string; type?: string; price?: string; acres?: string; ppa?: string; page?: string };
 }
 
 const TYPE_ICONS: Record<string, string> = {
@@ -41,6 +41,12 @@ async function getListings(sp: Props['searchParams']) {
       if (min) query = query.gte('acres', min);
       if (max) query = query.lte('acres', max);
     }
+    // Price per acre filter — uses computed price_per_acre column (added in migration)
+    if (sp.ppa) {
+      const [min, max] = sp.ppa.split('-').map(Number);
+      if (min) query = query.gte('price_per_acre', min);
+      if (max) query = query.lte('price_per_acre', max);
+    }
     const page = parseInt(sp.page ?? '1');
     const per  = 24;
     query = query.order('created_at', { ascending: false }).range((page - 1) * per, page * per - 1);
@@ -53,6 +59,16 @@ async function getListings(sp: Props['searchParams']) {
   if (sp.q)     filtered = filtered.filter(l =>
     l.title.toLowerCase().includes(sp.q!.toLowerCase()) ||
     l.state.toLowerCase().includes(sp.q!.toLowerCase()));
+  // Client-side PPA filter for mock data
+  if (sp.ppa) {
+    const [min, max] = sp.ppa.split('-').map(Number);
+    filtered = filtered.filter(l => {
+      const ppa = l.acres > 0 ? l.price / l.acres : 0;
+      if (min && ppa < min) return false;
+      if (max && ppa > max) return false;
+      return true;
+    });
+  }
   return { listings: filtered, total: filtered.length };
 }
 
@@ -67,6 +83,7 @@ export default async function ListingsPage({ searchParams }: Props) {
     searchParams.type  && { key: 'type',  label: searchParams.type },
     searchParams.price && { key: 'price', label: `Price: ${searchParams.price}` },
     searchParams.acres && { key: 'acres', label: `Acres: ${searchParams.acres}` },
+    searchParams.ppa   && { key: 'ppa',   label: `$/Ac: ${searchParams.ppa}` },
     searchParams.q     && { key: 'q',     label: `"${searchParams.q}"` },
   ].filter(Boolean) as { key: string; label: string }[];
 
@@ -82,7 +99,6 @@ export default async function ListingsPage({ searchParams }: Props) {
 
       {/* ── MOBILE HEADER ── */}
       <div className="md:hidden bg-brand-700 px-4 pt-4 pb-3 space-y-3">
-        {/* Search row */}
         <form method="GET" action="/listings" className="flex gap-2">
           <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 shadow-sm">
             <Search size={16} className="text-brand-400 flex-shrink-0" />
@@ -100,8 +116,6 @@ export default async function ListingsPage({ searchParams }: Props) {
             />
           </Suspense>
         </form>
-
-        {/* Result count */}
         <p className="text-white/70 text-sm">
           {total.toLocaleString()} {total === 1 ? 'property' : 'properties'} found
           {searchParams.state ? ` in ${searchParams.state}` : ''}
@@ -196,6 +210,13 @@ export default async function ListingsPage({ searchParams }: Props) {
                     {ACREAGE_OPTIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                   </select>
                 </div>
+                {/* Price Per Acre — NEW */}
+                <div>
+                  <label className="label text-xs">Price Per Acre</label>
+                  <select name="ppa" defaultValue={searchParams.ppa ?? ''} className="input text-sm">
+                    {PPA_OPTIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                  </select>
+                </div>
                 <button type="submit" className="btn-primary w-full text-sm py-2.5">Apply Filters</button>
                 <Link href="/listings" className="block text-center text-brand-400 hover:text-brand-600 text-xs">Clear all filters</Link>
               </form>
@@ -226,7 +247,6 @@ export default async function ListingsPage({ searchParams }: Props) {
 
             {listings.length > 0 ? (
               <>
-                {/* Cards — 1 col mobile, 2 col tablet, 3 col desktop */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
                   {listings.map((l: any) => <ListingCard key={l.id} listing={l} />)}
                 </div>

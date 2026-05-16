@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
-import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS } from '../types';
+import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../types';
 
 interface Props {
   current: {
@@ -10,6 +10,7 @@ interface Props {
     type?:  string;
     price?: string;
     acres?: string;
+    ppa?:   string;
     q?:     string;
   };
   totalActive: number;
@@ -22,6 +23,7 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
   const [type,  setType]  = useState(current.type  ?? '');
   const [price, setPrice] = useState(current.price ?? '');
   const [acres, setAcres] = useState(current.acres ?? '');
+  const [ppa,   setPpa]   = useState(current.ppa   ?? '');
 
   function apply() {
     const p = new URLSearchParams();
@@ -30,17 +32,18 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
     if (type)  p.set('type',  type);
     if (price) p.set('price', price);
     if (acres) p.set('acres', acres);
+    if (ppa)   p.set('ppa',   ppa);
     router.push(`/listings?${p.toString()}`);
     setOpen(false);
   }
 
   function clear() {
-    setState(''); setType(''); setPrice(''); setAcres('');
+    setState(''); setType(''); setPrice(''); setAcres(''); setPpa('');
     router.push('/listings');
     setOpen(false);
   }
 
-  const activeCount = [state, type, price, acres].filter(Boolean).length;
+  const activeCount = [state, type, price, acres, ppa].filter(Boolean).length;
 
   return (
     <>
@@ -152,6 +155,26 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
                   onClick={() => setAcres(acres === r.value ? '' : r.value)}
                   className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all active:scale-95
                     ${acres === r.value
+                      ? 'bg-brand-700 text-white border-brand-700'
+                      : 'bg-white text-brand-700 border-brand-200'
+                    }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Price Per Acre */}
+          <div>
+            <label className="text-xs font-bold text-brand-500 uppercase tracking-wider mb-2 block">Price Per Acre</label>
+            <div className="grid grid-cols-2 gap-2">
+              {PPA_OPTIONS.filter(r => r.value !== '').map(r => (
+                <button
+                  key={r.value}
+                  onClick={() => setPpa(ppa === r.value ? '' : r.value)}
+                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all active:scale-95
+                    ${ppa === r.value
                       ? 'bg-brand-700 text-white border-brand-700'
                       : 'bg-white text-brand-700 border-brand-200'
                     }`}

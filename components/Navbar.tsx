@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, PlusCircle, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, PlusCircle, LogOut, LayoutDashboard, Heart } from 'lucide-react';
 import { createClient } from '../lib/supabase';
 
 const supabase = createClient();
@@ -39,6 +39,20 @@ export default function Navbar() {
     { href: '/listings?type=Ranch%20Land',     label: 'Ranch Land' },
   ];
 
+  // Saved count from localStorage — client-only, 0 during SSR
+  const [savedCount, setSavedCount] = useState(0);
+  useEffect(() => {
+    function updateCount() {
+      try {
+        const ids = JSON.parse(localStorage.getItem('clb_favorites') ?? '[]');
+        setSavedCount(ids.length);
+      } catch { setSavedCount(0); }
+    }
+    updateCount();
+    window.addEventListener('clb-favorites-changed', updateCount);
+    return () => window.removeEventListener('clb-favorites-changed', updateCount);
+  }, []);
+
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href.split('?')[0]);
@@ -73,6 +87,20 @@ export default function Navbar() {
 
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-2">
+            {/* Saved listings heart - always visible */}
+            <Link
+              href="/saved"
+              className="relative flex items-center justify-center w-9 h-9 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              title="Saved listings"
+            >
+              <Heart size={18} className={savedCount > 0 ? 'fill-red-400 text-red-400' : ''} />
+              {savedCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+                  {savedCount > 9 ? '9+' : savedCount}
+                </span>
+              )}
+            </Link>
+
             {!loaded ? (
               <div className="w-24 h-8 bg-white/10 rounded-lg animate-pulse" />
             ) : user ? (
@@ -125,6 +153,16 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="border-t border-white/10 pt-3 mt-3 space-y-1">
+              {/* Saved listings - mobile */}
+              <Link href="/saved" onClick={() => setOpen(false)}
+                className="flex items-center gap-2 px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
+                <Heart size={15} className={savedCount > 0 ? 'fill-red-400 text-red-400' : ''} />
+                Saved Listings
+                {savedCount > 0 && (
+                  <span className="bg-red-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">{savedCount}</span>
+                )}
+              </Link>
+
               {user ? (
                 <>
                   <Link href="/dashboard" onClick={() => setOpen(false)}

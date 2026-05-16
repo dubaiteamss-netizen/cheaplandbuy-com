@@ -105,3 +105,12 @@ export const ACREAGE_OPTIONS = [
   { label: '100+ Acres',    value: '100-' },
   { label: '500+ Acres',    value: '500-' },
 ];
+
+export const PPA_OPTIONS = [
+  { label: 'Any $/Acre',        value: '' },
+  { label: 'Under $500/ac',     value: '0-500' },
+  { label: '$500 - $1k/ac',     value: '500-1000' },
+  { label: '$1k - $2.5k/ac',   value: '1000-2500' },
+  { label: '$2.5k - $5k/ac',   value: '2500-5000' },
+  { label: '$5k+/ac',           value: '5000-' },
+];
