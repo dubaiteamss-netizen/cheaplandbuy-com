@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '../../../lib/supabase';
 import { Eye, EyeOff, CheckCircle, Home, BadgeCheck, ChevronRight } from 'lucide-react';
 
@@ -11,12 +11,19 @@ type Role = 'owner' | 'agent';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const [role, setRole] = useState<Role>((searchParams.get('role') as Role) || 'owner');
-  const [step, setStep] = useState<'role' | 'details'>(
-    searchParams.get('role') ? 'details' : 'role'
-  );
+  // Read ?role= from URL on client side (avoids useSearchParams Suspense requirement)
+  const [role, setRole] = useState<Role>('owner');
+  const [step, setStep] = useState<'role' | 'details'>('role');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlRole = params.get('role') as Role | null;
+    if (urlRole === 'agent' || urlRole === 'owner') {
+      setRole(urlRole);
+      setStep('details');
+    }
+  }, []);
   const [form, setForm] = useState({
     name:           '',
     email:          '',
