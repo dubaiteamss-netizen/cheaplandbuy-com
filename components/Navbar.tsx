@@ -34,6 +34,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/listings',                       label: 'Browse Land' },
     { href: '/sell',                           label: 'Sell Land' },
+    { href: '/find-agent',                     label: 'Find an Agent' },
     { href: '/listings?type=Hunting%20Land',   label: 'Hunting Land' },
     { href: '/listings?type=Ranch%20Land',     label: 'Ranch Land' },
   ];
