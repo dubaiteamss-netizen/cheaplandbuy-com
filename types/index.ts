@@ -7,7 +7,6 @@ export interface Listing {
   description: string;
   acres: number;
   price: number;
-  price_per_acre: number;
   state: string;
   county: string;
   zip_code?: string;
@@ -17,8 +16,8 @@ export interface Listing {
   zoning?: string;
   type: LandType;
   status: ListingStatus;
-  images: string[];       // array of Supabase storage URLs
-  features: string[];     // e.g. ["Road Access", "Water Rights", "Utilities Nearby"]
+  images: string[];
+  features: string[];
   lat?: number;
   lng?: number;
   created_at: string;
@@ -104,13 +103,4 @@ export const ACREAGE_OPTIONS = [
   { label: '50+ Acres',     value: '50-' },
   { label: '100+ Acres',    value: '100-' },
   { label: '500+ Acres',    value: '500-' },
-];
-
-export const PPA_OPTIONS = [
-  { label: 'Any $/Acre',        value: '' },
-  { label: 'Under $500/ac',     value: '0-500' },
-  { label: '$500 - $1k/ac',     value: '500-1000' },
-  { label: '$1k - $2.5k/ac',   value: '1000-2500' },
-  { label: '$2.5k - $5k/ac',   value: '2500-5000' },
-  { label: '$5k+/ac',           value: '5000-' },
 ];
