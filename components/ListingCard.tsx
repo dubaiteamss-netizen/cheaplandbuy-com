@@ -32,7 +32,7 @@ export default function ListingCard({ listing }: { listing: any }) {
   const images: string[] = listing.images ?? [];
   const price       = listing.price ?? 0;
   const acres       = listing.acres ?? 0;
-  const pricePerAc  = acres > 0 ? Math.round(price / acres) : (listing.price_per_acre ?? 0);
+
   const isNew       = listing.created_at ? isNewListing(listing.created_at) : false;
   const hasOwnerFin = listing.owner_financing || listing.features?.includes('Owner Financing');
 
@@ -114,9 +114,7 @@ export default function ListingCard({ listing }: { listing: any }) {
                 </p>
               )}
             </div>
-            <span className="text-sm text-brand-400 bg-brand-50 px-2.5 py-0.5 rounded-full font-semibold border border-brand-100">
-              ${pricePerAc.toLocaleString()}/ac
-            </span>
+
           </div>
 
           {/* Title */}

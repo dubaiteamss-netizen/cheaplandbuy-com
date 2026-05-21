@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail, Globe, Clock, Send } from 'lucide-react';
+import { Mail, Globe, Clock } from 'lucide-react';
 import SupportForm from '../../components/SupportForm';
 
 export const metadata = {
