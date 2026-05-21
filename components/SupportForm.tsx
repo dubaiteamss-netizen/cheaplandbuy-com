@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Send, CheckCircle } from 'lucide-react';
 
 export default function SupportForm() {
@@ -8,11 +8,11 @@ export default function SupportForm() {
   const [errorMsg, setErrorMsg] = useState('');
 
   function set(k: keyof typeof form) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    return (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm(f => ({ ...f, [k]: e.target.value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
     setStatus('sending');
