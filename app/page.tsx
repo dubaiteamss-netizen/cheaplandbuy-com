@@ -89,24 +89,24 @@ export default async function HomePage() {
             <div className="absolute bottom-0 left-10 w-32 h-32 rounded-full bg-emerald-400/20 blur-3xl" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="text-3xl sm:text-4xl flex-shrink-0 animate-bounce" style={{ animationDuration: '2.5s' }}>📢</div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl sm:text-3xl flex-shrink-0 animate-bounce" style={{ animationDuration: '2.5s' }}>📢</div>
                 <div>
-                  <div className="inline-flex items-center gap-2 mb-1">
+                  <div className="inline-flex items-center gap-2 mb-0.5">
                     <span className="bg-gold text-brand-900 text-xs font-black px-2.5 py-0.5 rounded-full">COMING SOON</span>
                   </div>
-                  <h3 className="text-base sm:text-lg font-extrabold text-brand-900 leading-snug">
+                  <h3 className="text-sm sm:text-base font-extrabold text-brand-900 leading-snug">
                     Public Listings Launch June 30, 2026
                   </h3>
-                  <p className="text-brand-600 text-sm mt-1">
-                    We're opening doors for anyone to list their land. Zero fees. Zero commission. Forever.
+                  <p className="text-brand-600 text-xs sm:text-sm mt-0.5">
+                    Zero fees. Zero commission. Forever.
                   </p>
                 </div>
               </div>
               <Link 
                 href="/auth/register" 
-                className="flex-shrink-0 bg-gold hover:bg-gold/90 text-brand-900 font-bold px-5 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-sm whitespace-nowrap"
+                className="flex-shrink-0 bg-gold hover:bg-gold/90 text-brand-900 font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-xs sm:text-sm whitespace-nowrap"
               >
                 Join Waitlist →
               </Link>
@@ -116,7 +116,7 @@ export default async function HomePage() {
       </AnimateIn>
 
       {/* ── STATS BAR ── */}
-      <div className="bg-brand-800 py-5 sm:py-6">
+      <div className="bg-brand-800 py-4 sm:py-5">
         <div className="max-w-4xl mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
             {[
@@ -134,46 +134,20 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ── QUICK BENEFITS STRIP ── */}
-      <AnimateIn>
-        <section className="bg-white border-b border-brand-100 py-8 sm:py-10">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {[
-                { icon: <Globe size={22} className="text-brand-600" />, title: 'All 50 States',        desc: 'Search nationwide or filter by your state' },
-                { icon: <DollarSign size={22} className="text-emerald-600" />, title: 'Owner Financing', desc: 'No bank needed — buy direct from seller' },
-                { icon: <Zap size={22} className="text-gold" />,         title: 'List in Minutes',     desc: 'Free account, live listing instantly' },
-                { icon: <Shield size={22} className="text-blue-600" />,  title: 'Verified Sellers',   desc: 'Every seller reviewed before going live' },
-              ].map((b, i) => (
-                <AnimateIn key={b.title} delay={i * 80}>
-                  <div className="flex flex-col items-center text-center p-4 rounded-2xl bg-brand-50 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all duration-300 group h-full">
-                    <div className="w-11 h-11 rounded-xl bg-white shadow-sm border border-brand-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                      {b.icon}
-                    </div>
-                    <div className="font-bold text-brand-800 text-sm leading-snug mb-1">{b.title}</div>
-                    <div className="text-brand-400 text-xs leading-relaxed hidden sm:block">{b.desc}</div>
-                  </div>
-                </AnimateIn>
-              ))}
-            </div>
-          </div>
-        </section>
-      </AnimateIn>
-
       {/* ── LAND TYPE VISUAL CARDS ── */}
       <AnimateIn>
-        <section className="py-12 sm:py-16 bg-white">
+        <section className="py-10 sm:py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-7">
+            <div className="flex items-end justify-between mb-5">
               <div>
                 <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Explore</span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight mt-1">Browse by Land Type</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-brand-900 tracking-tight mt-1">Browse by Land Type</h2>
               </div>
               <Link href="/listings" className="hidden sm:flex items-center gap-1 text-brand-500 hover:text-brand-700 text-sm font-semibold transition-colors">
                 All Types <ChevronRight size={15} />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3">
               {[
                 { type: 'Ranch Land',              emoji: '🐄', gradient: 'linear-gradient(160deg,#87CEEB,#6B8F5E)' },
                 { type: 'Hunting Land',            emoji: '🦌', gradient: 'linear-gradient(160deg,#4A90D9,#2D5A27)' },
@@ -208,7 +182,7 @@ export default async function HomePage() {
       </AnimateIn>
 
       {/* ── FEATURED LISTINGS ── */}
-      <section className="bg-gray-50 py-12 sm:py-16 border-t border-brand-100">
+      <section className="bg-gray-50 py-10 sm:py-12 border-t border-brand-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="flex items-end justify-between mb-6">
@@ -269,7 +243,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── BROWSE BY STATE ── */}
-      <section className="bg-white border-y border-brand-100 py-12 sm:py-16">
+      <section className="bg-white border-y border-brand-100 py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="text-center mb-8">
@@ -313,7 +287,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="bg-brand-50 border-b border-brand-100 py-12 sm:py-16">
+      <section className="bg-brand-50 border-b border-brand-100 py-10 sm:py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="text-center mb-10">
@@ -354,7 +328,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── BLOG PREVIEW ── */}
-      <section className="bg-white py-12 sm:py-16 border-b border-brand-100">
+      <section className="bg-white py-10 sm:py-12 border-b border-brand-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="flex items-end justify-between mb-8">
@@ -406,7 +380,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── WHY CHOOSE US ── */}
-      <section className="bg-brand-50 border-b border-brand-100 py-12 sm:py-16">
+      <section className="bg-brand-50 border-b border-brand-100 py-10 sm:py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="text-center mb-10">
@@ -414,7 +388,7 @@ export default async function HomePage() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Why Buyers & Sellers Choose Us</h2>
             </div>
           </AnimateIn>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {[
               { icon: <Shield size={26} />, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100',   title: 'Verified Sellers',    desc: 'Every seller reviewed before listings go live.' },
               { icon: <Users size={26} />,  color: 'text-purple-600', bg: 'bg-purple-50 border-purple-100', title: 'Huge Buyer Pool',    desc: '50,000+ active buyers searching every month.' },
@@ -422,11 +396,11 @@ export default async function HomePage() {
               { icon: <Star size={26} />,   color: 'text-gold', bg: 'bg-amber-50 border-amber-100',   title: 'Owner Financing',     desc: 'Buy land with no bank — pay the seller directly.' },
             ].map((f, i) => (
               <AnimateIn key={f.title} delay={i * 80}>
-                <div className={`bg-white border ${f.bg.split(' ')[1]} rounded-2xl p-5 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300`}>
-                  <div className={`w-12 h-12 rounded-xl ${f.bg} border flex items-center justify-center mx-auto mb-3 ${f.color}`}>
+                <div className={`bg-white border ${f.bg.split(' ')[1]} rounded-xl p-4 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300`}>
+                  <div className={`w-10 h-10 rounded-lg ${f.bg} border flex items-center justify-center mx-auto mb-2 ${f.color}`}>
                     {f.icon}
                   </div>
-                  <h4 className="font-bold text-brand-900 text-sm mb-1">{f.title}</h4>
+                  <h4 className="font-bold text-brand-900 text-xs sm:text-sm mb-0.5">{f.title}</h4>
                   <p className="text-brand-400 text-xs leading-relaxed">{f.desc}</p>
                 </div>
               </AnimateIn>
@@ -436,7 +410,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="relative overflow-hidden py-16 sm:py-20">
+      <section className="relative overflow-hidden py-12 sm:py-16">
         {/* Animated gradient background */}
         <div className="absolute inset-0 hero-anim-bg opacity-95" />
         {/* Orbs */}
