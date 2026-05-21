@@ -47,9 +47,8 @@ async function getSimilar(id: string, state: string, type: string) {
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const listing = await getListing(params.id);
   if (!listing) return {};
-  const pricePerAcre = listing.acres > 0 ? Math.round(listing.price / listing.acres) : 0;
   const title = `${listing.title} – ${listing.acres} Acres in ${listing.county ? listing.county + ', ' : ''}${listing.state}`;
-  const description = `${listing.acres} acres of ${listing.type.toLowerCase()} for sale in ${listing.state} for $${listing.price.toLocaleString()} ($${pricePerAcre.toLocaleString()}/acre).${listing.owner_financing ? ' Owner financing available.' : ''} ${listing.description?.slice(0, 100) ?? ''}`;
+  const description = `${listing.acres} acres of ${listing.type.toLowerCase()} for sale in ${listing.state} for $${listing.price.toLocaleString()}.${listing.owner_financing ? ' Owner financing available.' : ''} ${listing.description?.slice(0, 100) ?? ''}`;
   const image = listing.images?.[0] ?? 'https://cheaplandbuy.com/og-image.png';
   return {
     title,
@@ -73,7 +72,6 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
   const similar = await getSimilar(params.id, listing.state, listing.type);
   const images: string[] = listing.images ?? [];
   const features: string[] = listing.features ?? [];
-  const pricePerAcre = listing.acres > 0 ? Math.round(listing.price / listing.acres) : 0;
   const createdDate = listing.created_at
     ? new Date(listing.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     : null;
@@ -181,8 +179,8 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                 {[
                   { icon: <DollarSign size={18} />, label: 'Price',         value: `$${listing.price.toLocaleString()}` },
                   { icon: <Ruler size={18} />,      label: 'Acres',         value: `${listing.acres} ac` },
-                  { icon: <DollarSign size={18} />, label: 'Per Acre',      value: `$${pricePerAcre.toLocaleString()}/ac` },
                   { icon: <Tag size={18} />,        label: 'Type',          value: listing.type },
+                  { icon: <MapPin size={18} />,     label: 'County',        value: listing.county ?? listing.state },
                 ].map(m => (
                   <div key={m.label} className="bg-brand-50 rounded-xl p-3 text-center">
                     <div className="text-brand-400 flex justify-center mb-1">{m.icon}</div>
@@ -306,7 +304,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                 {hasPriceDrop && (
                   <p className="text-red-300 text-sm line-through mt-0.5">${prevPrice.toLocaleString()}</p>
                 )}
-                <p className="text-white/60 text-sm mt-1">{listing.acres} acres · ${pricePerAcre.toLocaleString()}/ac</p>
+                <p className="text-white/60 text-sm mt-1">{listing.acres} acres · {listing.county ? `${listing.county}, ` : ''}{listing.state}</p>
                 {hasPriceDrop && (
                   <div className="mt-2 bg-red-500/20 border border-red-400/40 text-red-300 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
                     <TrendingDown size={11} /> Price Reduced {dropPct}%
