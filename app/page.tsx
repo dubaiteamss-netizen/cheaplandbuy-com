@@ -2,6 +2,8 @@ import Link from 'next/link';
 import ListingCard from '../components/ListingCard';
 import HeroSlider from '../components/HeroSlider';
 import AnimateIn from '../components/AnimateIn';
+export const dynamic = 'force-dynamic'; // Skip static generation to avoid build-time Supabase errors
+
 import { createServerSupabaseClient } from '../lib/supabase-server';
 import { mockListings } from '../lib/mock-listings';
 import { LAND_TYPES } from '../types';

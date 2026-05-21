@@ -3,15 +3,27 @@ import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import { createServerSupabaseClient } from '../../../lib/supabase-server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM   = process.env.FROM_EMAIL ?? 'hello@cheaplandbuy.com';
 
+// Lazily initialize Resend to avoid build-time errors when API key is missing
+function getResend() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is not set');
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
+
 // Admin client to look up seller email from auth.users
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-);
+function getAdminSupabase() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase URL or service role key is not set');
+  }
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,13 +60,13 @@ export async function POST(req: NextRequest) {
     // Get seller email from auth.users via admin client
     let sellerEmail: string | null = null;
     try {
-      const { data: authUser } = await adminSupabase.auth.admin.getUserById(listing.seller_id);
+      const { data: authUser } = await getAdminSupabase().auth.admin.getUserById(listing.seller_id);
       sellerEmail = authUser?.user?.email ?? null;
     } catch {}
 
     // Email to seller (if we have their email)
     if (sellerEmail) {
-      await resend.emails.send({
+      await getResend().emails.send({
         from:    FROM,
         to:      sellerEmail,
         subject: `New Inquiry: ${listing.title}`,
@@ -117,7 +129,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Auto-reply to buyer
-    await resend.emails.send({
+    await getResend().emails.send({
       from:    FROM,
       to:      buyer_email,
       subject: `Your inquiry about "${listing.title}" has been sent`,
