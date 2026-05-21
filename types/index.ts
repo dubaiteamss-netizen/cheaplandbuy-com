@@ -7,6 +7,8 @@ export interface Listing {
   description: string;
   acres: number;
   price: number;
+  price_per_acre?: number;
+  previous_price?: number;
   state: string;
   county: string;
   zip_code?: string;
@@ -18,6 +20,8 @@ export interface Listing {
   status: ListingStatus;
   images: string[];
   features: string[];
+  video_url?: string;
+  view_count?: number;
   lat?: number;
   lng?: number;
   created_at: string;
@@ -103,4 +107,13 @@ export const ACREAGE_OPTIONS = [
   { label: '50+ Acres',     value: '50-' },
   { label: '100+ Acres',    value: '100-' },
   { label: '500+ Acres',    value: '500-' },
+];
+
+export const PPA_OPTIONS = [
+  { label: 'Any Price/Acre',    value: '' },
+  { label: 'Under $500/ac',     value: '0-500' },
+  { label: '$500 – $1,000/ac',  value: '500-1000' },
+  { label: '$1,000 – $5,000/ac', value: '1000-5000' },
+  { label: '$5,000 – $15,000/ac', value: '5000-15000' },
+  { label: '$15,000+/ac',       value: '15000-' },
 ];
