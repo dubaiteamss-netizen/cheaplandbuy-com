@@ -81,6 +81,86 @@ export default async function HomePage() {
       {/* ── HERO ── */}
       <HeroSlider />
 
+      {/* ── LAUNCH ANNOUNCEMENT ── */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500">
+        {/* Shimmer layer */}
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_60px,rgba(255,255,255,0.08)_60px,rgba(255,255,255,0.08)_120px)]" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+
+            {/* Left — icon + text */}
+            <div className="flex items-center gap-4 text-center sm:text-left">
+              <div className="flex-shrink-0 w-14 h-14 bg-white/25 rounded-2xl flex items-center justify-center shadow-inner">
+                <span className="text-3xl">🚀</span>
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-amber-900/70 mb-0.5">
+                  Platform Launch
+                </p>
+                <h2 className="text-xl sm:text-2xl font-black text-amber-950 leading-tight">
+                  Public listings open&nbsp;
+                  <span className="underline decoration-wavy decoration-amber-700/50">June 30, 2026</span>
+                </h2>
+                <p className="text-amber-900/75 text-sm mt-1 leading-snug">
+                  We start accepting land listings from the public on&nbsp;
+                  <strong>June&nbsp;30, 2026</strong>. Register now — it&apos;s free and your spot is secured.
+                </p>
+              </div>
+            </div>
+
+            {/* Right — date badge + CTA */}
+            <div className="flex flex-col items-center gap-3 flex-shrink-0">
+              <div className="bg-white/30 border border-white/50 rounded-2xl px-6 py-3 text-center shadow">
+                <p className="text-xs font-bold text-amber-900/60 uppercase tracking-widest">Opening</p>
+                <p className="text-2xl font-black text-amber-950 leading-none mt-0.5">June 30</p>
+                <p className="text-sm font-semibold text-amber-900/70">2026</p>
+              </div>
+              <Link
+                href="/auth/register"
+                className="bg-amber-950 hover:bg-amber-800 text-white font-bold text-sm px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap"
+              >
+                🔔 Reserve Your Free Account
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── STATS BAR ── */}
+      <AnimateIn>
+        <section className="relative overflow-hidden py-6 sm:py-8 bg-gradient-to-r from-gold/10 via-emerald-100/20 to-gold/10 border-y border-gold/30">
+          <div className="absolute inset-0 opacity-40">
+            <div className="absolute top-0 right-10 w-40 h-40 rounded-full bg-gold/20 blur-3xl" />
+            <div className="absolute bottom-0 left-10 w-32 h-32 rounded-full bg-emerald-400/20 blur-3xl" />
+          </div>
+          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="text-3xl sm:text-4xl flex-shrink-0 animate-bounce" style={{ animationDuration: '2.5s' }}>📢</div>
+                <div>
+                  <div className="inline-flex items-center gap-2 mb-1">
+                    <span className="bg-gold text-brand-900 text-xs font-black px-2.5 py-0.5 rounded-full">COMING SOON</span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-extrabold text-brand-900 leading-snug">
+                    Public Listings Launch June 30, 2026
+                  </h3>
+                  <p className="text-brand-600 text-sm mt-1">
+                    We're opening doors for anyone to list their land. Zero fees. Zero commission. Forever.
+                  </p>
+                </div>
+              </div>
+              <Link 
+                href="/auth/register" 
+                className="flex-shrink-0 bg-gold hover:bg-gold/90 text-brand-900 font-bold px-5 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-sm whitespace-nowrap"
+              >
+                Join Waitlist →
+              </Link>
+            </div>
+          </div>
+        </section>
+      </AnimateIn>
+
       {/* ── STATS BAR ── */}
       <div className="bg-brand-800 py-5 sm:py-6">
         <div className="max-w-4xl mx-auto px-4">
