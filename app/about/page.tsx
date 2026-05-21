@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { MapPin, Users, Shield, TrendingUp } from 'lucide-react';
 
 export const metadata = {
-  title: 'About Us | CheapLandBuy.com',
+  title: 'About Us',
   description: 'Learn about CheapLandBuy.com — an independent online land marketplace connecting buyers and sellers across the United States.',
+  alternates: { canonical: 'https://cheaplandbuy.com/about' },
 };
 
 export default function AboutPage() {
@@ -24,7 +25,7 @@ export default function AboutPage() {
           <h2 className="text-xl font-extrabold text-brand-900 mb-4">Who We Are</h2>
           <div className="space-y-4 text-brand-600 leading-relaxed">
             <p>
-              CheapLandBuy.com is an independent online land marketplace created to connect land buyers and sellers directly.
+              CheapLandBuy.com is an independent online land marketplace created to connect land buyers and sellers directly — no brokers, no middlemen, no commissions.
             </p>
             <p>
               We provide a platform where users can easily post land listings, explore properties, communicate with sellers, and find affordable land opportunities across the USA.
@@ -35,6 +36,11 @@ export default function AboutPage() {
             <p>
               We believe land ownership should be accessible to everyone. Our platform helps individuals, investors, and property owners connect directly without complicated processes.
             </p>
+          </div>
+          <div className="mt-6 p-4 bg-brand-50 rounded-xl border border-brand-100 text-sm text-brand-600">
+            <p className="font-bold text-brand-900 mb-1">📬 Reach Us Directly</p>
+            <p>Email: <a href="mailto:support@cheaplandbuy.com" className="text-brand-700 font-semibold hover:underline">support@cheaplandbuy.com</a></p>
+            <p className="text-brand-400 mt-1">We typically respond within 1 business day, Monday – Saturday, 9 AM – 6 PM EST.</p>
           </div>
         </div>
 

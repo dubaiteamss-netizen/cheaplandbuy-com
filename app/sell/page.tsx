@@ -1,6 +1,12 @@
 import Link from 'next/link';
 import { CheckCircle, DollarSign, Users, Zap, Globe, Camera, MessageSquare } from 'lucide-react';
 
+export const metadata = {
+  title: 'Sell Your Land Free — List in Minutes',
+  description: 'List your land for free on CheapLandBuy.com. Reach motivated buyers across all 50 states. No commission, no listing fees. Owner financing welcome.',
+  alternates: { canonical: 'https://cheaplandbuy.com/sell' },
+};
+
 const FAQS = [
   { q: 'How much does it cost to list my land?',
     a: 'Completely free. We charge zero listing fees. You keep 100% of the sale price.' },
@@ -45,10 +51,10 @@ export default function SellPage() {
       <div className="bg-brand-800 py-4">
         <div className="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8">
           {[
-            { n: '12,400+', l: 'Listings Posted' },
-            { n: '8,200+',  l: 'Buyers Monthly' },
-            { n: '48 hrs',  l: 'Avg First Inquiry' },
+            { n: '50',      l: 'States Covered' },
             { n: '$0',      l: 'Cost to List' },
+            { n: '48 hrs',  l: 'Avg First Inquiry' },
+            { n: '0%',      l: 'Commission' },
           ].map((s, i, arr) => (
             <div key={s.l} className="flex items-center gap-8">
               <div className="text-center">

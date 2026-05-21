@@ -1,9 +1,11 @@
 import Link from 'next/link';
-import { Mail, Globe, Clock } from 'lucide-react';
+import { Mail, Globe, Clock, Send } from 'lucide-react';
+import SupportForm from '../../components/SupportForm';
 
 export const metadata = {
-  title: 'Contact Us | CheapLandBuy.com',
+  title: 'Contact',
   description: 'Contact CheapLandBuy.com for questions about listings, property postings, account support, or general inquiries.',
+  alternates: { canonical: 'https://cheaplandbuy.com/contact' },
 };
 
 export default function ContactPage() {
@@ -57,6 +59,13 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className="bg-white rounded-2xl border border-brand-100 shadow-sm p-8">
+          <h2 className="text-lg font-extrabold text-brand-900 mb-1">Send Us a Message</h2>
+          <p className="text-brand-400 text-sm mb-6">Fill out the form below and we'll get back to you within 1 business day.</p>
+          <SupportForm />
         </div>
 
         <div className="bg-brand-700 rounded-2xl p-8 text-center">

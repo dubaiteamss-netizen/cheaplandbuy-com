@@ -84,10 +84,10 @@ export default async function HomePage() {
         <div className="max-w-4xl mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
             {[
-              { n: '12,400+', l: 'Active Listings', icon: '🏕️' },
-              { n: '50',      l: 'States Covered',  icon: '🗺️' },
-              { n: '8,200+',  l: 'Happy Buyers',    icon: '🤝' },
-              { n: '$85M+',   l: 'In Land Sales',   icon: '💰' },
+              { n: '50',    l: 'States Covered',         icon: '🗺️' },
+              { n: '$0',    l: 'Cost to List',          icon: '🏕️' },
+              { n: '0%',    l: 'Commission',            icon: '💰' },
+              { n: 'Free',  l: 'Owner Financing Tools', icon: '🤝' },
             ].map((s, i) => (
               <div key={s.l} className={`text-center py-3 px-2 ${i < 3 ? 'border-r border-white/10' : ''} ${i >= 2 ? 'border-t border-white/10 sm:border-t-0' : ''}`}>
                 <div className="text-gold font-black text-2xl sm:text-3xl tracking-tight leading-none">{s.n}</div>
@@ -243,15 +243,15 @@ export default async function HomePage() {
           </AnimateIn>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { state: 'Texas',      count: '2,410', emoji: '🤠' },
-              { state: 'Florida',    count: '1,830', emoji: '🌴' },
-              { state: 'Montana',    count: '980',   emoji: '🏔️' },
-              { state: 'Colorado',   count: '1,140', emoji: '⛷️' },
-              { state: 'Tennessee',  count: '760',   emoji: '🎵' },
-              { state: 'Oklahoma',   count: '890',   emoji: '🌾' },
-              { state: 'Georgia',    count: '1,020', emoji: '🍑' },
-              { state: 'Arizona',    count: '670',   emoji: '🌵' },
-            ].map(({ state, count, emoji }, i) => (
+              { state: 'Texas',      emoji: '🤠' },
+              { state: 'Florida',    emoji: '🌴' },
+              { state: 'Montana',    emoji: '🏔️' },
+              { state: 'Colorado',   emoji: '⛷️' },
+              { state: 'Tennessee',  emoji: '🎵' },
+              { state: 'Oklahoma',   emoji: '🌾' },
+              { state: 'Georgia',    emoji: '🍑' },
+              { state: 'Arizona',    emoji: '🌵' },
+            ].map(({ state, emoji }, i) => (
               <AnimateIn key={state} delay={i * 60}>
                 <Link href={`/listings?state=${state}`}
                   className="group bg-white hover:bg-brand-700 border border-brand-100 hover:border-brand-700
@@ -259,7 +259,7 @@ export default async function HomePage() {
                   <span className="text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300">{emoji}</span>
                   <div className="min-w-0">
                     <div className="font-bold text-brand-800 group-hover:text-white text-sm leading-tight">{state}</div>
-                    <div className="text-brand-400 group-hover:text-white/70 text-xs">{count} listings</div>
+                    <div className="text-brand-400 group-hover:text-white/70 text-xs">Browse listings</div>
                   </div>
                   <ChevronRight size={14} className="text-brand-300 group-hover:text-white/70 ml-auto flex-shrink-0 transition-colors" />
                 </Link>
@@ -383,7 +383,7 @@ export default async function HomePage() {
               { icon: <Shield size={26} />, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100',   title: 'Verified Sellers',    desc: 'Every seller reviewed before listings go live.' },
               { icon: <Users size={26} />,  color: 'text-purple-600', bg: 'bg-purple-50 border-purple-100', title: 'Huge Buyer Pool',    desc: '50,000+ active buyers searching every month.' },
               { icon: <TrendingUp size={26} />, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', title: 'Fast Sales', desc: 'Most listings get inquiries within 48 hours.' },
-              { icon: <Star size={26} />,   color: 'text-gold', bg: 'bg-amber-50 border-amber-100',   title: 'Top Rated',           desc: 'Rated #1 for affordable land by our buyers.' },
+              { icon: <Star size={26} />,   color: 'text-gold', bg: 'bg-amber-50 border-amber-100',   title: 'Owner Financing',     desc: 'Buy land with no bank — pay the seller directly.' },
             ].map((f, i) => (
               <AnimateIn key={f.title} delay={i * 80}>
                 <div className={`bg-white border ${f.bg.split(' ')[1]} rounded-2xl p-5 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300`}>

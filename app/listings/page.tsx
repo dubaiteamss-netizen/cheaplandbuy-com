@@ -1,11 +1,18 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import ListingCard from '../../components/ListingCard';
 import MobileFilterSheet from '../../components/MobileFilterSheet';
 import { createServerSupabaseClient } from '../../lib/supabase-server';
 import { mockListings } from '../../lib/mock-listings';
 import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../../types';
 import { SlidersHorizontal, MapPin, Search } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Browse Land for Sale Across America',
+  description: 'Search affordable land for sale in all 50 states. Filter by state, type, price, and acreage. Ranch land, hunting land, farmland, waterfront lots & more.',
+  alternates: { canonical: 'https://cheaplandbuy.com/listings' },
+};
 
 interface Props {
   searchParams: { q?: string; state?: string; type?: string; price?: string; acres?: string; ppa?: string; page?: string };

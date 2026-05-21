@@ -1,6 +1,7 @@
 export const metadata = {
-  title: 'Terms & Conditions | CheapLandBuy.com',
+  title: 'Terms & Conditions',
   description: 'Terms and Conditions for using CheapLandBuy.com — the online land marketplace platform.',
+  alternates: { canonical: 'https://cheaplandbuy.com/terms' },
 };
 
 export default function TermsPage() {
