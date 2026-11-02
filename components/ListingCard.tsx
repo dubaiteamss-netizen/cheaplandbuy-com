@@ -41,7 +41,7 @@ export default function ListingCard({
 
   const photo = (
     <div className={`relative overflow-hidden bg-brand-100 ${
-      mode === 'premium' ? 'h-[420px] sm:h-[520px]' :
+      mode === 'premium' ? 'h-56 sm:h-[420px] lg:h-[520px]' :
       mode === 'row' ? (showLargePhoto ? 'h-72 sm:h-[240px] sm:w-[380px] flex-shrink-0' : 'h-44 sm:h-[168px] sm:w-56 flex-shrink-0') :
       'h-52'
     }`}>

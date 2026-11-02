@@ -110,6 +110,44 @@
   animation-delay: 2.5s;
 }
 
+@keyframes sunPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes cloudDrift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(28px); }
+}
+.cartoon-sun {
+  position: absolute;
+  top: 14%;
+  left: 22%;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #ffe082;
+  box-shadow: 0 0 0 10px rgba(255, 224, 130, 0.35);
+  animation: sunPulse 4.5s ease-in-out infinite;
+}
+.cartoon-cloud {
+  position: absolute;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff;
+  animation: cloudDrift 8s ease-in-out infinite;
+}
+.cartoon-cloud::before,
+.cartoon-cloud::after {
+  content: '';
+  position: absolute;
+  background: #fff;
+  border-radius: 999px;
+}
+.cartoon-cloud::before { width: 18px; height: 18px; top: -10px; left: 8px; }
+.cartoon-cloud::after { width: 14px; height: 14px; top: -7px; left: 22px; }
+.cartoon-cloud-a { top: 12%; right: 18%; width: 54px; }
+.cartoon-cloud-b { top: 28%; left: 8%; width: 40px; animation-delay: -3s; }
+
 /* ── Scroll AnimateIn ────────────────────────────────────────────────────── */
 .anim-out {
   opacity: 0;

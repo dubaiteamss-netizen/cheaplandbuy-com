@@ -52,16 +52,16 @@ export default function BottomNav() {
           return (
             <Link key={label} href={href}
               className={`flex flex-col items-center justify-center gap-1 transition-colors active:scale-95
-                ${gold ? 'text-brand-700' : active ? 'text-brand-700' : 'text-gray-400'}`}
+                ${gold ? 'text-blue' : active ? 'text-blue' : 'text-gray-400'}`}
             >
               {gold ? (
-                <span className="bg-brand-900 rounded-full p-2 -mt-1 shadow-md">
+                <span className="bg-blue rounded-full p-2 -mt-1 shadow-md">
                   <Icon size={22} strokeWidth={2.5} className="text-white" />
                 </span>
               ) : (
                 <Icon size={24} strokeWidth={active ? 2.5 : 1.8} />
               )}
-              <span className={`text-[11px] font-semibold leading-none ${gold ? 'text-brand-700' : active ? 'text-brand-700' : 'text-gray-400'}`}>{label}</span>
+              <span className={`text-[11px] font-semibold leading-none ${gold || active ? 'text-blue' : 'text-gray-400'}`}>{label}</span>
             </Link>
           );
         })}

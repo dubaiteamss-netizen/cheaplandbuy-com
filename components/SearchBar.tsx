@@ -48,54 +48,28 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
   return (
     <>
       {/* ── MOBILE: stacked layout ── */}
-      <div className="sm:hidden bg-white rounded-2xl shadow-2xl overflow-hidden max-w-sm mx-auto">
-        <div className="px-4 py-3 border-b border-brand-100">
-          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Keyword</label>
+      <div className="sm:hidden overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card">
+        <label className="block px-4 pt-3">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-brand-400">Where</span>
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
-            placeholder="County, city, or keyword"
-            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none placeholder:text-brand-300 placeholder:font-normal"
+            placeholder="County, city, or state"
+            className="mt-1 h-11 w-full bg-transparent text-base font-semibold text-brand-800 outline-none placeholder:font-normal placeholder:text-brand-300"
           />
-        </div>
-        <div className="grid grid-cols-2 divide-x divide-y divide-brand-100">
-          <div className="px-4 py-3">
-            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
-            <select value={state} onChange={e => setState(e.target.value)}
-              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-              <option value="">All States</option>
-              {US_STATES.map(s => <option key={s}>{s}</option>)}
-            </select>
-          </div>
-          <div className="px-4 py-3">
-            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Land Type</label>
-            <select value={type} onChange={e => setType(e.target.value)}
-              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-              <option value="">Any Type</option>
-              {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
-            </select>
-          </div>
-          <div className="px-4 py-3">
-            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Max Price</label>
-            <select value={price} onChange={e => setPrice(e.target.value)}
-              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-              <option value="">Any Price</option>
-              {PRICE_RANGES.map(p => <option key={p.label} value={p.value}>{p.label}</option>)}
-            </select>
-          </div>
-          <div className="px-4 py-3">
-            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Min Acres</label>
-            <select value={acres} onChange={e => setAcres(e.target.value)}
-              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none appearance-none cursor-pointer">
-              <option value="">Any Size</option>
-              {ACREAGE_OPTIONS.map(a => <option key={a.label} value={a.value}>{a.label}</option>)}
-            </select>
-          </div>
-        </div>
+        </label>
+        <label className="block border-t border-brand-100 px-4 py-3">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-brand-400">State</span>
+          <select value={state} onChange={e => setState(e.target.value)}
+            className="mt-1 h-11 w-full bg-transparent text-base font-semibold text-brand-800 outline-none">
+            <option value="">All states</option>
+            {US_STATES.map(s => <option key={s}>{s}</option>)}
+          </select>
+        </label>
         <button onClick={handleSearch}
-          className="w-full bg-blue hover:bg-blue-dark text-white py-3.5 font-bold text-sm transition-colors flex items-center justify-center gap-2">
-          <Search size={16} /> Search Land
+          className="flex h-12 w-full items-center justify-center gap-2 bg-blue text-base font-bold text-white">
+          <Search size={18} /> Search land
         </button>
       </div>
 

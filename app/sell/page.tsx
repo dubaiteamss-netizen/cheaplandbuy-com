@@ -28,7 +28,7 @@ export default function SellPage() {
 
       {/* ── HERO ── */}
       <section className="relative bg-brand-900 py-24 px-4 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=80" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        <img src="/illustrations/cartoon-ranch.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
         <div className="relative max-w-4xl">
         <p className="text-gold text-[11px] uppercase tracking-[0.28em] mb-4">No commission</p>
         <h1 className="text-4xl sm:text-6xl text-white max-w-3xl leading-[0.95] mb-5">
