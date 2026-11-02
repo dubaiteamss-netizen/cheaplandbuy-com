@@ -4,7 +4,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Menu, X, PlusCircle, LogOut, LayoutDashboard, Heart } from 'lucide-react';
 import { createClient } from '../lib/supabase';
-import ColorMenu from './ColorMenu';
 
 const supabase = createClient();
 
@@ -33,14 +32,13 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { href: '/listings',                       label: 'Browse Land' },
-    { href: '/sell',                           label: 'Sell Land' },
-    { href: '/faq',                           label: 'FAQ' },
-    { href: '/listings?type=Hunting%20Land',   label: 'Hunting Land' },
-    { href: '/listings?type=Ranch%20Land',     label: 'Ranch Land' },
+    { href: '/listings', label: 'Buy' },
+    { href: '/sell', label: 'Sell' },
+    { href: '/listings?type=Ranch%20Land', label: 'Ranch' },
+    { href: '/listings?type=Hunting%20Land', label: 'Hunting' },
+    { href: '/blog', label: 'Journal' },
   ];
 
-  // Saved count from localStorage — client-only, 0 during SSR
   const [savedCount, setSavedCount] = useState(0);
   useEffect(() => {
     function updateCount() {
@@ -56,142 +54,117 @@ export default function Navbar() {
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
-    return pathname.startsWith(href.split('?')[0]);
+    const path = href.split('?')[0];
+    if (path === '/listings') return pathname === '/listings' && !href.includes('?');
+    return pathname === path || pathname.startsWith(path + '/');
   }
 
-  return (
-    <nav className="bg-brand-800 shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+  const linkClass = (href: string) =>
+    `px-3 py-2 text-[13px] font-medium tracking-wide transition-colors ${
+      isActive(href) ? 'text-brand-900' : 'text-brand-500 hover:text-brand-900'
+    }`;
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
-            {/* SVG icon mark */}
-            <img src="/icon.svg" alt="" width={36} height={36} className="flex-shrink-0" />
-            {/* Wordmark */}
-            <span className="font-extrabold text-xl tracking-tight">
-              <span className="text-white">CheapLandBuy</span><span className="text-gold">.com</span>
+  return (
+    <nav className="bg-white/95 backdrop-blur-md border-b border-brand-100 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[72px]">
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <img src="/icon.svg" alt="" width={28} height={28} className="flex-shrink-0" />
+            <span className="font-semibold text-[15px] tracking-[0.14em] uppercase text-brand-900">
+              CheapLandBuy
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map(({ href, label }) => (
-              <Link key={href} href={href}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(href) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
-                }`}>
+              <Link key={href} href={href} className={linkClass(href)}>
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-2">
-            <ColorMenu />
-            {/* Saved listings heart - always visible */}
             <Link
               href="/saved"
-              className="relative flex items-center justify-center w-9 h-9 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="relative flex items-center justify-center w-9 h-9 text-brand-700 hover:bg-brand-50 rounded-md transition-colors"
               title="Saved listings"
             >
-              <Heart size={18} className={savedCount > 0 ? 'fill-red-400 text-red-400' : ''} />
+              <Heart size={18} className={savedCount > 0 ? 'fill-brand-900 text-brand-900' : ''} />
               {savedCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-brand-900 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                   {savedCount > 9 ? '9+' : savedCount}
                 </span>
               )}
             </Link>
 
             {!loaded ? (
-              <div className="w-24 h-8 bg-white/10 rounded-lg animate-pulse" />
+              <div className="w-24 h-8 bg-brand-50 rounded-md animate-pulse" />
             ) : user ? (
               <>
-                <Link href="/dashboard"
-                  className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
-                  <LayoutDashboard size={14} /> Dashboard
+                <Link href="/dashboard" className="flex items-center gap-1.5 text-brand-700 hover:text-brand-900 text-sm font-medium px-3 py-2">
+                  <LayoutDashboard size={14} /> Account
                 </Link>
-                <Link href="/dashboard/new-listing"
-                  className="btn-gold text-sm flex items-center gap-1.5 py-2">
-                  <PlusCircle size={14} /> Post Listing
+                <Link href="/dashboard/new-listing" className="btn-primary text-sm flex items-center gap-1.5 py-2 px-4">
+                  <PlusCircle size={14} /> List land
                 </Link>
-                <button onClick={signOut}
-                  className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                  title="Sign out">
+                <button onClick={signOut} className="p-2 text-brand-400 hover:text-brand-900" title="Sign out">
                   <LogOut size={16} />
                 </button>
               </>
             ) : (
               <>
-                <Link href="/auth/login"
-                  className="text-white/80 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-colors border border-white/20 hover:border-white/40">
-                  Sign In
+                <Link href="/auth/login" className="text-brand-700 hover:text-brand-900 text-sm font-medium px-3 py-2">
+                  Sign in
                 </Link>
-                <Link href="/auth/register" className="btn-gold text-sm py-2">
-                  + List Your Land
+                <Link href="/auth/register" className="btn-primary text-sm py-2.5 px-4">
+                  List your land
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile hamburger */}
-          <button onClick={() => setOpen(!open)}
-            className="md:hidden p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden p-2 text-brand-800"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+          >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-brand-900 border-t border-white/10 pb-4">
+        <div className="md:hidden bg-white border-t border-brand-100 pb-4">
           <div className="px-4 pt-3 space-y-1">
             {navLinks.map(({ href, label }) => (
-              <Link key={href} href={href} onClick={() => setOpen(false)}
-                className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(href) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
-                }`}>
+              <Link key={href} href={href} onClick={() => setOpen(false)} className={`block px-3 py-3 text-sm ${linkClass(href)}`}>
                 {label}
               </Link>
             ))}
-            <div className="border-t border-white/10 pt-3 mt-3 space-y-1">
-              <div className="px-3 py-2">
-                <ColorMenu />
-              </div>
-              {/* Saved listings - mobile */}
-              <Link href="/saved" onClick={() => setOpen(false)}
-                className="flex items-center gap-2 px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
-                <Heart size={15} className={savedCount > 0 ? 'fill-red-400 text-red-400' : ''} />
-                Saved Listings
-                {savedCount > 0 && (
-                  <span className="bg-red-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">{savedCount}</span>
-                )}
+            <div className="border-t border-brand-100 pt-3 mt-3 space-y-1">
+              <Link href="/saved" onClick={() => setOpen(false)} className="flex items-center gap-2 px-3 py-3 text-brand-700 text-sm">
+                <Heart size={15} /> Saved
+                {savedCount > 0 && <span className="text-xs">({savedCount})</span>}
               </Link>
-
               {user ? (
                 <>
-                  <Link href="/dashboard" onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
-                    <LayoutDashboard size={15} /> Dashboard
+                  <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-2 px-3 py-3 text-brand-700 text-sm">
+                    <LayoutDashboard size={15} /> Account
                   </Link>
-                  <Link href="/dashboard/new-listing" onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2.5 bg-gold text-brand-900 rounded-lg text-sm font-bold">
-                    <PlusCircle size={15} /> Post New Listing
+                  <Link href="/dashboard/new-listing" onClick={() => setOpen(false)} className="btn-primary block text-center text-sm">
+                    List land
                   </Link>
-                  <button onClick={() => { signOut(); setOpen(false); }}
-                    className="flex items-center gap-2 px-3 py-2.5 text-white/60 hover:text-white w-full text-left text-sm">
-                    <LogOut size={15} /> Sign Out
+                  <button onClick={() => { signOut(); setOpen(false); }} className="flex items-center gap-2 px-3 py-3 text-brand-500 text-sm w-full">
+                    <LogOut size={15} /> Sign out
                   </button>
                 </>
               ) : (
                 <>
-                  <Link href="/auth/login" onClick={() => setOpen(false)}
-                    className="block px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
-                    Sign In
+                  <Link href="/auth/login" onClick={() => setOpen(false)} className="block px-3 py-3 text-brand-700 text-sm">
+                    Sign in
                   </Link>
-                  <Link href="/auth/register" onClick={() => setOpen(false)}
-                    className="block px-3 py-2.5 bg-gold text-brand-900 rounded-lg text-sm font-bold text-center">
-                    + List Your Land Free
+                  <Link href="/auth/register" onClick={() => setOpen(false)} className="btn-primary block text-center text-sm">
+                    List your land
                   </Link>
                 </>
               )}

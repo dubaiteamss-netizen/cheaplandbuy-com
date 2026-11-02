@@ -113,7 +113,7 @@ export default async function ListingsPage({ searchParams }: Props) {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── MOBILE HEADER ── */}
-      <div className="md:hidden bg-brand-700 px-4 pt-4 pb-3 space-y-3">
+      <div className="md:hidden bg-white border-b border-brand-100 px-4 pt-4 pb-3 space-y-3">
         <form method="GET" action="/listings" className="flex gap-2">
           <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 shadow-sm">
             <Search size={16} className="text-brand-400 flex-shrink-0" />
@@ -131,7 +131,7 @@ export default async function ListingsPage({ searchParams }: Props) {
             />
           </Suspense>
         </form>
-        <p className="text-white/70 text-sm">
+        <p className="text-brand-400 text-sm">
           {total.toLocaleString()} {total === 1 ? 'property' : 'properties'} found
           {searchParams.state ? ` in ${searchParams.state}` : ''}
         </p>
@@ -171,15 +171,16 @@ export default async function ListingsPage({ searchParams }: Props) {
       </div>
 
       {/* ── DESKTOP HEADER ── */}
-      <div className="hidden md:block bg-brand-700 py-8 px-4">
+      <div className="hidden md:block bg-white border-b border-brand-100 py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-white font-extrabold text-2xl mb-1">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-brand-400 mb-3">Marketplace</p>
+          <h1 className="text-brand-900 text-4xl sm:text-5xl mb-2">
             {searchParams.state ? `Land for Sale in ${searchParams.state}` :
              searchParams.type  ? `${searchParams.type} for Sale` :
              searchParams.q     ? `Results for "${searchParams.q}"` :
              'Browse Land for Sale'}
           </h1>
-          <p className="text-white/60 text-sm">
+          <p className="text-brand-400 text-sm">
             {total.toLocaleString()} propert{total === 1 ? 'y' : 'ies'} found
           </p>
         </div>

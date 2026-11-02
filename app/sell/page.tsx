@@ -27,41 +27,38 @@ export default function SellPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── HERO ── */}
-      <section className="bg-gradient-to-br from-brand-800 to-brand-600 py-20 text-center px-4">
-        <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
-          🆓 100% Free to List — No Commission
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight mb-5">
-          Sell Your Land Faster with <span className="text-gold">CheapLandBuy.com</span>
+      <section className="relative bg-brand-900 py-24 px-4 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=80" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        <div className="relative max-w-4xl">
+        <p className="text-gold text-[11px] uppercase tracking-[0.28em] mb-4">No commission</p>
+        <h1 className="text-4xl sm:text-6xl text-white max-w-3xl leading-[0.95] mb-5">
+          Sell your land directly.
         </h1>
-        <p className="text-white/75 text-xl max-w-xl mx-auto mb-10">
-          List your property in minutes, completely free. Buyers contact you directly.
+        <p className="text-white/75 text-lg max-w-xl mb-10">
+          List your property in minutes. Buyers contact you. There is no fee and no commission from this site.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/auth/register" className="btn-gold text-base px-10 py-4">
-            List Your Land Free →
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link href="/auth/register" className="bg-white text-brand-900 font-semibold px-6 py-3 rounded-md text-center">
+            List your land
           </Link>
-          <Link href="/auth/login" className="border-2 border-white/40 hover:border-white text-white font-bold px-10 py-4 rounded-lg transition-all text-base">
-            Already a Seller? Sign In
+          <Link href="/auth/login" className="border border-white/40 text-white font-semibold px-6 py-3 rounded-md text-center">
+            Sign in
           </Link>
+        </div>
         </div>
       </section>
 
-      {/* ── TRUST STATS ── */}
-      <div className="bg-brand-800 py-4">
-        <div className="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8">
+      <div className="bg-white border-b border-brand-100">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4">
           {[
-            { n: '50',      l: 'States Covered' },
-            { n: '$0',      l: 'Cost to List' },
-            { n: 'Live',    l: 'As Soon As You Post' },
-            { n: '0%',      l: 'Commission' },
-          ].map((s, i, arr) => (
-            <div key={s.l} className="flex items-center gap-8">
-              <div className="text-center">
-                <div className="text-gold font-extrabold text-2xl">{s.n}</div>
-                <div className="text-white/55 text-xs uppercase tracking-wider">{s.l}</div>
-              </div>
-              {i < arr.length - 1 && <div className="h-8 w-px bg-white/10" />}
+            { n: '50', l: 'States' },
+            { n: '$0', l: 'To list' },
+            { n: 'Live', l: 'On submit' },
+            { n: '0%', l: 'Commission' },
+          ].map((item) => (
+            <div key={item.l} className="py-6">
+              <div className="text-2xl text-brand-900">{item.n}</div>
+              <div className="mt-1 text-[11px] uppercase tracking-[0.18em] text-brand-400">{item.l}</div>
             </div>
           ))}
         </div>
@@ -132,8 +129,8 @@ export default function SellPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-gradient-to-r from-brand-800 to-brand-600 py-16 text-center px-4">
-        <h2 className="text-3xl font-extrabold text-white mb-4">Ready to List Your Land?</h2>
+      <section className="bg-brand-900 py-16 text-center px-4">
+        <h2 className="text-3xl sm:text-5xl text-white mb-4">Ready to list your land?</h2>
         <p className="text-white/75 text-lg mb-8 max-w-md mx-auto">
           It takes less than 10 minutes. Your listing is public as soon as you submit it.
         </p>

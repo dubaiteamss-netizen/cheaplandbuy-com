@@ -8,7 +8,7 @@ import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured 
 import { mockListings } from '../lib/mock-listings';
 import { LAND_TYPES } from '../types';
 import { BLOG_POSTS } from '../lib/blog-data';
-import { Users, TrendingUp, Shield, ChevronRight, Star, Zap, DollarSign, Globe } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 async function getFeaturedListings() {
   if (!isSupabaseConfigured()) return mockListings.slice(0, 6);
@@ -83,56 +83,19 @@ export default async function HomePage() {
       {/* ── HERO ── */}
       <HeroSlider />
 
-      {/* ── LAUNCH ANNOUNCEMENT ── */}
-      <AnimateIn>
-        <section className="relative overflow-hidden py-6 sm:py-8 bg-gradient-to-r from-gold/10 via-emerald-100/20 to-gold/10 border-y border-gold/30">
-          <div className="absolute inset-0 opacity-40">
-            <div className="absolute top-0 right-10 w-40 h-40 rounded-full bg-gold/20 blur-3xl" />
-            <div className="absolute bottom-0 left-10 w-32 h-32 rounded-full bg-emerald-400/20 blur-3xl" />
-          </div>
-          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-              <div className="flex items-start gap-3">
-                <div className="text-2xl sm:text-3xl flex-shrink-0 animate-bounce" style={{ animationDuration: '2.5s' }}>📢</div>
-                <div>
-                  <div className="inline-flex items-center gap-2 mb-0.5">
-                    <span className="bg-gold text-brand-900 text-xs font-black px-2.5 py-0.5 rounded-full">LISTINGS ARE OPEN</span>
-                  </div>
-                  <h3 className="text-sm sm:text-base font-extrabold text-brand-900 leading-snug">
-                    Browse land for sale, or list yours free
-                  </h3>
-                  <p className="text-brand-600 text-xs sm:text-sm mt-0.5">
-                    Zero fees. Zero commission. A listing is public as soon as you submit it.
-                  </p>
-                </div>
-              </div>
-              <Link 
-                href="/listings" 
-                className="flex-shrink-0 bg-gold hover:bg-gold/90 text-brand-900 font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-xs sm:text-sm whitespace-nowrap"
-              >
-                Browse Land →
-              </Link>
+      <div className="bg-white border-b border-brand-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4">
+          {[
+            { n: '50', l: 'States' },
+            { n: '$0', l: 'To list' },
+            { n: '0%', l: 'Commission' },
+            { n: 'Direct', l: 'Buyer contact' },
+          ].map((item, index) => (
+            <div key={item.l} className={`py-6 ${index % 2 === 0 ? '' : ''} ${index < 3 ? 'lg:border-r lg:border-brand-100' : ''} ${index < 2 ? 'border-b lg:border-b-0 border-brand-100' : ''}`}>
+              <div className="text-2xl text-brand-900">{item.n}</div>
+              <div className="mt-1 text-[11px] uppercase tracking-[0.18em] text-brand-400">{item.l}</div>
             </div>
-          </div>
-        </section>
-      </AnimateIn>
-
-      {/* ── STATS BAR ── */}
-      <div className="bg-brand-800 py-4 sm:py-5">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
-            {[
-              { n: '50',    l: 'States Covered',         icon: '🗺️' },
-              { n: '$0',    l: 'Cost to List',          icon: '🏕️' },
-              { n: '0%',    l: 'Commission',            icon: '💰' },
-              { n: 'Free',  l: 'Owner Financing Tools', icon: '🤝' },
-            ].map((s, i) => (
-              <div key={s.l} className={`text-center py-3 px-2 ${i < 3 ? 'border-r border-white/10' : ''} ${i >= 2 ? 'border-t border-white/10 sm:border-t-0' : ''}`}>
-                <div className="text-gold font-black text-2xl sm:text-3xl tracking-tight leading-none">{s.n}</div>
-                <div className="text-white/60 text-xs uppercase tracking-widest mt-1">{s.l}</div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
 
@@ -149,34 +112,25 @@ export default async function HomePage() {
                 All Types <ChevronRight size={15} />
               </Link>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { type: 'Ranch Land',              emoji: '🐄', gradient: 'linear-gradient(160deg,#87CEEB,#6B8F5E)' },
-                { type: 'Hunting Land',            emoji: '🦌', gradient: 'linear-gradient(160deg,#4A90D9,#2D5A27)' },
-                { type: 'Farmland / Agricultural', emoji: '🌾', gradient: 'linear-gradient(160deg,#87CEEB,#4A8F40)' },
-                { type: 'Waterfront Property',     emoji: '🌊', gradient: 'linear-gradient(160deg,#2176AE,#6B8F5E)' },
-                { type: 'Mountain Property',       emoji: '🏔️', gradient: 'linear-gradient(160deg,#2C6FAC,#8B7355)' },
-                { type: 'Desert Land',             emoji: '🌵', gradient: 'linear-gradient(160deg,#FF9552,#D2B48C)' },
-                { type: 'Wooded / Timber Land',    emoji: '🌲', gradient: 'linear-gradient(160deg,#228B22,#0F3B0F)' },
-                { type: 'Residential Lots',        emoji: '🏡', gradient: 'linear-gradient(160deg,#87CEEB,#2E7D32)' },
-              ].map((lt, i) => (
-                <AnimateIn key={lt.type} delay={i * 55}>
-                  <Link
-                    href={`/listings?type=${encodeURIComponent(lt.type)}`}
-                    className="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300"
-                  >
-                    <div
-                      className="relative flex flex-col items-center justify-end text-center p-3 pb-4"
-                      style={{ background: lt.gradient, minHeight: 110 }}
-                    >
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                      <span className="text-3xl sm:text-4xl mb-2 drop-shadow-md relative z-10 group-hover:scale-110 transition-transform duration-300 inline-block">{lt.emoji}</span>
-                      <span className="text-white text-xs font-bold leading-tight drop-shadow relative z-10 text-center">
-                        {lt.type.replace(' / Agricultural', '').replace(' / Timber Land', '')}
-                      </span>
-                    </div>
-                  </Link>
-                </AnimateIn>
+                { type: 'Ranch Land', label: 'Ranch', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80' },
+                { type: 'Hunting Land', label: 'Hunting', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=80' },
+                { type: 'Waterfront Property', label: 'Waterfront', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80' },
+                { type: 'Mountain Property', label: 'Mountain', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80' },
+              ].map((item) => (
+                <Link
+                  key={item.type}
+                  href={`/listings?type=${encodeURIComponent(item.type)}`}
+                  className="group relative h-56 sm:h-72 overflow-hidden bg-brand-900"
+                >
+                  <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-white/70">Land type</p>
+                    <p className="text-white text-2xl mt-1">{item.label}</p>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -189,10 +143,8 @@ export default async function HomePage() {
           <AnimateIn>
             <div className="flex items-end justify-between mb-6">
               <div>
-                <span className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full mb-2">
-                  🔥 Just Listed
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight">Latest Land Listings</h2>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-400">Current inventory</span>
+                <h2 className="text-3xl sm:text-4xl text-brand-900 mt-2">Latest listings</h2>
                 <p className="text-brand-400 text-sm mt-1">Land currently posted by sellers on CheapLandBuy.com</p>
               </div>
               <Link href="/listings" className="hidden sm:flex items-center gap-1 text-brand-600 hover:text-brand-700 font-semibold text-sm whitespace-nowrap">
@@ -223,9 +175,8 @@ export default async function HomePage() {
             </div>
           ) : (
             <AnimateIn>
-              <div className="text-center py-16 bg-white rounded-2xl border border-brand-100 shadow-sm">
-                <p className="text-5xl mb-3">🌾</p>
-                <h3 className="font-bold text-brand-800 text-lg mb-2">No listings to show yet</h3>
+              <div className="text-center py-16 bg-white border border-brand-100">
+                <h3 className="text-brand-800 text-2xl mb-2">No listings to show yet</h3>
                 <p className="text-brand-400 text-sm mb-6">When a seller posts land, it appears here right away.</p>
                 <Link href="/auth/register" className="btn-primary">List Your Land Free →</Link>
               </div>
@@ -253,29 +204,13 @@ export default async function HomePage() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Popular States for Land</h2>
             </div>
           </AnimateIn>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { state: 'Texas',      emoji: '🤠' },
-              { state: 'Florida',    emoji: '🌴' },
-              { state: 'Montana',    emoji: '🏔️' },
-              { state: 'Colorado',   emoji: '⛷️' },
-              { state: 'Tennessee',  emoji: '🎵' },
-              { state: 'Oklahoma',   emoji: '🌾' },
-              { state: 'Georgia',    emoji: '🍑' },
-              { state: 'Arizona',    emoji: '🌵' },
-            ].map(({ state, emoji }, i) => (
-              <AnimateIn key={state} delay={i * 60}>
-                <Link href={`/listings?state=${state}`}
-                  className="group bg-white hover:bg-brand-700 border border-brand-100 hover:border-brand-700
-                             rounded-xl px-4 py-4 flex items-center gap-3 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
-                  <span className="text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300">{emoji}</span>
-                  <div className="min-w-0">
-                    <div className="font-bold text-brand-800 group-hover:text-white text-sm leading-tight">{state}</div>
-                    <div className="text-brand-400 group-hover:text-white/70 text-xs">Browse listings</div>
-                  </div>
-                  <ChevronRight size={14} className="text-brand-300 group-hover:text-white/70 ml-auto flex-shrink-0 transition-colors" />
-                </Link>
-              </AnimateIn>
+          <div className="grid grid-cols-2 sm:grid-cols-4 border border-brand-100">
+            {['Texas','Florida','Montana','Colorado','Tennessee','Oklahoma','Georgia','Arizona'].map((state) => (
+              <Link key={state} href={`/listings?state=${state}`}
+                className="group border-brand-100 border-b sm:[&:nth-child(4n)]:border-r-0 border-r px-5 py-6 hover:bg-brand-900 transition-colors">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-brand-400 group-hover:text-white/60">State</div>
+                <div className="mt-2 text-xl text-brand-900 group-hover:text-white">{state}</div>
+              </Link>
             ))}
           </div>
           <AnimateIn delay={500}>
@@ -302,19 +237,15 @@ export default async function HomePage() {
             {/* Connecting line on desktop */}
             <div className="hidden md:block absolute top-12 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-brand-200 via-brand-400 to-brand-200 z-0" />
             {[
-              { emoji: '👤', step: '01', title: 'Create Free Account', desc: 'Sign up in under 2 minutes. No experience needed. Completely free to start.' },
-              { emoji: '📸', step: '02', title: 'Post Your Listing',   desc: 'Add photos, price, acreage, location, and description. Goes live immediately.' },
-              { emoji: '🤝', step: '03', title: 'Connect with Buyers', desc: 'Receive inquiries directly. Close deals on your terms — no middleman.' },
+              { step: '01', title: 'Create an account', desc: 'Sign up with email. There is no fee to start.' },
+              { step: '02', title: 'Post the parcel', desc: 'Add photos, price, acreage, and location. It is public immediately.' },
+              { step: '03', title: 'Talk to buyers', desc: 'Inquiries come to you. You negotiate and close on your own terms.' },
             ].map((s, i) => (
               <AnimateIn key={s.step} delay={i * 120}>
-                <div className="relative bg-white rounded-2xl border border-brand-100 shadow-sm p-6 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300 z-10">
-                  {/* Step number */}
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-700 text-white text-xs font-black px-3 py-1 rounded-full">
-                    Step {s.step}
-                  </div>
-                  <div className="text-5xl mb-4 mt-3">{s.emoji}</div>
-                  <h3 className="font-bold text-brand-900 text-base mb-2">{s.title}</h3>
-                  <p className="text-brand-400 text-sm leading-relaxed">{s.desc}</p>
+                <div className="relative bg-white border border-brand-100 p-6 z-10">
+                  <div className="text-[11px] tracking-[0.22em] uppercase text-brand-400 mb-4">{s.step}</div>
+                  <h3 className="text-brand-900 text-2xl mb-2">{s.title}</h3>
+                  <p className="text-brand-500 text-sm leading-relaxed">{s.desc}</p>
                 </div>
               </AnimateIn>
             ))}
@@ -390,62 +321,46 @@ export default async function HomePage() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Why Buyers & Sellers Choose Us</h2>
             </div>
           </AnimateIn>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-brand-200 bg-white">
             {[
-              { icon: <Shield size={26} />, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100',   title: 'You Deal Directly',    desc: 'Buyers and sellers message each other. We are not the broker.' },
-              { icon: <Users size={26} />,  color: 'text-purple-600', bg: 'bg-purple-50 border-purple-100', title: 'Search That Fits',    desc: 'Filter by state, land type, price, and acreage.' },
-              { icon: <TrendingUp size={26} />, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', title: 'Live Immediately', desc: 'A new listing is public as soon as the seller submits it.' },
-              { icon: <Star size={26} />,   color: 'text-gold', bg: 'bg-amber-50 border-amber-100',   title: 'Owner Financing',     desc: 'Buy land with no bank — pay the seller directly.' },
-            ].map((f, i) => (
-              <AnimateIn key={f.title} delay={i * 80}>
-                <div className={`bg-white border ${f.bg.split(' ')[1]} rounded-xl p-4 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300`}>
-                  <div className={`w-10 h-10 rounded-lg ${f.bg} border flex items-center justify-center mx-auto mb-2 ${f.color}`}>
-                    {f.icon}
-                  </div>
-                  <h4 className="font-bold text-brand-900 text-xs sm:text-sm mb-0.5">{f.title}</h4>
-                  <p className="text-brand-400 text-xs leading-relaxed">{f.desc}</p>
-                </div>
-              </AnimateIn>
+              { title: 'Direct', desc: 'Buyers and sellers message each other. This site is not the broker.' },
+              { title: 'Search', desc: 'Filter by state, land type, price, and acreage.' },
+              { title: 'Immediate', desc: 'A new listing is public as soon as the seller submits it.' },
+              { title: 'Financing', desc: 'Sellers can offer owner financing and skip the bank.' },
+            ].map((item) => (
+              <div key={item.title} className="p-6 border-brand-200 border-b lg:border-b-0 lg:border-r last:border-0">
+                <h4 className="text-brand-900 text-xl mb-2">{item.title}</h4>
+                <p className="text-brand-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="relative overflow-hidden py-12 sm:py-16">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 hero-anim-bg opacity-95" />
-        {/* Orbs */}
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full hero-orb-gold" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full hero-orb-green" />
-        <AnimateIn>
-          <div className="relative z-10 max-w-2xl mx-auto px-4 text-center">
-            <div className="text-4xl mb-4 hero-float inline-block">🏕️</div>
-            <p className="text-gold text-xs font-bold uppercase tracking-widest mb-3">Ready to Sell?</p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
-              Have Land to Sell?
-            </h2>
-            <p className="text-white/75 text-base sm:text-lg mb-8 leading-relaxed">
-              Post your land and buyers can contact you directly. Listing is free in every state.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/register" className="btn-gold text-base px-8 py-3.5">
-                List Your Land Free
-              </Link>
-              <Link href="/listings"
-                className="border-2 border-white/40 hover:border-white text-white font-bold px-8 py-3.5 rounded-lg transition-all text-base hover:bg-white/10">
-                Browse Listings
-              </Link>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2 mt-8">
-              {['✓ Free to List', '✓ No Commission', '✓ Owner Financing Friendly', '✓ All 50 States'].map(t => (
-                <span key={t} className="bg-white/10 border border-white/20 text-white/80 text-xs font-semibold px-3 py-1.5 rounded-full">
-                  {t}
-                </span>
-              ))}
-            </div>
+      <section className="relative overflow-hidden bg-brand-900">
+        <img
+          src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-40"
+        />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+          <p className="text-gold text-[11px] uppercase tracking-[0.28em] mb-4">For owners</p>
+          <h2 className="text-white text-4xl sm:text-6xl max-w-2xl leading-[0.95]">
+            List the land. Keep the conversation.
+          </h2>
+          <p className="text-white/75 text-base sm:text-lg max-w-xl mt-6 mb-8">
+            Post your parcel and buyers contact you directly. There is no listing fee and no commission from this site.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/auth/register" className="bg-white text-brand-900 font-semibold px-6 py-3 rounded-md text-center">
+              List your land
+            </Link>
+            <Link href="/listings" className="border border-white/40 text-white font-semibold px-6 py-3 rounded-md text-center hover:bg-white/10">
+              Browse listings
+            </Link>
           </div>
-        </AnimateIn>
+        </div>
       </section>
     </>
   );
