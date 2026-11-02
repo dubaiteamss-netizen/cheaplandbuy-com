@@ -3,19 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --canvas: 247 246 243;
-  --brand-50: 244 243 239;
-  --brand-100: 232 230 224;
-  --brand-200: 214 210 202;
-  --brand-300: 176 170 158;
-  --brand-400: 122 116 106;
-  --brand-500: 82 76 68;
-  --brand-600: 46 56 50;
-  --brand-700: 28 40 34;
-  --brand-800: 18 26 22;
-  --brand-900: 12 16 14;
-  --gold: 168 138 90;
-  --gold-dark: 138 110 66;
+  --canvas: 255 255 255;
+  --brand-50: 244 247 251;
+  --brand-100: 226 232 240;
+  --brand-200: 203 213 225;
+  --brand-300: 148 163 184;
+  --brand-400: 100 116 139;
+  --brand-500: 71 85 105;
+  --brand-600: 51 65 85;
+  --brand-700: 36 48 63;
+  --brand-800: 28 37 48;
+  --brand-900: 23 32 42;
+  --blue: 21 101 192;
+  --blue-dark: 13 71 161;
+  --teal: 13 148 156;
+  --teal-dark: 15 118 126;
+  --gold: 13 148 156;
+  --gold-dark: 15 118 126;
 }
 
 @layer base {
@@ -27,7 +31,7 @@
     font-size: 1rem;
     line-height: 1.6;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display), Georgia, serif; letter-spacing: -0.03em; }
+  h1, h2, h3, h4 { font-family: var(--font-outfit), system-ui, sans-serif; letter-spacing: -0.035em; font-weight: 600; }
   select { @apply bg-transparent; font-size: 1rem; }
   /* Prevent tap highlight flash on mobile */
   a, button { -webkit-tap-highlight-color: transparent; }
@@ -45,17 +49,21 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-md
-           tracking-wide transition-colors;
+    background-color: rgb(var(--blue));
+    @apply text-white font-semibold px-6 py-3 rounded-md transition-colors;
   }
+  .btn-primary:hover { background-color: rgb(var(--blue-dark)); }
   .btn-secondary {
-    @apply border border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white
-           font-semibold px-6 py-3 rounded-md tracking-wide transition-colors;
+    color: rgb(var(--blue));
+    border: 1px solid rgb(var(--blue));
+    @apply font-semibold px-6 py-3 rounded-md transition-colors;
   }
+  .btn-secondary:hover { background-color: rgb(var(--blue)); color: white; }
   .btn-gold {
-    @apply bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-md
-           tracking-wide transition-colors;
+    background-color: rgb(var(--teal));
+    @apply text-white font-semibold px-6 py-3 rounded-md transition-colors;
   }
+  .btn-gold:hover { background-color: rgb(var(--teal-dark)); }
   .input {
     /* text-base (16px) prevents iOS Safari from zooming on focus */
     @apply w-full border border-brand-200 rounded-xl px-4 py-3 text-brand-800 bg-white

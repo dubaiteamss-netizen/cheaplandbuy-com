@@ -8,18 +8,20 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const params = useSearchParams();
 
+  const [query, setQuery] = useState(params.get('q') ?? '');
   const [state, setState] = useState(params.get('state') ?? '');
   const [type,  setType]  = useState(params.get('type')  ?? '');
   const [price, setPrice] = useState(params.get('price') ?? '');
   const [acres, setAcres] = useState(params.get('acres') ?? '');
 
   function handleSearch() {
-    const q = new URLSearchParams();
-    if (state) q.set('state', state);
-    if (type)  q.set('type',  type);
-    if (price) q.set('price', price);
-    if (acres) q.set('acres', acres);
-    router.push(`/listings?${q.toString()}`);
+    const next = new URLSearchParams();
+    if (query.trim()) next.set('q', query.trim());
+    if (state) next.set('state', state);
+    if (type)  next.set('type',  type);
+    if (price) next.set('price', price);
+    if (acres) next.set('acres', acres);
+    router.push(`/listings?${next.toString()}`);
   }
 
   if (compact) {
@@ -36,7 +38,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
           {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
         </select>
         <button onClick={handleSearch}
-          className="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1.5">
+          className="bg-blue hover:bg-blue-dark text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1.5">
           <Search size={14} /> Search
         </button>
       </div>
@@ -47,6 +49,16 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
     <>
       {/* ── MOBILE: stacked layout ── */}
       <div className="sm:hidden bg-white rounded-2xl shadow-2xl overflow-hidden max-w-sm mx-auto">
+        <div className="px-4 py-3 border-b border-brand-100">
+          <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Keyword</label>
+          <input
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
+            placeholder="County, city, or keyword"
+            className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none placeholder:text-brand-300 placeholder:font-normal"
+          />
+        </div>
         <div className="grid grid-cols-2 divide-x divide-y divide-brand-100">
           <div className="px-4 py-3">
             <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
@@ -82,7 +94,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
           </div>
         </div>
         <button onClick={handleSearch}
-          className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 font-bold text-sm transition-colors flex items-center justify-center gap-2">
+          className="w-full bg-blue hover:bg-blue-dark text-white py-3.5 font-bold text-sm transition-colors flex items-center justify-center gap-2">
           <Search size={16} /> Search Land
         </button>
       </div>
@@ -90,6 +102,16 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
       {/* ── DESKTOP: horizontal layout ── */}
       <div className="hidden sm:block bg-white/95 backdrop-blur rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto ring-1 ring-white/70">
         <div className="flex items-stretch">
+          <div className="flex-[1.4] px-4 py-3 border-r border-brand-100">
+            <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">Keyword</label>
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
+              placeholder="County, city, or keyword"
+              className="w-full font-semibold text-brand-800 text-sm bg-transparent border-none outline-none placeholder:text-brand-300 placeholder:font-normal"
+            />
+          </div>
           <div className="flex-1 px-4 py-3 border-r border-brand-100">
             <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
             <select value={state} onChange={e => setState(e.target.value)}
@@ -123,7 +145,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
             </select>
           </div>
           <button onClick={handleSearch}
-            className="bg-brand-800 hover:bg-brand-900 text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
+            className="bg-blue hover:bg-blue-dark text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
             <Search size={16} /> Search
           </button>
         </div>

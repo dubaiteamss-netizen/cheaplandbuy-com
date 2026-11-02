@@ -86,6 +86,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
   const videoEmbed  = listing.video_url ? getEmbedUrl(listing.video_url) : null;
   const prevPrice   = listing.previous_price ?? 0;
   const hasPriceDrop = prevPrice > 0 && prevPrice > listing.price;
+  const pricePerAcre = listing.price_per_acre || (listing.acres > 0 ? Math.round(listing.price / listing.acres) : 0);
   const dropPct     = hasPriceDrop ? Math.round(((prevPrice - listing.price) / prevPrice) * 100) : 0;
 
   const listingJsonLd = {
@@ -185,9 +186,9 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
                 {[
                   { icon: <DollarSign size={18} />, label: 'Price',         value: `$${listing.price.toLocaleString()}` },
-                  { icon: <Ruler size={18} />,      label: 'Acres',         value: `${listing.acres} ac` },
+                  { icon: <Ruler size={18} />,      label: 'Acres',         value: `${Number(listing.acres).toLocaleString()} ac` },
+                  { icon: <DollarSign size={18} />, label: 'Per acre',      value: pricePerAcre ? `$${pricePerAcre.toLocaleString()}` : '—' },
                   { icon: <Tag size={18} />,        label: 'Type',          value: listing.type },
-                  { icon: <MapPin size={18} />,     label: 'County',        value: listing.county ?? listing.state },
                 ].map(m => (
                   <div key={m.label} className="bg-brand-50 rounded-xl p-3 text-center">
                     <div className="text-brand-400 flex justify-center mb-1">{m.icon}</div>
@@ -305,13 +306,17 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           <div className="w-full lg:w-80 flex-shrink-0">
             <div className="sticky top-4 space-y-4">
               {/* Price card */}
-              <div className="card bg-brand-700 text-white text-center">
+              <div className="card bg-blue text-white text-center">
                 <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Asking Price</p>
                 <p className="text-4xl font-extrabold">${listing.price.toLocaleString()}</p>
                 {hasPriceDrop && (
                   <p className="text-red-300 text-sm line-through mt-0.5">${prevPrice.toLocaleString()}</p>
                 )}
-                <p className="text-white/60 text-sm mt-1">{listing.acres} acres · {listing.county ? `${listing.county}, ` : ''}{listing.state}</p>
+                <p className="text-white/80 text-sm mt-2">
+                  {Number(listing.acres).toLocaleString()} acres
+                  {pricePerAcre > 0 && <> · ${pricePerAcre.toLocaleString()}/acre</>}
+                </p>
+                <p className="text-white/60 text-sm mt-1">{listing.county ? `${listing.county}, ` : ''}{listing.state}</p>
                 {hasPriceDrop && (
                   <div className="mt-2 bg-red-500/20 border border-red-400/40 text-red-300 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
                     <TrendingDown size={11} /> Price Reduced {dropPct}%
@@ -319,7 +324,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                 )}
                 {(listing.owner_financing || listing.features?.includes('Owner Financing')) && (
                   <div className="mt-3 bg-gold/20 border border-gold/40 text-gold text-xs font-bold px-3 py-1.5 rounded-full inline-block">
-                    💰 Owner Financing Available
+                    Owner financing available
                   </div>
                 )}
               </div>

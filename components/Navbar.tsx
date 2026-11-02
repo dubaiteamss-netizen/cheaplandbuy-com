@@ -34,9 +34,9 @@ export default function Navbar() {
   const navLinks = [
     { href: '/listings', label: 'Buy' },
     { href: '/sell', label: 'Sell' },
-    { href: '/listings?type=Ranch%20Land', label: 'Ranch' },
-    { href: '/listings?type=Hunting%20Land', label: 'Hunting' },
-    { href: '/blog', label: 'Journal' },
+    { href: '/listings?finance=1', label: 'Financing' },
+    { href: '/saved', label: 'Saved' },
+    { href: '/blog', label: 'Guides' },
   ];
 
   const [savedCount, setSavedCount] = useState(0);
@@ -60,12 +60,12 @@ export default function Navbar() {
   }
 
   const linkClass = (href: string) =>
-    `px-3 py-2 text-[13px] font-medium tracking-wide transition-colors ${
-      isActive(href) ? 'text-brand-900' : 'text-brand-500 hover:text-brand-900'
+    `px-3 py-2 text-[13px] font-semibold tracking-wide transition-colors ${
+      isActive(href) ? 'text-blue' : 'text-brand-600 hover:text-blue'
     }`;
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md border-b border-brand-100 sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-md border-b border-brand-100 sticky top-0 z-50 shadow-[inset_0_-3px_0_0_rgb(21,101,192)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
@@ -91,7 +91,7 @@ export default function Navbar() {
             >
               <Heart size={18} className={savedCount > 0 ? 'fill-brand-900 text-brand-900' : ''} />
               {savedCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-900 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-teal text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                   {savedCount > 9 ? '9+' : savedCount}
                 </span>
               )}
@@ -142,10 +142,6 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="border-t border-brand-100 pt-3 mt-3 space-y-1">
-              <Link href="/saved" onClick={() => setOpen(false)} className="flex items-center gap-2 px-3 py-3 text-brand-700 text-sm">
-                <Heart size={15} /> Saved
-                {savedCount > 0 && <span className="text-xs">({savedCount})</span>}
-              </Link>
               {user ? (
                 <>
                   <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-2 px-3 py-3 text-brand-700 text-sm">

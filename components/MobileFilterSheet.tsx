@@ -12,6 +12,7 @@ interface Props {
     acres?: string;
     ppa?:   string;
     q?:     string;
+    sort?:  string;
   };
   totalActive: number;
 }
@@ -28,6 +29,7 @@ export default function MobileFilterSheet({ current, totalActive }: Props) {
   function apply() {
     const p = new URLSearchParams();
     if (current.q) p.set('q', current.q);
+    if (current.sort && current.sort !== 'newest') p.set('sort', current.sort);
     if (state) p.set('state', state);
     if (type)  p.set('type',  type);
     if (price) p.set('price', price);
