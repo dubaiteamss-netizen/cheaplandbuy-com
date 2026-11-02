@@ -270,7 +270,7 @@ const FAQ_CATEGORIES = [
     items: [
       {
         q: 'How do I sell my land fast?',
-        a: 'List on CheapLandBuy.com with high-quality photos, a clear description, and a competitive price. Offer owner financing — listings with owner financing get 3× more inquiries and sell significantly faster. Price at or slightly below comparable sales. Respond to inquiries quickly. The more channels you list on (Craigslist, Facebook Marketplace, signs on the property), the faster it sells.',
+        a: 'List on CheapLandBuy.com with clear photos, a plain description, and a price you can explain. Offer owner financing if you are willing to take payments yourself. Price against recent sales of similar parcels, and answer inquiries yourself. Listing in more than one place, such as a sign on the property, can also help.',
       },
       {
         q: 'What documents do I need to sell land?',
@@ -282,7 +282,7 @@ const FAQ_CATEGORIES = [
       },
       {
         q: 'Can I sell land without a real estate agent?',
-        a: 'Yes. Selling land by owner (FSBO) is very common. You list the property, field inquiries, and hire a title company or real estate attorney to handle closing. This saves you the 5–10% commission a land broker would charge. Platforms like CheapLandBuy.com make it easy to list directly and reach thousands of buyers.',
+        a: 'Yes. Selling land by owner is common. You list the property, answer inquiries, and hire a title company or real estate attorney to handle closing. CheapLandBuy.com lets you post the listing yourself and have buyers contact you directly. There is no listing fee and no commission from this site.',
       },
       {
         q: 'How long does it take to sell land?',
@@ -408,7 +408,7 @@ export default function FaqPage() {
         <div className="mt-16 bg-brand-800 rounded-2xl p-8 text-center text-white">
           <div className="text-3xl mb-3">🏕️</div>
           <h3 className="text-xl font-bold mb-2">Ready to Find Your Land?</h3>
-          <p className="text-white/65 text-sm mb-6">Browse thousands of affordable listings across all 50 states — ranch land, hunting land, farmland, waterfront, and more.</p>
+          <p className="text-white/65 text-sm mb-6">Browse land for sale across all 50 states — ranch land, hunting land, farmland, waterfront, and more.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/listings" className="bg-gold text-brand-900 font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
               Browse Land Listings →

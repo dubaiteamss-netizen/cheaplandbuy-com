@@ -105,8 +105,8 @@ function buildWelcomeEmail(name: string): string {
               <tr>
                 <td width="33%" align="center"
                   style="background:#EDF4FF;border-radius:10px;padding:16px 8px;margin:4px;">
-                  <div style="font-size:22px;font-weight:800;color:#0C4A8F;">50,000+</div>
-                  <div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;">Monthly Buyers</div>
+                  <div style="font-size:22px;font-weight:800;color:#0C4A8F;">50</div>
+                  <div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;">States</div>
                 </td>
                 <td width="2%" />
                 <td width="33%" align="center"
@@ -117,8 +117,8 @@ function buildWelcomeEmail(name: string): string {
                 <td width="2%" />
                 <td width="33%" align="center"
                   style="background:#EDF4FF;border-radius:10px;padding:16px 8px;">
-                  <div style="font-size:22px;font-weight:800;color:#0C4A8F;">48 hrs</div>
-                  <div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;">First Inquiry</div>
+                  <div style="font-size:22px;font-weight:800;color:#0C4A8F;">0%</div>
+                  <div style="font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;">Commission</div>
                 </td>
               </tr>
             </table>
@@ -155,7 +155,7 @@ function buildWelcomeEmail(name: string): string {
                 <td style="padding-left:12px;">
                   <div style="font-weight:700;color:#1A2744;font-size:14px;">Buyers find your land</div>
                   <div style="color:#718096;font-size:13px;margin-top:2px;">
-                    Your listing shows up in search immediately after approval.
+                    Your listing is public as soon as you submit it.
                   </div>
                 </td>
               </tr>

@@ -4,13 +4,14 @@ import HeroSlider from '../components/HeroSlider';
 import AnimateIn from '../components/AnimateIn';
 export const dynamic = 'force-dynamic'; // Skip static generation to avoid build-time Supabase errors
 
-import { createServerSupabaseClient } from '../lib/supabase-server';
+import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../lib/supabase-server';
 import { mockListings } from '../lib/mock-listings';
 import { LAND_TYPES } from '../types';
 import { BLOG_POSTS } from '../lib/blog-data';
 import { Users, TrendingUp, Shield, ChevronRight, Star, Zap, DollarSign, Globe } from 'lucide-react';
 
 async function getFeaturedListings() {
+  if (!isSupabaseConfigured()) return mockListings.slice(0, 6);
   try {
     const supabase = createServerSupabaseClient();
     const { data } = await supabase
@@ -19,9 +20,10 @@ async function getFeaturedListings() {
       .eq('status', 'active')
       .order('created_at', { ascending: false })
       .limit(6);
-    if (data && data.length > 0) return data;
-  } catch {}
-  return mockListings.slice(0, 6);
+    return (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
+  } catch {
+    return [];
+  }
 }
 
 export const metadata = {
@@ -39,7 +41,7 @@ const homepageJsonLd = {
       name: 'CheapLandBuy.com',
       url: 'https://cheaplandbuy.com',
       logo: 'https://cheaplandbuy.com/logo.png',
-      contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'hello@cheaplandbuy.com' },
+      contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'support@cheaplandbuy.com' },
       sameAs: [],
     },
     {
@@ -58,9 +60,9 @@ const homepageJsonLd = {
       '@type': 'FAQPage',
       mainEntity: [
         { '@type': 'Question', name: 'How do I buy cheap land in the USA?', acceptedAnswer: { '@type': 'Answer', text: 'Browse CheapLandBuy.com to find affordable land listings in all 50 states. Filter by state, land type, price, and acreage. Look for owner-financed properties to skip bank approval, and always check zoning, road access, and parcel taxes before making an offer.' } },
-        { '@type': 'Question', name: 'What is the cheapest state to buy land in?', acceptedAnswer: { '@type': 'Answer', text: 'New Mexico, Arizona, Arkansas, Wyoming, and West Virginia consistently offer the lowest price per acre. CheapLandBuy.com lists affordable parcels starting under $1,000 per acre in these states.' } },
+        { '@type': 'Question', name: 'What is the cheapest state to buy land in?', acceptedAnswer: { '@type': 'Answer', text: 'New Mexico, Arizona, Arkansas, Wyoming, and West Virginia often have some of the lowest prices per acre. Compare the listings on CheapLandBuy.com and confirm price, access, and zoning before you make an offer.' } },
         { '@type': 'Question', name: 'Can I buy land with owner financing?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Many listings on CheapLandBuy.com offer owner financing — you pay the seller monthly with no bank required. It is ideal for buyers with limited credit history. Look for the green Owner Financing badge on listings.' } },
-        { '@type': 'Question', name: 'How do I sell my land online?', acceptedAnswer: { '@type': 'Answer', text: 'Create a free account on CheapLandBuy.com and post your listing in minutes. Add photos, description, parcel number, and price. Toggle owner financing on to get 3x more inquiries. Your listing goes live immediately.' } },
+        { '@type': 'Question', name: 'How do I sell my land online?', acceptedAnswer: { '@type': 'Answer', text: 'Create a free account on CheapLandBuy.com and post your listing in minutes. Add photos, description, parcel number, and price. Your listing goes live as soon as you submit it.' } },
         { '@type': 'Question', name: 'How much does an acre of land cost in the United States?', acceptedAnswer: { '@type': 'Answer', text: 'Raw rural land can cost $500–$3,000 per acre in affordable states. Agricultural Midwest land averages $5,000–$15,000 per acre. Residential lots near cities run $20,000–$100,000+ per acre. Waterfront and mountain land commands premium prices.' } },
         { '@type': 'Question', name: 'What is raw land?', acceptedAnswer: { '@type': 'Answer', text: 'Raw land is undeveloped property with no utilities, roads, or structures. It is the cheapest type of land to buy and is ideal for hunting, camping, future building, or long-term investment.' } },
         { '@type': 'Question', name: 'Is buying land a good investment?', acceptedAnswer: { '@type': 'Answer', text: 'Land is one of the most reliable long-term investments — it cannot be manufactured, never depreciates, and appreciates over time especially near growing metros. Rural land appreciates 3–7% annually on average and provides inflation protection.' } },
@@ -94,21 +96,21 @@ export default async function HomePage() {
                 <div className="text-2xl sm:text-3xl flex-shrink-0 animate-bounce" style={{ animationDuration: '2.5s' }}>📢</div>
                 <div>
                   <div className="inline-flex items-center gap-2 mb-0.5">
-                    <span className="bg-gold text-brand-900 text-xs font-black px-2.5 py-0.5 rounded-full">COMING SOON</span>
+                    <span className="bg-gold text-brand-900 text-xs font-black px-2.5 py-0.5 rounded-full">LISTINGS ARE OPEN</span>
                   </div>
                   <h3 className="text-sm sm:text-base font-extrabold text-brand-900 leading-snug">
-                    Public Listings Launch June 30, 2026
+                    Browse land for sale, or list yours free
                   </h3>
                   <p className="text-brand-600 text-xs sm:text-sm mt-0.5">
-                    Zero fees. Zero commission. Forever.
+                    Zero fees. Zero commission. A listing is public as soon as you submit it.
                   </p>
                 </div>
               </div>
               <Link 
-                href="/auth/register" 
+                href="/listings" 
                 className="flex-shrink-0 bg-gold hover:bg-gold/90 text-brand-900 font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-xs sm:text-sm whitespace-nowrap"
               >
-                Join Waitlist →
+                Browse Land →
               </Link>
             </div>
           </div>
@@ -191,7 +193,7 @@ export default async function HomePage() {
                   🔥 Just Listed
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight">Latest Land Listings</h2>
-                <p className="text-brand-400 text-sm mt-1">Fresh properties from verified sellers across the USA</p>
+                <p className="text-brand-400 text-sm mt-1">Land currently posted by sellers on CheapLandBuy.com</p>
               </div>
               <Link href="/listings" className="hidden sm:flex items-center gap-1 text-brand-600 hover:text-brand-700 font-semibold text-sm whitespace-nowrap">
                 View All <ChevronRight size={16} />
@@ -223,8 +225,8 @@ export default async function HomePage() {
             <AnimateIn>
               <div className="text-center py-16 bg-white rounded-2xl border border-brand-100 shadow-sm">
                 <p className="text-5xl mb-3">🌾</p>
-                <h3 className="font-bold text-brand-800 text-lg mb-2">Listings Coming Soon</h3>
-                <p className="text-brand-400 text-sm mb-6">Be the first to list your land on CheapLandBuy.com</p>
+                <h3 className="font-bold text-brand-800 text-lg mb-2">No listings to show yet</h3>
+                <p className="text-brand-400 text-sm mb-6">When a seller posts land, it appears here right away.</p>
                 <Link href="/auth/register" className="btn-primary">List Your Land Free →</Link>
               </div>
             </AnimateIn>
@@ -384,15 +386,15 @@ export default async function HomePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateIn>
             <div className="text-center mb-10">
-              <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Trusted Platform</span>
+              <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">The Marketplace</span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Why Buyers & Sellers Choose Us</h2>
             </div>
           </AnimateIn>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {[
-              { icon: <Shield size={26} />, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100',   title: 'Verified Sellers',    desc: 'Every seller reviewed before listings go live.' },
-              { icon: <Users size={26} />,  color: 'text-purple-600', bg: 'bg-purple-50 border-purple-100', title: 'Huge Buyer Pool',    desc: '50,000+ active buyers searching every month.' },
-              { icon: <TrendingUp size={26} />, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', title: 'Fast Sales', desc: 'Most listings get inquiries within 48 hours.' },
+              { icon: <Shield size={26} />, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100',   title: 'You Deal Directly',    desc: 'Buyers and sellers message each other. We are not the broker.' },
+              { icon: <Users size={26} />,  color: 'text-purple-600', bg: 'bg-purple-50 border-purple-100', title: 'Search That Fits',    desc: 'Filter by state, land type, price, and acreage.' },
+              { icon: <TrendingUp size={26} />, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', title: 'Live Immediately', desc: 'A new listing is public as soon as the seller submits it.' },
               { icon: <Star size={26} />,   color: 'text-gold', bg: 'bg-amber-50 border-amber-100',   title: 'Owner Financing',     desc: 'Buy land with no bank — pay the seller directly.' },
             ].map((f, i) => (
               <AnimateIn key={f.title} delay={i * 80}>
@@ -424,7 +426,7 @@ export default async function HomePage() {
               Have Land to Sell?
             </h2>
             <p className="text-white/75 text-base sm:text-lg mb-8 leading-relaxed">
-              Join thousands of sellers reaching motivated buyers every day across all 50 states.
+              Post your land and buyers can contact you directly. Listing is free in every state.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/register" className="btn-gold text-base px-8 py-3.5">

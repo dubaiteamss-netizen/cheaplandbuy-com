@@ -2,8 +2,7 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '../../../lib/supabase-server';
-import { MOCK_AGENTS, type AgentProfile, formatPrice } from '../../../lib/mock-agents';
-import { mockListings } from '../../../lib/mock-listings';
+import { type AgentProfile, formatPrice } from '../../../lib/mock-agents';
 import ListingCard from '../../../components/ListingCard';
 import {
   BadgeCheck, MapPin, Phone, Globe, Building2,
@@ -31,7 +30,7 @@ async function getAgent(id: string): Promise<AgentProfile | null> {
       .single();
     if (data) return data as AgentProfile;
   } catch {}
-  return MOCK_AGENTS.find(a => a.id === id) || null;
+  return null;
 }
 
 async function getAgentListings(agentId: string) {
@@ -45,7 +44,7 @@ async function getAgentListings(agentId: string) {
       .limit(6);
     if (data && data.length > 0) return data;
   } catch {}
-  return mockListings.slice(0, 3);
+  return [];
 }
 
 export default async function AgentProfilePage({ params }: { params: { id: string } }) {

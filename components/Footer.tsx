@@ -14,7 +14,7 @@ export default function Footer() {
               <span>CheapLandBuy<span className="text-gold">.com</span></span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-4">
-              America's trusted marketplace for affordable land. Connect buyers and sellers across all 50 states.
+              A direct marketplace for affordable land. Buyers and sellers connect across all 50 states.
             </p>
             <p className="text-white/30 text-xs">© {year} CheapLandBuy.com<br />All rights reserved.</p>
           </div>

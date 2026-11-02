@@ -117,14 +117,14 @@ export default function HeroSlider() {
       {!isAnimSlide && (
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="inline-flex items-center gap-2 bg-white/12 border border-white/25 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
-            🌿 Trusted by 8,000+ Land Buyers Nationwide
+            🌿 Direct from sellers. No commission.
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight mb-5 drop-shadow-lg">
             Find Affordable Land<br />
             <span className="text-gold">Anywhere in America</span>
           </h1>
           <p className="text-white/85 text-base sm:text-xl mb-8 max-w-xl mx-auto">
-            Browse thousands of land listings from verified sellers across all 50 states.
+            Browse land for sale from private sellers across all 50 states.
           </p>
           <Suspense>
             <SearchBar />
