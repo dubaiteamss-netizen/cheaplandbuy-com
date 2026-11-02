@@ -1,21 +1,20 @@
 import Link from 'next/link';
-import ListingCard from '../components/ListingCard';
-import HeroSlider from '../components/HeroSlider';
+import { Suspense } from 'react';
 import AnimateIn from '../components/AnimateIn';
+import MarketBoard from '../components/MarketBoard';
+import SearchBar from '../components/SearchBar';
 export const dynamic = 'force-dynamic'; // Skip static generation to avoid build-time Supabase errors
 
 import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../lib/supabase-server';
 import { mockListings } from '../lib/mock-listings';
-import { LAND_TYPES } from '../types';
 import { BLOG_POSTS } from '../lib/blog-data';
 import { ChevronRight } from 'lucide-react';
-import { isPremiumListing } from '../lib/map-points';
 
 async function getFeaturedListings() {
   if (!isSupabaseConfigured()) {
     return [...mockListings]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 7);
+      .slice(0, 8);
   }
   try {
     const supabase = createServerSupabaseClient();
@@ -24,7 +23,7 @@ async function getFeaturedListings() {
       .select('*')
       .eq('status', 'active')
       .order('created_at', { ascending: false })
-      .limit(7);
+      .limit(8);
     return (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
   } catch {
     return [];
@@ -86,79 +85,35 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }} />
       {/* ── HERO ── */}
-      <HeroSlider />
-
-      <section className="bg-white border-b border-brand-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-5">
-          {[
-            { href: '/listings', title: 'Buy land', text: 'Search by place, price, and acres' },
-            { href: '/sell', title: 'Sell land', text: 'List a parcel and hear from buyers' },
-            { href: '/listings?finance=1', title: 'Financing', text: 'Parcels with owner financing' },
-            { href: '/saved', title: 'Saved', text: 'Keep parcels you want to revisit' },
-            { href: '/blog', title: 'Guides', text: 'Read before you make an offer' },
-          ].map((item) => (
-            <Link key={item.title} href={item.href} className="px-4 py-5 border-brand-100 border-b lg:border-b-0 lg:border-r last:border-0 hover:bg-brand-50">
-              <p className="text-blue font-semibold">{item.title}</p>
-              <p className="text-sm text-brand-500 mt-1">{item.text}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="py-8 sm:py-10 border-b border-brand-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between gap-4 mb-5">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.22em] text-brand-400">On the market</p>
-              <h2 className="text-3xl sm:text-4xl text-brand-900 mt-2">Land listed right now</h2>
-            </div>
-            <Link href="/listings" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
-              All listings <ChevronRight size={16} />
-            </Link>
+      <section className="bg-blue text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <p className="text-teal text-xs font-semibold uppercase tracking-[0.22em]">Land marketplace</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl text-white max-w-3xl">Search land for sale.</h1>
+          <p className="mt-3 max-w-2xl text-white/80">Price, acres, and a map. No broker fee. A new parcel is public as soon as the seller posts it.</p>
+          <div className="mt-6">
+            <Suspense>
+              <SearchBar />
+            </Suspense>
           </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
-            <Link href="/listings" className="flex-shrink-0 bg-blue text-white px-3 py-1.5 text-sm">All land</Link>
-            {LAND_TYPES.slice(0, 8).map(t => (
-              <Link key={t} href={`/listings?type=${encodeURIComponent(t)}`}
-                className="flex-shrink-0 bg-white text-brand-700 border border-brand-200 px-3 py-1.5 text-sm whitespace-nowrap hover:border-brand-700">
-                {t}
-              </Link>
-            ))}
-          </div>
-
-          {featured.length > 0 ? (
-            <div className="space-y-5">
-              {(() => {
-                const lead = featured.find((l: any) => isPremiumListing(l));
-                const rest = featured.filter((l: any) => l !== lead);
-                return (
-                  <>
-                    {lead && <ListingCard listing={lead} variant="premium" premium />}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {rest.map((l: any) => (
-                        <ListingCard key={l.id} listing={l} premium={isPremiumListing(l)} />
-                      ))}
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-white border border-brand-100">
-              <h3 className="text-brand-800 text-2xl mb-2">No listings to show yet</h3>
-              <p className="text-brand-400 text-sm mb-6">When a seller posts land, it appears here right away.</p>
-              <Link href="/auth/register" className="btn-primary">List your land</Link>
-            </div>
-          )}
-
-          <div className="mt-6 sm:hidden text-center">
-            <Link href="/listings" className="btn-secondary inline-flex items-center gap-1 text-sm">
-              All listings <ChevronRight size={16} />
-            </Link>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm">
+            <Link href="/listings" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Buy</Link>
+            <Link href="/sell" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Sell</Link>
+            <Link href="/listings?finance=1" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Owner financing</Link>
+            <Link href="/saved" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Saved</Link>
+            <Link href="/blog" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Guides</Link>
           </div>
         </div>
       </section>
+
+      {featured.length > 0 ? (
+        <MarketBoard listings={featured} />
+      ) : (
+        <div className="text-center py-16 bg-white border-b border-brand-100">
+          <h2 className="text-brand-800 text-2xl mb-2">No listings to show yet</h2>
+          <p className="text-brand-400 text-sm mb-6">When a seller posts land, it appears here right away.</p>
+          <Link href="/auth/register" className="btn-primary">List your land</Link>
+        </div>
+      )}
 
       <div className="bg-white border-b border-brand-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4">
