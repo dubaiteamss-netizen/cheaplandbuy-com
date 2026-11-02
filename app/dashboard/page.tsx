@@ -143,7 +143,7 @@ export default function DashboardPage() {
               <p className="text-6xl mb-4">🌾</p>
               <h3 className="font-bold text-brand-800 text-xl mb-2">No listings yet</h3>
               <p className="text-brand-400 mb-8 text-sm max-w-sm mx-auto">
-                Post your first land listing and start getting buyer inquiries within 48 hours.
+                Post your first land listing. It is public as soon as you submit it.
               </p>
               <Link href="/dashboard/new-listing" className="btn-primary">
                 Post Your First Listing →

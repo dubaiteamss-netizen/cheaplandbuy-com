@@ -249,12 +249,12 @@ export default function NewListingPage() {
                   placeholder="Paste YouTube or Vimeo link — e.g. https://youtube.com/watch?v=..."
                   type="url"
                 />
-                <p className="text-xs text-brand-400 mt-1">Listings with a video tour get significantly more inquiries.</p>
+                <p className="text-xs text-brand-400 mt-1">Optional. A video gives buyers a closer look at the land.</p>
               </div>
               <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
                 <div>
                   <p className="font-bold text-green-800">💰 Owner Financing Available</p>
-                  <p className="text-green-600 text-xs mt-0.5">Listings with owner financing get 3x more inquiries</p>
+                  <p className="text-green-600 text-xs mt-0.5">Turn this on only if you will finance the sale yourself.</p>
                 </div>
                 <button type="button"
                   onClick={() => setOwnerFinancing(v => !v)}
@@ -341,7 +341,7 @@ export default function NewListingPage() {
                   <Upload size={28} className="mx-auto text-brand-300 mb-2" />
                   <p className="font-semibold text-brand-600 text-sm">Click to upload photos</p>
                   <p className="text-xs text-brand-400 mt-1">JPG or PNG, up to 10MB each</p>
-                  <p className="text-xs text-brand-400">Listings with photos get 5× more inquiries</p>
+                  <p className="text-xs text-brand-400">Photos help buyers see the parcel before they write.</p>
                   <input ref={fileRef} type="file" accept="image/*" multiple className="hidden"
                     onChange={handlePhotoSelect} />
                 </div>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import ListingCard from '../../components/ListingCard';
 import MobileFilterSheet from '../../components/MobileFilterSheet';
-import { createServerSupabaseClient } from '../../lib/supabase-server';
+import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../../lib/supabase-server';
 import { mockListings } from '../../lib/mock-listings';
 import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../../types';
 import { SlidersHorizontal, MapPin, Search } from 'lucide-react';
@@ -33,6 +33,7 @@ const TYPE_ICONS: Record<string, string> = {
 };
 
 async function getListings(sp: Props['searchParams']) {
+  if (!isSupabaseConfigured()) return filterMockListings(sp);
   try {
     const supabase = createServerSupabaseClient();
     let query = supabase.from('listings').select('*', { count: 'exact' }).eq('status', 'active');
@@ -59,8 +60,14 @@ async function getListings(sp: Props['searchParams']) {
     const per  = 24;
     query = query.order('created_at', { ascending: false }).range((page - 1) * per, page * per - 1);
     const { data, count } = await query;
-    if (data && data.length > 0) return { listings: data, total: count ?? 0 };
-  } catch {}
+    const listings = (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
+    return { listings, total: listings.length };
+  } catch {
+    return { listings: [], total: 0 };
+  }
+}
+
+function filterMockListings(sp: Props['searchParams']) {
   let filtered = [...mockListings];
   if (sp.state) filtered = filtered.filter(l => l.state === sp.state);
   if (sp.type)  filtered = filtered.filter(l => l.type === sp.type);

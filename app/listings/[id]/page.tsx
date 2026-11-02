@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createServerSupabaseClient } from '../../../lib/supabase-server';
+import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../../../lib/supabase-server';
 import { mockListings } from '../../../lib/mock-listings';
 import ContactForm from '../../../components/ContactForm';
 import ListingCard from '../../../components/ListingCard';
@@ -25,23 +25,30 @@ function getEmbedUrl(url: string): string | null {
 }
 
 async function getListing(id: string) {
+  if (!isSupabaseConfigured()) return mockListings.find(l => l.id === id) ?? null;
   try {
     const supabase = createServerSupabaseClient();
-    const { data } = await supabase.from('listings').select('*').eq('id', id).single();
-    if (data) return data;
-  } catch {}
-  return mockListings.find(l => l.id === id) ?? null;
+    const { data } = await supabase.from('listings').select('*').eq('id', id).maybeSingle();
+    if (!data || !isPublishedListingId(String(data.id))) return null;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 async function getSimilar(id: string, state: string, type: string) {
+  if (!isSupabaseConfigured()) {
+    return mockListings.filter(l => l.id !== id && (l.state === state || l.type === type)).slice(0, 3);
+  }
   try {
     const supabase = createServerSupabaseClient();
     const { data } = await supabase
       .from('listings').select('*').eq('status', 'active')
       .eq('state', state).neq('id', id).limit(3);
-    if (data && data.length > 0) return data;
-  } catch {}
-  return mockListings.filter(l => l.id !== id && (l.state === state || l.type === type)).slice(0, 3);
+    return (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {

@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { createServerSupabaseClient } from '../../lib/supabase-server';
-import { MOCK_AGENTS, type AgentProfile, formatPrice } from '../../lib/mock-agents';
+import { type AgentProfile, formatPrice } from '../../lib/mock-agents';
 import { Search, MapPin, BadgeCheck, Building2, ChevronRight, Phone, Globe } from 'lucide-react';
 import AgentSearch from './AgentSearch';
 
 export const metadata = {
   title: 'Find a Land Specialist — Real Estate Agents & Land Brokers | CheapLandBuy.com',
-  description: 'Find licensed land specialists, real estate agents, and land brokers near you. Browse by state, view listings count, price range, and contact agents directly on CheapLandBuy.com.',
+  description: 'CheapLandBuy.com is a direct land marketplace. Agent profiles appear here only after a real agent creates an account. Buyers otherwise contact sellers on each listing.',
   alternates: { canonical: 'https://cheaplandbuy.com/find-agent' },
 };
 
@@ -21,11 +21,10 @@ async function getAgents(state?: string): Promise<AgentProfile[]> {
       .eq('role', 'agent');
     if (state) query = query.eq('location_state', state);
     const { data } = await query.limit(50);
-    if (data && data.length > 0) return data as AgentProfile[];
-  } catch {}
-  // Fall back to mock agents
-  if (state) return MOCK_AGENTS.filter(a => a.location_state === state);
-  return MOCK_AGENTS;
+    return (data ?? []) as AgentProfile[];
+  } catch {
+    return [];
+  }
 }
 
 const US_STATES = [
@@ -131,8 +130,8 @@ export default async function FindAgentPage({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Land Specialists & Agents on CheapLandBuy.com',
-    description: 'Licensed real estate agents and land brokers specializing in US land sales',
+    name: 'Agent profiles on CheapLandBuy.com',
+    description: 'Agent profiles published by people who created an account. Buyers can also contact sellers directly on each listing.',
     numberOfItems: agents.length,
     itemListElement: agents.map((a, i) => ({
       '@type': 'ListItem',
@@ -155,13 +154,13 @@ export default async function FindAgentPage({
       <div className="bg-brand-800 border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
-            <BadgeCheck size={13} /> Licensed & Verified Specialists
+            <BadgeCheck size={13} /> Direct marketplace
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 leading-tight">
-            Find a Land Specialist
+            Land Agent Profiles
           </h1>
           <p className="text-white/65 text-base sm:text-lg mb-8">
-            Explore top land brokers &amp; agents near you
+            Profiles show up here only when an agent creates an account. Most buyers contact the seller on the listing.
           </p>
 
           {/* Search form */}
@@ -178,7 +177,7 @@ export default async function FindAgentPage({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-extrabold text-brand-900">
-              {stateFilter ? `Land Specialists in ${stateFilter}` : 'Find Trusted Land Brokers & Agents'}
+              {stateFilter ? `Agent profiles in ${stateFilter}` : 'Agent profiles'}
             </h2>
             <p className="text-brand-400 text-sm mt-0.5">{agents.length} specialists found</p>
           </div>
@@ -199,9 +198,9 @@ export default async function FindAgentPage({
         ) : (
           <div className="text-center py-16 bg-brand-50 rounded-2xl border border-brand-100">
             <p className="text-5xl mb-3">🏕️</p>
-            <h3 className="font-bold text-brand-800 text-lg mb-2">No agents found in {stateFilter}</h3>
-            <p className="text-brand-400 text-sm mb-6">Try searching a different state or browse all agents</p>
-            <Link href="/find-agent" className="btn-primary">Browse All Agents</Link>
+            <h3 className="font-bold text-brand-800 text-lg mb-2">No agent profiles yet</h3>
+            <p className="text-brand-400 text-sm mb-6 max-w-md mx-auto">Buyers and sellers deal with each other directly. This directory stays empty until a real agent account is created.</p>
+            <Link href="/listings" className="btn-primary">Browse Land Instead</Link>
           </div>
         )}
 
@@ -210,7 +209,7 @@ export default async function FindAgentPage({
           <p className="text-gold text-xs font-bold uppercase tracking-widest mb-2">Are You an Agent?</p>
           <h3 className="text-2xl font-extrabold text-white mb-3">List Your Agency Profile Free</h3>
           <p className="text-white/65 text-sm mb-6 max-w-lg mx-auto">
-            Join CheapLandBuy.com as a verified land specialist. Get your license number displayed, manage listings, and connect directly with motivated buyers.
+            If you are a licensed agent, you can create an account and publish your own profile. CheapLandBuy.com does not review licenses, and buyers can still contact sellers directly.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/auth/register?role=agent" className="btn-gold px-8 py-3">
