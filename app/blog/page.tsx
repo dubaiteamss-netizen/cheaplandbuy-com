@@ -134,7 +134,7 @@ export default function BlogIndexPage() {
           <h3 className="text-xl font-bold mb-2">Ready to Find Your Land?</h3>
           <p className="text-white/65 text-sm mb-6">Browse land for sale from private sellers across all 50 states.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/listings" className="bg-gold text-brand-900 font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+            <Link href="/listings" className="bg-teal text-white font-bold px-6 py-3 rounded-xl hover:bg-teal-dark transition-colors">
               Browse Listings →
             </Link>
             <Link href="/faq" className="bg-white/10 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/20 transition-colors border border-white/20">

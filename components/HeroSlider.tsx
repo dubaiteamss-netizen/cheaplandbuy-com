@@ -30,7 +30,7 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-brand-900" style={{ minHeight: 680 }}>
+    <section className="relative overflow-hidden bg-brand-900" style={{ minHeight: 560 }}>
       {SLIDES.map((slide, index) => (
         <div
           key={slide.url}

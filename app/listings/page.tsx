@@ -2,12 +2,12 @@ export const dynamic = 'force-dynamic';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import ListingCard from '../../components/ListingCard';
+import ListingFilters from '../../components/ListingFilters';
+import MarketBoard from '../../components/MarketBoard';
 import MobileFilterSheet from '../../components/MobileFilterSheet';
 import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../../lib/supabase-server';
 import { mockListings } from '../../lib/mock-listings';
-import { US_STATES, LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../../types';
-import { SlidersHorizontal, MapPin, Search } from 'lucide-react';
+import { LAND_TYPES, PRICE_RANGES, ACREAGE_OPTIONS, PPA_OPTIONS } from '../../types';
 
 export const metadata: Metadata = {
   title: 'Browse Land for Sale Across America',
@@ -16,21 +16,30 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams: { q?: string; state?: string; type?: string; price?: string; acres?: string; ppa?: string; page?: string };
+  searchParams: { q?: string; state?: string; type?: string; price?: string; acres?: string; ppa?: string; sort?: string; finance?: string; page?: string };
 }
 
-const TYPE_ICONS: Record<string, string> = {
-  'All':              '🌎',
-  'Ranch Land':       '🐄',
-  'Hunting Land':     '🦌',
-  'Residential Lots': '🏡',
-  'Mountain Property':'⛰️',
-  'Wooded Land':      '🌲',
-  'Desert Land':      '🌵',
-  'Farmland':         '🌾',
-  'Commercial':       '🏢',
-  'Recreational':     '⛺',
-};
+const SORTS = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'price-asc', label: 'Price: low to high' },
+  { value: 'price-desc', label: 'Price: high to low' },
+  { value: 'acres', label: 'Largest acreage' },
+] as const;
+
+function sortKey(value?: string) {
+  return SORTS.some(option => option.value === value) ? value! : 'newest';
+}
+
+function applyRange<T>(rows: T[], raw: string | undefined, read: (row: T) => number) {
+  if (!raw) return rows;
+  const [min, max] = raw.split('-').map(Number);
+  return rows.filter(row => {
+    const value = read(row);
+    if (min && value < min) return false;
+    if (max && value > max) return false;
+    return true;
+  });
+}
 
 async function getListings(sp: Props['searchParams']) {
   if (!isSupabaseConfigured()) return filterMockListings(sp);
@@ -56,9 +65,15 @@ async function getListings(sp: Props['searchParams']) {
       if (min) query = query.gte('price_per_acre', min);
       if (max) query = query.lte('price_per_acre', max);
     }
+    if (sp.finance === '1') query = query.eq('owner_financing', true);
     const page = parseInt(sp.page ?? '1');
     const per  = 24;
-    query = query.order('created_at', { ascending: false }).range((page - 1) * per, page * per - 1);
+    const sort = sortKey(sp.sort);
+    if (sort === 'price-asc') query = query.order('price', { ascending: true });
+    else if (sort === 'price-desc') query = query.order('price', { ascending: false });
+    else if (sort === 'acres') query = query.order('acres', { ascending: false });
+    else query = query.order('created_at', { ascending: false });
+    query = query.range((page - 1) * per, page * per - 1);
     const { data, count } = await query;
     const listings = (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
     return { listings, total: listings.length };
@@ -71,20 +86,31 @@ function filterMockListings(sp: Props['searchParams']) {
   let filtered = [...mockListings];
   if (sp.state) filtered = filtered.filter(l => l.state === sp.state);
   if (sp.type)  filtered = filtered.filter(l => l.type === sp.type);
-  if (sp.q)     filtered = filtered.filter(l =>
-    l.title.toLowerCase().includes(sp.q!.toLowerCase()) ||
-    l.state.toLowerCase().includes(sp.q!.toLowerCase()));
-  // Client-side PPA filter for mock data
-  if (sp.ppa) {
-    const [min, max] = sp.ppa.split('-').map(Number);
-    filtered = filtered.filter(l => {
-      const ppa = l.acres > 0 ? l.price / l.acres : 0;
-      if (min && ppa < min) return false;
-      if (max && ppa > max) return false;
-      return true;
-    });
+  if (sp.q) {
+    const needle = sp.q.toLowerCase();
+    filtered = filtered.filter(l =>
+      l.title.toLowerCase().includes(needle) ||
+      l.description.toLowerCase().includes(needle) ||
+      l.county.toLowerCase().includes(needle) ||
+      l.state.toLowerCase().includes(needle));
   }
-  return { listings: filtered, total: filtered.length };
+  if (sp.finance === '1') {
+    filtered = filtered.filter(l => l.owner_financing || l.features?.includes('Owner Financing') || l.features?.includes('Seller Financing'));
+  }
+  filtered = applyRange(filtered, sp.price, l => l.price);
+  filtered = applyRange(filtered, sp.acres, l => l.acres);
+  filtered = applyRange(filtered, sp.ppa, l => (l.acres > 0 ? l.price / l.acres : 0));
+  const sort = sortKey(sp.sort);
+  filtered.sort((a, b) => {
+    if (sort === 'price-asc') return a.price - b.price;
+    if (sort === 'price-desc') return b.price - a.price;
+    if (sort === 'acres') return b.acres - a.acres;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+  const page = Math.max(1, parseInt(sp.page ?? '1') || 1);
+  const per = 24;
+  const start = (page - 1) * per;
+  return { listings: filtered.slice(start, start + per), total: filtered.length };
 }
 
 export default async function ListingsPage({ searchParams }: Props) {
@@ -96,10 +122,15 @@ export default async function ListingsPage({ searchParams }: Props) {
   const activeFilters = [
     searchParams.state && { key: 'state', label: searchParams.state },
     searchParams.type  && { key: 'type',  label: searchParams.type },
-    searchParams.price && { key: 'price', label: `Price: ${searchParams.price}` },
-    searchParams.acres && { key: 'acres', label: `Acres: ${searchParams.acres}` },
-    searchParams.ppa   && { key: 'ppa',   label: `$/Ac: ${searchParams.ppa}` },
+    searchParams.price && { key: 'price', label: PRICE_RANGES.find(r => r.value === searchParams.price)?.label ?? searchParams.price },
+    searchParams.acres && { key: 'acres', label: ACREAGE_OPTIONS.find(r => r.value === searchParams.acres)?.label ?? searchParams.acres },
+    searchParams.ppa   && { key: 'ppa',   label: PPA_OPTIONS.find(r => r.value === searchParams.ppa)?.label ?? searchParams.ppa },
     searchParams.q     && { key: 'q',     label: `"${searchParams.q}"` },
+    searchParams.finance === '1' && { key: 'finance', label: 'Owner financing' },
+    searchParams.sort && searchParams.sort !== 'newest' && {
+      key: 'sort',
+      label: SORTS.find(option => option.value === searchParams.sort)?.label ?? 'Sorted',
+    },
   ].filter(Boolean) as { key: string; label: string }[];
 
   function removeFilter(key: string) {
@@ -109,189 +140,115 @@ export default async function ListingsPage({ searchParams }: Props) {
     return '/listings' + (qs ? '?' + qs : '');
   }
 
+  const currentSort = sortKey(searchParams.sort);
+  const heading = searchParams.state
+    ? `Land for sale in ${searchParams.state}`
+    : searchParams.type
+      ? `${searchParams.type} for sale`
+      : searchParams.q
+        ? `Results for “${searchParams.q}”`
+        : 'Land for sale';
+
+  function typeHref(type?: string) {
+    const params = new URLSearchParams();
+    if (searchParams.q) params.set('q', searchParams.q);
+    if (searchParams.state) params.set('state', searchParams.state);
+    if (type && searchParams.type !== type) params.set('type', type);
+    if (searchParams.price) params.set('price', searchParams.price);
+    if (searchParams.acres) params.set('acres', searchParams.acres);
+    if (searchParams.ppa) params.set('ppa', searchParams.ppa);
+    if (searchParams.finance) params.set('finance', searchParams.finance);
+    if (currentSort !== 'newest') params.set('sort', currentSort);
+    const qs = params.toString();
+    return '/listings' + (qs ? `?${qs}` : '');
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-
-      {/* ── MOBILE HEADER ── */}
-      <div className="md:hidden bg-white border-b border-brand-100 px-4 pt-4 pb-3 space-y-3">
-        <form method="GET" action="/listings" className="flex gap-2">
-          <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 shadow-sm">
-            <Search size={16} className="text-brand-400 flex-shrink-0" />
-            <input
-              name="q"
-              defaultValue={searchParams.q ?? ''}
-              placeholder="Search land..."
-              className="flex-1 text-base text-brand-800 bg-transparent outline-none placeholder:text-brand-300"
-            />
+    <div className="min-h-screen" style={{ backgroundColor: 'rgb(var(--canvas))' }}>
+      <div className="bg-white border-b border-brand-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+          <div className="flex items-end justify-between gap-4 mb-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-brand-400 mb-1">Marketplace</p>
+              <h1 className="text-brand-900 text-3xl sm:text-4xl">{heading}</h1>
+            </div>
+            <p className="text-sm text-brand-500 whitespace-nowrap pb-1">
+              {total.toLocaleString()} {total === 1 ? 'parcel' : 'parcels'}
+            </p>
           </div>
-          <Suspense>
-            <MobileFilterSheet
-              current={searchParams}
-              totalActive={activeFilters.length}
-            />
-          </Suspense>
-        </form>
-        <p className="text-brand-400 text-sm">
-          {total.toLocaleString()} {total === 1 ? 'property' : 'properties'} found
-          {searchParams.state ? ` in ${searchParams.state}` : ''}
-        </p>
-      </div>
 
-      {/* ── MOBILE TYPE CHIPS ── */}
-      <div className="md:hidden bg-white border-b border-gray-100 shadow-sm">
-        <div className="flex gap-2 px-4 py-2.5 overflow-x-auto scrollbar-hide">
-          <Link
-            href={searchParams.q ? `/listings?q=${searchParams.q}` : '/listings'}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all
-              ${!searchParams.type
-                ? 'bg-brand-700 text-white border-brand-700'
-                : 'bg-white text-brand-600 border-brand-200'
+          <ListingFilters current={{ ...searchParams, sort: currentSort }} />
+        </div>
+
+        <div className="border-t border-brand-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 py-2.5 overflow-x-auto scrollbar-hide">
+            <Link
+              href={typeHref()}
+              className={`flex-shrink-0 px-3 py-1.5 text-sm border ${
+                !searchParams.type ? 'bg-blue text-white border-blue' : 'bg-white text-brand-700 border-brand-200'
               }`}
-          >
-            {TYPE_ICONS['All']} All
-          </Link>
-          {LAND_TYPES.map(t => {
-            const params = new URLSearchParams({ ...searchParams, type: t } as any);
-            if (searchParams.type === t) params.delete('type');
-            return (
+            >
+              All land
+            </Link>
+            {LAND_TYPES.map(t => (
               <Link
                 key={t}
-                href={`/listings?${params.toString()}`}
-                className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all whitespace-nowrap
-                  ${searchParams.type === t
-                    ? 'bg-brand-700 text-white border-brand-700'
-                    : 'bg-white text-brand-600 border-brand-200'
-                  }`}
+                href={typeHref(t)}
+                className={`flex-shrink-0 px-3 py-1.5 text-sm border whitespace-nowrap ${
+                  searchParams.type === t ? 'bg-blue text-white border-blue' : 'bg-white text-brand-700 border-brand-200'
+                }`}
               >
-                {TYPE_ICONS[t]} {t}
+                {t}
               </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── DESKTOP HEADER ── */}
-      <div className="hidden md:block bg-white border-b border-brand-100 py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-[11px] uppercase tracking-[0.22em] text-brand-400 mb-3">Marketplace</p>
-          <h1 className="text-brand-900 text-4xl sm:text-5xl mb-2">
-            {searchParams.state ? `Land for Sale in ${searchParams.state}` :
-             searchParams.type  ? `${searchParams.type} for Sale` :
-             searchParams.q     ? `Results for "${searchParams.q}"` :
-             'Browse Land for Sale'}
-          </h1>
-          <p className="text-brand-400 text-sm">
-            {total.toLocaleString()} propert{total === 1 ? 'y' : 'ies'} found
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
-        <div className="flex flex-col lg:flex-row gap-7">
-
-          {/* ── DESKTOP SIDEBAR FILTERS ── */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="card sticky top-4">
-              <div className="flex items-center gap-2 mb-5">
-                <SlidersHorizontal size={16} className="text-brand-500" />
-                <h2 className="font-bold text-brand-900 text-sm">Filter Results</h2>
-              </div>
-              <form method="GET" action="/listings" className="space-y-5">
-                {searchParams.q && <input type="hidden" name="q" value={searchParams.q} />}
-                <div>
-                  <label className="label text-xs">State</label>
-                  <select name="state" defaultValue={searchParams.state ?? ''} className="input text-sm">
-                    <option value="">All States</option>
-                    {US_STATES.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="label text-xs">Land Type</label>
-                  <select name="type" defaultValue={searchParams.type ?? ''} className="input text-sm">
-                    <option value="">All Types</option>
-                    {LAND_TYPES.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="label text-xs">Price Range</label>
-                  <select name="price" defaultValue={searchParams.price ?? ''} className="input text-sm">
-                    <option value="">Any Price</option>
-                    {PRICE_RANGES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="label text-xs">Acreage</label>
-                  <select name="acres" defaultValue={searchParams.acres ?? ''} className="input text-sm">
-                    <option value="">Any Size</option>
-                    {ACREAGE_OPTIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
-                  </select>
-                </div>
-                {/* Price Per Acre — NEW */}
-                <div>
-                  <label className="label text-xs">Price Per Acre</label>
-                  <select name="ppa" defaultValue={searchParams.ppa ?? ''} className="input text-sm">
-                    {PPA_OPTIONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
-                  </select>
-                </div>
-                <button type="submit" className="btn-primary w-full text-sm py-2.5">Apply Filters</button>
-                <Link href="/listings" className="block text-center text-brand-400 hover:text-brand-600 text-xs">Clear all filters</Link>
-              </form>
+            ))}
+            <div className="lg:hidden flex-shrink-0">
+              <Suspense>
+                <MobileFilterSheet current={searchParams} totalActive={activeFilters.length} />
+              </Suspense>
             </div>
-          </aside>
-
-          {/* ── MAIN CONTENT ── */}
-          <div className="flex-1 min-w-0">
-
-            {/* Active filter tags */}
-            {activeFilters.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {activeFilters.map(f => (
-                  <Link key={f.key} href={removeFilter(f.key)}
-                    className="inline-flex items-center gap-1.5 bg-brand-100 text-brand-700 border border-brand-200 px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
-                    {f.label} ✕
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {/* Sort bar — desktop only */}
-            <div className="hidden md:flex items-center justify-between mb-5">
-              <p className="text-sm text-brand-500">
-                Showing <strong>{listings.length}</strong> of <strong>{total}</strong>
-              </p>
-            </div>
-
-            {listings.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
-                  {listings.map((l: any) => <ListingCard key={l.id} listing={l} />)}
-                </div>
-
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-10 mb-4">
-                    {page > 1 && (
-                      <Link href={`/listings?${new URLSearchParams({ ...searchParams, page: String(page - 1) })}`}
-                        className="btn-secondary text-sm px-4 py-2">← Prev</Link>
-                    )}
-                    <span className="text-sm text-brand-500 px-4">Page {page} of {totalPages}</span>
-                    {page < totalPages && (
-                      <Link href={`/listings?${new URLSearchParams({ ...searchParams, page: String(page + 1) })}`}
-                        className="btn-secondary text-sm px-4 py-2">Next →</Link>
-                    )}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-center py-20 bg-white rounded-xl border border-brand-100">
-                <p className="text-5xl mb-4">🔍</p>
-                <h3 className="font-bold text-brand-800 text-xl mb-2">No listings found</h3>
-                <p className="text-brand-400 text-sm mb-6">Try adjusting your filters or search terms</p>
-                <Link href="/listings" className="btn-primary text-sm">Clear Filters</Link>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {activeFilters.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap gap-2">
+          {activeFilters.map(f => (
+            <Link
+              key={f.key}
+              href={removeFilter(f.key)}
+              className="inline-flex items-center gap-1.5 bg-blue/10 text-blue border border-blue/20 px-3 py-1 text-xs font-semibold"
+            >
+              {f.label} <span aria-hidden>×</span>
+            </Link>
+          ))}
+          <Link href="/listings" className="text-xs text-brand-500 underline self-center">Clear all</Link>
+        </div>
+      )}
+
+      {listings.length > 0 ? (
+        <>
+          <MarketBoard listings={listings} />
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 py-8">
+              {page > 1 && (
+                <Link href={`/listings?${new URLSearchParams({ ...searchParams, page: String(page - 1) })}`}
+                  className="btn-secondary text-sm px-4 py-2">Previous</Link>
+              )}
+              <span className="text-sm text-brand-500 px-4">Page {page} of {totalPages}</span>
+              {page < totalPages && (
+                <Link href={`/listings?${new URLSearchParams({ ...searchParams, page: String(page + 1) })}`}
+                  className="btn-secondary text-sm px-4 py-2">Next</Link>
+              )}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="max-w-3xl mx-auto text-center py-20">
+          <h3 className="text-brand-800 text-2xl mb-2">No parcels match these filters</h3>
+          <p className="text-brand-400 text-sm mb-6">Widen the price, acreage, or location and search again.</p>
+          <Link href="/listings" className="btn-primary text-sm">Clear filters</Link>
+        </div>
+      )}
     </div>
   );
 }

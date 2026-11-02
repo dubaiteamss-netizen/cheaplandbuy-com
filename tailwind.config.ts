@@ -26,13 +26,21 @@ const config: Config = {
           DEFAULT: 'rgb(var(--gold) / <alpha-value>)',
           dark:    'rgb(var(--gold-dark) / <alpha-value>)',
         },
+        blue: {
+          DEFAULT: 'rgb(var(--blue) / <alpha-value>)',
+          dark:    'rgb(var(--blue-dark) / <alpha-value>)',
+        },
+        teal: {
+          DEFAULT: 'rgb(var(--teal) / <alpha-value>)',
+          dark:    'rgb(var(--teal-dark) / <alpha-value>)',
+        },
       },
       fontFamily: {
         sans: ['var(--font-outfit)', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['var(--font-display)', 'Georgia', 'serif'],
       },
       boxShadow: {
-        card: '0 10px 30px -18px rgb(var(--brand-900) / 0.45)',
+        card: '0 12px 32px -20px rgb(21 101 192 / 0.35)',
       },
     },
   },

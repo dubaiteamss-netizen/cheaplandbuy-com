@@ -174,7 +174,7 @@ export default function BlogPostPage({ params }: Props) {
           <h3 className="text-lg font-bold mb-2">Start Browsing Land Today</h3>
           <p className="text-white/65 text-sm mb-5">Thousands of affordable listings across all 50 states. Many with owner financing available.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/listings" className="bg-gold text-brand-900 font-bold px-6 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+            <Link href="/listings" className="bg-teal text-white font-bold px-6 py-2.5 rounded-xl hover:bg-teal-dark transition-colors text-sm">
               Browse Listings →
             </Link>
             <Link href="/faq" className="bg-white/10 text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-white/20 transition-colors border border-white/20 text-sm">

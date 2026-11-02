@@ -159,7 +159,7 @@ export default async function AgentProfilePage({ params }: { params: { id: strin
                 </a>
               )}
               <Link href="/contact"
-                className="flex items-center gap-2 bg-gold hover:bg-gold-dark text-brand-900 font-bold px-5 py-2.5 rounded-xl transition-colors text-sm">
+                className="flex items-center gap-2 bg-teal hover:bg-teal-dark text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm">
                 <Mail size={15} /> Send Message
               </Link>
               {agent.website && (
