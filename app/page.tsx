@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
 import AnimateIn from '../components/AnimateIn';
+import CartoonHero from '../components/CartoonHero';
 import MarketBoard from '../components/MarketBoard';
-import SearchBar from '../components/SearchBar';
 export const dynamic = 'force-dynamic'; // Skip static generation to avoid build-time Supabase errors
 
 import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../lib/supabase-server';
@@ -85,25 +84,7 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }} />
       {/* ── HERO ── */}
-      <section className="bg-blue text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-          <p className="text-teal text-xs font-semibold uppercase tracking-[0.22em]">Land marketplace</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl text-white max-w-3xl">Search land for sale.</h1>
-          <p className="mt-3 max-w-2xl text-white/80">Price, acres, and a map. No broker fee. A new parcel is public as soon as the seller posts it.</p>
-          <div className="mt-6">
-            <Suspense>
-              <SearchBar />
-            </Suspense>
-          </div>
-          <div className="mt-5 flex flex-wrap gap-2 text-sm">
-            <Link href="/listings" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Buy</Link>
-            <Link href="/sell" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Sell</Link>
-            <Link href="/listings?finance=1" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Owner financing</Link>
-            <Link href="/saved" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Saved</Link>
-            <Link href="/blog" className="bg-white/15 hover:bg-white/25 px-3 py-1.5">Guides</Link>
-          </div>
-        </div>
-      </section>
+      <CartoonHero />
 
       {featured.length > 0 ? (
         <MarketBoard listings={featured} />
@@ -146,22 +127,20 @@ export default async function HomePage() {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { type: 'Ranch Land', label: 'Ranch', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80' },
-                { type: 'Hunting Land', label: 'Hunting', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=80' },
-                { type: 'Waterfront Property', label: 'Waterfront', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80' },
-                { type: 'Mountain Property', label: 'Mountain', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80' },
+                { type: 'Ranch Land', label: 'Ranch', image: '/illustrations/cartoon-ranch.jpg' },
+                { type: 'Hunting Land', label: 'Hunting', image: '/illustrations/cartoon-forest.jpg' },
+                { type: 'Waterfront Property', label: 'Waterfront', image: '/illustrations/cartoon-coast.jpg' },
+                { type: 'Mountain Property', label: 'Mountain', image: '/illustrations/cartoon-mountain.jpg' },
               ].map((item) => (
                 <Link
                   key={item.type}
                   href={`/listings?type=${encodeURIComponent(item.type)}`}
-                  className="group relative h-56 sm:h-72 overflow-hidden bg-brand-900"
+                  className="group overflow-hidden rounded-2xl border border-brand-100 bg-white"
                 >
-                  <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-white/70">Land type</p>
-                    <p className="text-white text-2xl mt-1">{item.label}</p>
+                  <div className="h-36 overflow-hidden sm:h-48">
+                    <img src={item.image} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
+                  <p className="px-3 py-3 text-lg font-semibold text-brand-900">{item.label}</p>
                 </Link>
               ))}
             </div>
@@ -312,28 +291,24 @@ export default async function HomePage() {
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="relative overflow-hidden bg-brand-900">
-        <img
-          src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-40"
-        />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-          <p className="text-gold text-[11px] uppercase tracking-[0.28em] mb-4">For owners</p>
-          <h2 className="text-white text-4xl sm:text-6xl max-w-2xl leading-[0.95]">
-            List the land. Keep the conversation.
-          </h2>
-          <p className="text-white/75 text-base sm:text-lg max-w-xl mt-6 mb-8">
-            Post your parcel and buyers contact you directly. There is no listing fee and no commission from this site.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/auth/register" className="bg-white text-brand-900 font-semibold px-6 py-3 rounded-md text-center">
-              List your land
-            </Link>
-            <Link href="/listings" className="border border-white/40 text-white font-semibold px-6 py-3 rounded-md text-center hover:bg-white/10">
-              Browse listings
-            </Link>
+      <section className="bg-blue text-white">
+        <div className="grid lg:grid-cols-2">
+          <div className="px-4 py-12 sm:px-10 sm:py-16">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-teal">For owners</p>
+            <h2 className="mt-3 max-w-xl text-4xl text-white sm:text-5xl">List the land. Keep the conversation.</h2>
+            <p className="mt-4 max-w-xl text-white/80">
+              Post your parcel and buyers contact you directly. There is no listing fee and no commission from this site.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link href="/auth/register" className="rounded-md bg-white px-6 py-3 text-center font-semibold text-blue">
+                List your land
+              </Link>
+              <Link href="/listings" className="rounded-md border border-white/40 px-6 py-3 text-center font-semibold text-white">
+                Browse listings
+              </Link>
+            </div>
           </div>
+          <img src="/illustrations/cartoon-coast.jpg" alt="" className="h-56 w-full object-cover sm:h-72 lg:h-full" />
         </div>
       </section>
     </>

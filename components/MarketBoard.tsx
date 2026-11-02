@@ -37,7 +37,7 @@ export default function MarketBoard({ listings }: { listings: any[] }) {
         <ListingMap listings={listings} />
       </div>
 
-      <div className="lg:hidden fixed bottom-20 left-1/2 z-40 -translate-x-1/2">
+      <div className="lg:hidden fixed bottom-24 left-1/2 z-40 -translate-x-1/2">
         <button
           type="button"
           onClick={() => setView(view === 'list' ? 'map' : 'list')}
