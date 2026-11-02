@@ -1,153 +1,99 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
-import { Suspense } from 'react';
 
 const SLIDES = [
   {
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85',
-    label: '🌊 Florida Beach Land — FL',
-    overlay: 'linear-gradient(135deg,rgba(0,100,180,0.58) 0%,rgba(0,60,120,0.35) 50%,rgba(255,180,0,0.08) 100%)',
+    url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=80',
+    label: 'Farmland',
+    place: 'Kansas',
   },
   {
-    url: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1920&q=85',
-    label: '🌴 Florida Sunshine Land — FL',
-    overlay: 'linear-gradient(135deg,rgba(0,100,180,0.55) 0%,rgba(0,80,140,0.32) 50%,rgba(255,180,0,0.08) 100%)',
+    url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80',
+    label: 'Mountain land',
+    place: 'Colorado',
   },
   {
-    url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=85',
-    label: '🌾 Farmland — Kansas',
-    overlay: 'linear-gradient(135deg,rgba(10,74,47,0.65) 0%,rgba(10,74,47,0.38) 50%,rgba(0,0,0,0.12) 100%)',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=85',
-    label: '🏔️ Mountain Property — Colorado',
-    overlay: 'linear-gradient(135deg,rgba(10,74,47,0.65) 0%,rgba(10,74,47,0.38) 50%,rgba(0,0,0,0.12) 100%)',
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80',
+    label: 'Coastal land',
+    place: 'Florida',
   },
 ];
-
-const TOTAL = SLIDES.length + 1; // +1 for animated slide
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % TOTAL), 5000);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setCurrent(index => (index + 1) % SLIDES.length), 7000);
+    return () => clearInterval(timer);
   }, []);
 
-  const isAnimSlide = current === SLIDES.length;
-
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: 520 }}>
-
-      {/* Photo slides */}
-      {SLIDES.map((slide, i) => (
+    <section className="relative overflow-hidden bg-brand-900" style={{ minHeight: 680 }}>
+      {SLIDES.map((slide, index) => (
         <div
-          key={i}
+          key={slide.url}
           className="absolute inset-0 transition-opacity duration-1000"
           style={{
-            opacity: i === current ? 1 : 0,
+            opacity: index === current ? 1 : 0,
             backgroundImage: `url('${slide.url}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-        >
-          <div className="absolute inset-0" style={{ background: slide.overlay }} />
-        </div>
+        />
       ))}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20" />
 
-      {/* Animated promotional slide */}
-      <div
-        className="absolute inset-0 transition-opacity duration-1000"
-        style={{ opacity: isAnimSlide ? 1 : 0 }}
-      >
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 hero-anim-bg" />
-        {/* Glow orbs */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full hero-orb-gold" />
-        <div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full hero-orb-green" />
-
-        {/* Animated content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-          <div className="text-6xl mb-4 hero-float">🌎</div>
-          <h2 className="text-white font-black text-4xl sm:text-5xl leading-tight mb-3 drop-shadow-lg">
-            Your Land.<br />
-            <span className="text-gold">Your Legacy.</span><br />
-            Your America.
-          </h2>
-          <p className="text-white/85 text-base sm:text-lg mb-6 max-w-md">
-            Start with as little as $5,000 — own real land anywhere in the USA, no middleman.
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {['✓ No Hidden Fees','✓ Owner Financing','✓ All 50 States','✓ Verified Sellers'].map(t => (
-              <span key={t} className="bg-white/12 border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
-                {t}
-              </span>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-24 sm:pb-24">
+        <p className="text-gold text-[11px] font-semibold uppercase tracking-[0.28em] mb-5">
+          Direct land marketplace
+        </p>
+        <h1 className="max-w-3xl text-white text-5xl sm:text-6xl lg:text-7xl leading-[0.95] mb-6">
+          Land for sale,
+          <span className="block">without the broker.</span>
+        </h1>
+        <p className="max-w-xl text-white/80 text-base sm:text-lg leading-relaxed mb-8">
+          Private sellers list acreage across all 50 states. Search by place, price, and land type. Listing is free, and a new parcel is public as soon as it is submitted.
+        </p>
+        <Suspense>
+          <SearchBar />
+        </Suspense>
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
+          <span>No commission</span>
+          <span className="text-white/30">/</span>
+          <span>$0 to list</span>
+          <span className="text-white/30">/</span>
+          <span>Owner financing tools</span>
+        </div>
+        <div className="mt-10 flex items-center gap-4 text-white/80 text-xs uppercase tracking-[0.22em]">
+          <span>{SLIDES[current].place}</span>
+          <span className="h-px w-10 bg-white/40" />
+          <span>{SLIDES[current].label}</span>
+          <div className="ml-auto flex gap-2">
+            {SLIDES.map((slide, index) => (
+              <button
+                key={slide.place}
+                type="button"
+                aria-label={`Show ${slide.place}`}
+                onClick={() => setCurrent(index)}
+                className={`h-1.5 rounded-full transition-all ${index === current ? 'w-8 bg-white' : 'w-4 bg-white/40'}`}
+              />
             ))}
           </div>
+        </div>
+        <div className="mt-8 flex flex-wrap gap-3">
+          {['Texas ranch', 'Florida acreage', 'Hunting land', 'Mountain property'].map(tag => (
+            <Link
+              key={tag}
+              href={`/listings?q=${encodeURIComponent(tag)}`}
+              className="text-xs text-white/90 border border-white/25 px-3 py-1.5 hover:bg-white hover:text-brand-900 transition-colors"
+            >
+              {tag}
+            </Link>
+          ))}
         </div>
       </div>
-
-      {/* Location label */}
-      {!isAnimSlide && (
-        <div className="absolute bottom-14 left-5 z-10 hidden sm:block">
-          <span className="bg-black/30 border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
-            {SLIDES[current]?.label}
-          </span>
-        </div>
-      )}
-
-      {/* Dot indicators */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {Array.from({ length: TOTAL }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-300 border-none cursor-pointer ${
-              i === current ? 'bg-gold' : 'bg-white/40 hover:bg-white/70'
-            }`}
-            style={{ width: i === current ? 22 : 8, height: 6 }}
-          />
-        ))}
-      </div>
-
-      {/* Main content (shown on photo slides only) */}
-      {!isAnimSlide && (
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/12 border border-white/25 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
-            🌿 Direct from sellers. No commission.
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight mb-5 drop-shadow-lg">
-            Find Affordable Land<br />
-            <span className="text-gold">Anywhere in America</span>
-          </h1>
-          <p className="text-white/85 text-base sm:text-xl mb-8 max-w-xl mx-auto">
-            Browse land for sale from private sellers across all 50 states.
-          </p>
-          <Suspense>
-            <SearchBar />
-          </Suspense>
-          <div className="hidden sm:flex flex-wrap items-center justify-center gap-2 mt-5 text-sm">
-            <span className="text-white/50">Popular:</span>
-            {['Florida Beach Lots','Texas Ranch Land','Hunting Land','Mountain Property','Farmland'].map(tag => (
-              <Link key={tag} href={`/listings?q=${encodeURIComponent(tag)}`}
-                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/85 hover:text-white px-3 py-1 rounded-full transition-all text-xs backdrop-blur-sm">
-                {tag}
-              </Link>
-            ))}
-          </div>
-          <div className="flex sm:hidden gap-2 mt-5 overflow-x-auto pb-1 -mx-4 px-4">
-            {['Florida Lots','Hunting Land','Ranch Land','Farmland','Mountain'].map(tag => (
-              <Link key={tag} href={`/listings?q=${encodeURIComponent(tag)}`}
-                className="flex-shrink-0 bg-white/15 border border-white/25 text-white/90 px-3 py-1.5 rounded-full text-xs font-semibold">
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 }

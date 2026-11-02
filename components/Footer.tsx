@@ -4,14 +4,14 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-brand-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl mb-4 hover:opacity-90 transition-opacity">
-              <img src="/icon.svg" alt="" width={34} height={34} className="flex-shrink-0" />
-              <span>CheapLandBuy<span className="text-gold">.com</span></span>
+            <Link href="/" className="flex items-center gap-2 text-white text-sm tracking-[0.16em] uppercase mb-4">
+              <img src="/icon.svg" alt="" width={28} height={28} className="flex-shrink-0" />
+              <span>CheapLandBuy</span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-4">
               A direct marketplace for affordable land. Buyers and sellers connect across all 50 states.
@@ -21,7 +21,7 @@ export default function Footer() {
 
           {/* Browse */}
           <div>
-            <h4 className="text-white/90 font-bold text-sm uppercase tracking-wider mb-4">Browse Land</h4>
+            <h4 className="text-white/50 text-[11px] uppercase tracking-[0.2em] mb-4">Browse</h4>
             <ul className="space-y-2.5">
               {[
                 { label: 'All Listings',      href: '/listings' },
@@ -39,7 +39,7 @@ export default function Footer() {
 
           {/* Sellers */}
           <div>
-            <h4 className="text-white/90 font-bold text-sm uppercase tracking-wider mb-4">For Sellers</h4>
+            <h4 className="text-white/50 text-[11px] uppercase tracking-[0.2em] mb-4">Sell</h4>
             <ul className="space-y-2.5">
               {[
                 { label: 'Sell Your Land',     href: '/sell' },
@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="text-white/90 font-bold text-sm uppercase tracking-wider mb-4">Company</h4>
+            <h4 className="text-white/50 text-[11px] uppercase tracking-[0.2em] mb-4">Company</h4>
             <ul className="space-y-2.5">
               {[
                 { label: 'Blog',               href: '/blog' },
@@ -71,8 +71,8 @@ export default function Footer() {
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-white/40 text-xs mb-2">Have land to sell?</p>
               <Link href="/auth/register"
-                className="inline-block bg-gold text-brand-900 font-bold text-xs px-4 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-                List Free →
+                className="inline-block border border-white/30 text-white text-xs tracking-wide px-4 py-2 hover:bg-white hover:text-brand-900 transition-colors">
+                List your land
               </Link>
             </div>
           </div>

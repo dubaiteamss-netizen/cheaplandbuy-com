@@ -2,66 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root,
-[data-theme='cedar'] {
-  --canvas: 246 244 239;
-  --brand-50: 243 247 244;
-  --brand-100: 227 238 230;
-  --brand-200: 197 220 206;
-  --brand-300: 143 184 160;
-  --brand-400: 78 138 106;
-  --brand-500: 47 107 79;
-  --brand-600: 36 90 65;
-  --brand-700: 27 70 51;
-  --brand-800: 18 50 38;
-  --brand-900: 11 31 24;
-  --gold: 230 177 90;
-  --gold-dark: 200 144 46;
-}
-[data-theme='mesa'] {
-  --canvas: 250 246 240;
-  --brand-50: 251 246 241;
-  --brand-100: 243 230 216;
-  --brand-200: 230 205 180;
-  --brand-300: 212 165 116;
-  --brand-400: 196 122 69;
-  --brand-500: 168 91 42;
-  --brand-600: 140 71 32;
-  --brand-700: 110 53 24;
-  --brand-800: 76 36 18;
-  --brand-900: 44 20 12;
-  --gold: 240 195 106;
-  --gold-dark: 217 164 65;
-}
-[data-theme='harbor'] {
-  --canvas: 244 248 249;
-  --brand-50: 242 247 248;
-  --brand-100: 224 238 241;
-  --brand-200: 192 220 227;
-  --brand-300: 127 184 198;
-  --brand-400: 61 142 163;
-  --brand-500: 31 111 132;
-  --brand-600: 24 92 110;
-  --brand-700: 18 70 86;
-  --brand-800: 12 49 64;
-  --brand-900: 7 30 40;
-  --gold: 242 193 78;
-  --gold-dark: 217 166 42;
-}
-[data-theme='ink'] {
-  --canvas: 244 245 247;
-  --brand-50: 244 245 247;
-  --brand-100: 230 232 238;
-  --brand-200: 201 206 218;
-  --brand-300: 154 163 184;
-  --brand-400: 107 118 144;
-  --brand-500: 70 80 106;
-  --brand-600: 52 60 82;
-  --brand-700: 38 44 62;
-  --brand-800: 24 28 42;
-  --brand-900: 14 17 26;
-  --gold: 240 180 41;
-  --gold-dark: 212 150 18;
+:root {
+  --canvas: 247 246 243;
+  --brand-50: 244 243 239;
+  --brand-100: 232 230 224;
+  --brand-200: 214 210 202;
+  --brand-300: 176 170 158;
+  --brand-400: 122 116 106;
+  --brand-500: 82 76 68;
+  --brand-600: 46 56 50;
+  --brand-700: 28 40 34;
+  --brand-800: 18 26 22;
+  --brand-900: 12 16 14;
+  --gold: 168 138 90;
+  --gold-dark: 138 110 66;
 }
 
 @layer base {
@@ -91,16 +45,16 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-brand-700 hover:bg-brand-800 text-white font-bold px-6 py-3 rounded-full
-           transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
+    @apply bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-md
+           tracking-wide transition-colors;
   }
   .btn-secondary {
-    @apply border-2 border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white
-           font-bold px-6 py-3 rounded-full transition-all;
+    @apply border border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white
+           font-semibold px-6 py-3 rounded-md tracking-wide transition-colors;
   }
   .btn-gold {
-    @apply bg-gold hover:bg-gold-dark text-brand-900 font-bold px-6 py-3 rounded-full
-           transition-all hover:-translate-y-0.5 hover:shadow-lg;
+    @apply bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-md
+           tracking-wide transition-colors;
   }
   .input {
     /* text-base (16px) prevents iOS Safari from zooming on focus */
