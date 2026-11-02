@@ -2,10 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
+:root,
+[data-theme='cedar'] {
+  --canvas: 246 244 239;
+  --brand-50: 243 247 244;
+  --brand-100: 227 238 230;
+  --brand-200: 197 220 206;
+  --brand-300: 143 184 160;
+  --brand-400: 78 138 106;
+  --brand-500: 47 107 79;
+  --brand-600: 36 90 65;
+  --brand-700: 27 70 51;
+  --brand-800: 18 50 38;
+  --brand-900: 11 31 24;
+  --gold: 230 177 90;
+  --gold-dark: 200 144 46;
+}
+[data-theme='mesa'] {
+  --canvas: 250 246 240;
+  --brand-50: 251 246 241;
+  --brand-100: 243 230 216;
+  --brand-200: 230 205 180;
+  --brand-300: 212 165 116;
+  --brand-400: 196 122 69;
+  --brand-500: 168 91 42;
+  --brand-600: 140 71 32;
+  --brand-700: 110 53 24;
+  --brand-800: 76 36 18;
+  --brand-900: 44 20 12;
+  --gold: 240 195 106;
+  --gold-dark: 217 164 65;
+}
+[data-theme='harbor'] {
+  --canvas: 244 248 249;
+  --brand-50: 242 247 248;
+  --brand-100: 224 238 241;
+  --brand-200: 192 220 227;
+  --brand-300: 127 184 198;
+  --brand-400: 61 142 163;
+  --brand-500: 31 111 132;
+  --brand-600: 24 92 110;
+  --brand-700: 18 70 86;
+  --brand-800: 12 49 64;
+  --brand-900: 7 30 40;
+  --gold: 242 193 78;
+  --gold-dark: 217 166 42;
+}
+[data-theme='ink'] {
+  --canvas: 244 245 247;
+  --brand-50: 244 245 247;
+  --brand-100: 230 232 238;
+  --brand-200: 201 206 218;
+  --brand-300: 154 163 184;
+  --brand-400: 107 118 144;
+  --brand-500: 70 80 106;
+  --brand-600: 52 60 82;
+  --brand-700: 38 44 62;
+  --brand-800: 24 28 42;
+  --brand-900: 14 17 26;
+  --gold: 240 180 41;
+  --gold-dark: 212 150 18;
+}
+
 @layer base {
   /* 16px base prevents iOS Safari auto-zoom on input focus */
   html { scroll-behavior: smooth; font-size: 16px; -webkit-text-size-adjust: 100%; }
-  body { @apply text-brand-900 antialiased; font-size: 1rem; line-height: 1.6; }
+  body {
+    background-color: rgb(var(--canvas));
+    @apply text-brand-900 antialiased;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display), Georgia, serif; letter-spacing: -0.03em; }
   select { @apply bg-transparent; font-size: 1rem; }
   /* Prevent tap highlight flash on mobile */
   a, button { -webkit-tap-highlight-color: transparent; }
@@ -23,20 +91,20 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-lg
+    @apply bg-brand-700 hover:bg-brand-800 text-white font-bold px-6 py-3 rounded-full
            transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
   }
   .btn-secondary {
-    @apply border-2 border-brand-600 text-brand-600 hover:bg-brand-600 hover:text-white
-           font-bold px-6 py-3 rounded-lg transition-all;
+    @apply border-2 border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white
+           font-bold px-6 py-3 rounded-full transition-all;
   }
   .btn-gold {
-    @apply bg-gold hover:bg-gold-dark text-brand-900 font-bold px-6 py-3 rounded-lg
+    @apply bg-gold hover:bg-gold-dark text-brand-900 font-bold px-6 py-3 rounded-full
            transition-all hover:-translate-y-0.5 hover:shadow-lg;
   }
   .input {
     /* text-base (16px) prevents iOS Safari from zooming on focus */
-    @apply w-full border border-brand-200 rounded-lg px-4 py-3 text-brand-800
+    @apply w-full border border-brand-200 rounded-xl px-4 py-3 text-brand-800 bg-white
            focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
            placeholder:text-brand-300 text-base;
   }
@@ -44,7 +112,7 @@
     @apply block text-sm font-semibold text-brand-700 mb-1.5;
   }
   .card {
-    @apply bg-white rounded-xl border border-brand-100 shadow-sm p-6;
+    @apply bg-white rounded-2xl border border-brand-100 shadow-card p-6;
   }
 }
 
@@ -63,7 +131,7 @@
   50%       { opacity: 0.32; transform: scale(1.08); }
 }
 .hero-anim-bg {
-  background: linear-gradient(135deg, #0a3d2f, #1e3a5f, #0a4a2f, #1a5276, #0d3b2a);
+  background: linear-gradient(135deg, rgb(var(--brand-900)), rgb(var(--brand-700)), rgb(var(--brand-800)), rgb(var(--brand-600)));
   background-size: 400% 400%;
   animation: heroGradShift 10s ease infinite;
 }
