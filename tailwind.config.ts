@@ -9,25 +9,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        canvas: 'rgb(var(--canvas) / <alpha-value>)',
         brand: {
-          50:  '#EDF4FF',
-          100: '#DAEAF8',
-          200: '#B5D4F2',
-          300: '#7BAEDE',
-          400: '#3D85C8',
-          500: '#1976D2',
-          600: '#1565C0',
-          700: '#0C4A8F',
-          800: '#083670',
-          900: '#052654',
+          50:  'rgb(var(--brand-50) / <alpha-value>)',
+          100: 'rgb(var(--brand-100) / <alpha-value>)',
+          200: 'rgb(var(--brand-200) / <alpha-value>)',
+          300: 'rgb(var(--brand-300) / <alpha-value>)',
+          400: 'rgb(var(--brand-400) / <alpha-value>)',
+          500: 'rgb(var(--brand-500) / <alpha-value>)',
+          600: 'rgb(var(--brand-600) / <alpha-value>)',
+          700: 'rgb(var(--brand-700) / <alpha-value>)',
+          800: 'rgb(var(--brand-800) / <alpha-value>)',
+          900: 'rgb(var(--brand-900) / <alpha-value>)',
         },
         gold: {
-          DEFAULT: '#FFD166',
-          dark:    '#F5B800',
+          DEFAULT: 'rgb(var(--gold) / <alpha-value>)',
+          dark:    'rgb(var(--gold-dark) / <alpha-value>)',
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['var(--font-outfit)', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+      },
+      boxShadow: {
+        card: '0 10px 30px -18px rgb(var(--brand-900) / 0.45)',
       },
     },
   },

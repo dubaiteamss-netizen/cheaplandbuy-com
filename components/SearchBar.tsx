@@ -88,7 +88,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
       </div>
 
       {/* ── DESKTOP: horizontal layout ── */}
-      <div className="hidden sm:block bg-white rounded-xl shadow-2xl overflow-hidden max-w-3xl mx-auto">
+      <div className="hidden sm:block bg-white/95 backdrop-blur rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto ring-1 ring-white/70">
         <div className="flex items-stretch">
           <div className="flex-1 px-4 py-3 border-r border-brand-100">
             <label className="block text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-1">State</label>
@@ -123,7 +123,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
             </select>
           </div>
           <button onClick={handleSearch}
-            className="bg-brand-600 hover:bg-brand-700 text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
+            className="bg-brand-800 hover:bg-brand-900 text-white px-8 font-bold text-sm transition-colors flex items-center gap-2">
             <Search size={16} /> Search
           </button>
         </div>

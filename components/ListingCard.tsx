@@ -43,19 +43,19 @@ export default function ListingCard({ listing }: { listing: any }) {
 
   return (
     <Link href={`/listings/${listing.id}`} className="group block">
-      <div className="bg-white rounded-xl overflow-hidden border border-brand-100 shadow-sm
-                      hover:shadow-xl hover:-translate-y-1 transition-all duration-250 relative">
+      <div className="bg-white rounded-2xl overflow-hidden border border-brand-100 shadow-card
+                      hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative">
 
         {/* Image */}
         <div
-          className="relative h-52 overflow-hidden bg-brand-100"
+          className="relative h-60 overflow-hidden bg-brand-100"
           style={{ background: images[0] ? undefined : gradient }}
         >
           {images[0] ? (
             <img
               src={images[0]}
               alt={listing.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function ListingCard({ listing }: { listing: any }) {
               {listing.type}
             </span>
             {isNew && (
-              <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
+              <span className="bg-gold text-brand-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
                 ✦ New
               </span>
             )}
@@ -105,7 +105,7 @@ export default function ListingCard({ listing }: { listing: any }) {
           {/* Price */}
           <div className="flex items-baseline justify-between mb-1.5">
             <div className="flex items-baseline gap-2">
-              <p className="text-brand-700 font-extrabold text-2xl tracking-tight">
+              <p className="text-brand-800 font-extrabold text-3xl tracking-tight">
                 ${price.toLocaleString()}
               </p>
               {hasPriceDrop && (

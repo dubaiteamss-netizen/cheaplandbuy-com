@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Menu, X, PlusCircle, LogOut, LayoutDashboard, Heart } from 'lucide-react';
 import { createClient } from '../lib/supabase';
+import ColorMenu from './ColorMenu';
 
 const supabase = createClient();
 
@@ -87,6 +88,7 @@ export default function Navbar() {
 
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-2">
+            <ColorMenu />
             {/* Saved listings heart - always visible */}
             <Link
               href="/saved"
@@ -153,6 +155,9 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="border-t border-white/10 pt-3 mt-3 space-y-1">
+              <div className="px-3 py-2">
+                <ColorMenu />
+              </div>
               {/* Saved listings - mobile */}
               <Link href="/saved" onClick={() => setOpen(false)}
                 className="flex items-center gap-2 px-3 py-2.5 text-white/75 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium">
