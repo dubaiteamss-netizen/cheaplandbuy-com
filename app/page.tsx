@@ -1,19 +1,17 @@
 import Link from 'next/link';
-import AnimateIn from '../components/AnimateIn';
 import CartoonHero from '../components/CartoonHero';
-import MarketBoard from '../components/MarketBoard';
+import ListingCard from '../components/ListingCard';
+import ListingMap from '../components/ListingMap';
 export const dynamic = 'force-dynamic'; // Skip static generation to avoid build-time Supabase errors
 
 import { createServerSupabaseClient, isPublishedListingId, isSupabaseConfigured } from '../lib/supabase-server';
 import { mockListings } from '../lib/mock-listings';
-import { BLOG_POSTS } from '../lib/blog-data';
-import { ChevronRight } from 'lucide-react';
 
 async function getFeaturedListings() {
   if (!isSupabaseConfigured()) {
     return [...mockListings]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 8);
+      .slice(0, 9);
   }
   try {
     const supabase = createServerSupabaseClient();
@@ -22,7 +20,7 @@ async function getFeaturedListings() {
       .select('*')
       .eq('status', 'active')
       .order('created_at', { ascending: false })
-      .limit(8);
+      .limit(9);
     return (data ?? []).filter((row: { id: string }) => isPublishedListingId(String(row.id)));
   } catch {
     return [];
@@ -86,229 +84,72 @@ export default async function HomePage() {
       {/* ── HERO ── */}
       <CartoonHero />
 
-      {featured.length > 0 ? (
-        <MarketBoard listings={featured} />
-      ) : (
-        <div className="text-center py-16 bg-white border-b border-brand-100">
-          <h2 className="text-brand-800 text-2xl mb-2">No listings to show yet</h2>
-          <p className="text-brand-400 text-sm mb-6">When a seller posts land, it appears here right away.</p>
-          <Link href="/auth/register" className="btn-primary">List your land</Link>
-        </div>
-      )}
-
-      <div className="bg-white border-b border-brand-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4">
+      <div className="border-b border-brand-100 bg-white">
+        <div className="mx-auto flex max-w-7xl gap-4 overflow-x-auto px-4 py-4 scrollbar-hide">
           {[
-            { n: '50', l: 'States' },
-            { n: '$0', l: 'To list' },
-            { n: '0%', l: 'Commission' },
-            { n: 'Direct', l: 'Buyer contact' },
-          ].map((item, index) => (
-            <div key={item.l} className={`py-6 ${index % 2 === 0 ? '' : ''} ${index < 3 ? 'lg:border-r lg:border-brand-100' : ''} ${index < 2 ? 'border-b lg:border-b-0 border-brand-100' : ''}`}>
-              <div className="text-2xl text-brand-900">{item.n}</div>
-              <div className="mt-1 text-[11px] uppercase tracking-[0.18em] text-brand-400">{item.l}</div>
-            </div>
+            { type: 'Ranch Land', label: 'Ranch', image: '/illustrations/cartoon-ranch.jpg' },
+            { type: 'Hunting Land', label: 'Hunting', image: '/illustrations/cartoon-forest.jpg' },
+            { type: 'Waterfront Property', label: 'Water', image: '/illustrations/cartoon-coast.jpg' },
+            { type: 'Mountain Property', label: 'Mountain', image: '/illustrations/cartoon-mountain.jpg' },
+            { type: 'Farmland / Agricultural', label: 'Farm', image: '/illustrations/cartoon-ranch.jpg' },
+          ].map((item) => (
+            <Link key={item.type} href={`/listings?type=${encodeURIComponent(item.type)}`} className="flex w-20 flex-shrink-0 flex-col items-center gap-2">
+              <img src={item.image} alt="" className="h-16 w-16 rounded-full object-cover ring-2 ring-teal" />
+              <span className="text-xs font-semibold text-brand-800">{item.label}</span>
+            </Link>
           ))}
         </div>
       </div>
 
-      {/* ── LAND TYPE VISUAL CARDS ── */}
-      <AnimateIn>
-        <section className="py-10 sm:py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-5">
-              <div>
-                <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Explore</span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-brand-900 tracking-tight mt-1">Browse by Land Type</h2>
+      <section className="bg-brand-50">
+        <div className="mx-auto max-w-7xl px-4 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-4 lg:px-6">
+          <div>
+            <div className="mb-3 flex items-end justify-between">
+              <h2 className="text-2xl text-brand-900">Just listed</h2>
+              <Link href="/listings" className="text-sm font-semibold text-blue">See all</Link>
+            </div>
+            {featured.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+                {featured.map((listing: any) => (
+                  <ListingCard key={listing.id} listing={listing} variant="tile" />
+                ))}
               </div>
-              <Link href="/listings" className="hidden sm:flex items-center gap-1 text-brand-500 hover:text-brand-700 text-sm font-semibold transition-colors">
-                All Types <ChevronRight size={15} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {[
-                { type: 'Ranch Land', label: 'Ranch', image: '/illustrations/cartoon-ranch.jpg' },
-                { type: 'Hunting Land', label: 'Hunting', image: '/illustrations/cartoon-forest.jpg' },
-                { type: 'Waterfront Property', label: 'Waterfront', image: '/illustrations/cartoon-coast.jpg' },
-                { type: 'Mountain Property', label: 'Mountain', image: '/illustrations/cartoon-mountain.jpg' },
-              ].map((item) => (
-                <Link
-                  key={item.type}
-                  href={`/listings?type=${encodeURIComponent(item.type)}`}
-                  className="group overflow-hidden rounded-2xl border border-brand-100 bg-white"
-                >
-                  <div className="h-36 overflow-hidden sm:h-48">
-                    <img src={item.image} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  </div>
-                  <p className="px-3 py-3 text-lg font-semibold text-brand-900">{item.label}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      </AnimateIn>
-
-      {/* ── BROWSE BY STATE ── */}
-      <section className="bg-white border-y border-brand-100 py-10 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimateIn>
-            <div className="text-center mb-8">
-              <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Search Your Area</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Popular States for Land</h2>
-            </div>
-          </AnimateIn>
-          <div className="grid grid-cols-2 sm:grid-cols-4 border border-brand-100">
-            {['Texas','Florida','Montana','Colorado','Tennessee','Oklahoma','Georgia','Arizona'].map((state) => (
-              <Link key={state} href={`/listings?state=${state}`}
-                className="group border-brand-100 border-b sm:[&:nth-child(4n)]:border-r-0 border-r px-5 py-6 hover:bg-brand-900 transition-colors">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-brand-400 group-hover:text-white/60">State</div>
-                <div className="mt-2 text-xl text-brand-900 group-hover:text-white">{state}</div>
-              </Link>
-            ))}
-          </div>
-          <AnimateIn delay={500}>
-            <div className="text-center mt-6">
-              <Link href="/listings" className="inline-flex items-center gap-1.5 text-brand-600 hover:text-brand-700 font-semibold text-sm">
-                Browse All 50 States <ChevronRight size={14} />
-              </Link>
-            </div>
-          </AnimateIn>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="bg-brand-50 border-b border-brand-100 py-10 sm:py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimateIn>
-            <div className="text-center mb-10">
-              <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Simple Process</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 tracking-tight mt-1">Sell Your Land in 3 Steps</h2>
-              <p className="text-brand-400 mt-2 text-sm">List your land and connect with buyers in minutes</p>
-            </div>
-          </AnimateIn>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-            {/* Connecting line on desktop */}
-            <div className="hidden md:block absolute top-12 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-brand-200 via-brand-400 to-brand-200 z-0" />
-            {[
-              { step: '01', title: 'Create an account', desc: 'Sign up with email. There is no fee to start.' },
-              { step: '02', title: 'Post the parcel', desc: 'Add photos, price, acreage, and location. It is public immediately.' },
-              { step: '03', title: 'Talk to buyers', desc: 'Inquiries come to you. You negotiate and close on your own terms.' },
-            ].map((s, i) => (
-              <AnimateIn key={s.step} delay={i * 120}>
-                <div className="relative bg-white border border-brand-100 p-6 z-10">
-                  <div className="text-[11px] tracking-[0.22em] uppercase text-brand-400 mb-4">{s.step}</div>
-                  <h3 className="text-brand-900 text-2xl mb-2">{s.title}</h3>
-                  <p className="text-brand-500 text-sm leading-relaxed">{s.desc}</p>
-                </div>
-              </AnimateIn>
-            ))}
-          </div>
-          <AnimateIn delay={400}>
-            <div className="text-center mt-10">
-              <Link href="/auth/register" className="btn-gold inline-flex items-center gap-2 text-base px-8 py-3.5">
-                Start Listing Today — It's Free <ChevronRight size={18} />
-              </Link>
-            </div>
-          </AnimateIn>
-        </div>
-      </section>
-
-      {/* ── BLOG PREVIEW ── */}
-      <section className="bg-white py-10 sm:py-12 border-b border-brand-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimateIn>
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">Land Insights</span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Learn Before You Buy</h2>
+            ) : (
+              <div className="bg-white px-4 py-16 text-center">
+                <h2 className="text-2xl text-brand-800">No listings to show yet</h2>
+                <p className="mt-2 text-sm text-brand-400">When a seller posts land, it appears here right away.</p>
+                <Link href="/auth/register" className="btn-primary mt-6 inline-block">List your land</Link>
               </div>
-              <Link href="/blog" className="hidden sm:flex items-center gap-1 text-brand-500 hover:text-brand-700 text-sm font-semibold">
-                All Articles <ChevronRight size={15} />
-              </Link>
-            </div>
-          </AnimateIn>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {BLOG_POSTS.slice(0, 3).map((post, i) => (
-              <AnimateIn key={post.slug} delay={i * 90}>
-                <Link href={`/blog/${post.slug}`}
-                  className="group block bg-white rounded-2xl border border-brand-100 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300">
-                  <div className="relative h-44 overflow-hidden bg-brand-900">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={post.image} alt={post.imageAlt}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${post.categoryColor}`}>
-                      {post.category}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-brand-800 text-sm leading-snug mb-1 group-hover:text-brand-600 transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-brand-400 text-xs leading-relaxed line-clamp-2 mb-3">{post.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-brand-300 text-xs">{post.readTime} min read</span>
-                      <span className="text-gold font-bold text-xs group-hover:translate-x-1 transition-transform inline-block">Read →</span>
-                    </div>
-                  </div>
-                </Link>
-              </AnimateIn>
-            ))}
+            )}
           </div>
-          <AnimateIn delay={350}>
-            <div className="text-center mt-8 sm:hidden">
-              <Link href="/blog" className="inline-flex items-center gap-1.5 text-brand-600 font-semibold text-sm">
-                All Articles <ChevronRight size={14} />
-              </Link>
-            </div>
-          </AnimateIn>
+          <aside className="sticky top-[84px] hidden h-[calc(100vh-100px)] overflow-hidden rounded-2xl border border-brand-100 lg:block">
+            <ListingMap listings={featured} />
+          </aside>
         </div>
       </section>
 
-      {/* ── WHY CHOOSE US ── */}
-      <section className="bg-brand-50 border-b border-brand-100 py-10 sm:py-12">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimateIn>
-            <div className="text-center mb-10">
-              <span className="text-xs font-bold text-brand-500 uppercase tracking-widest">The Marketplace</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-900 mt-1">Why Buyers & Sellers Choose Us</h2>
-            </div>
-          </AnimateIn>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-brand-200 bg-white">
-            {[
-              { title: 'Direct', desc: 'Buyers and sellers message each other. This site is not the broker.' },
-              { title: 'Search', desc: 'Filter by state, land type, price, and acreage.' },
-              { title: 'Immediate', desc: 'A new listing is public as soon as the seller submits it.' },
-              { title: 'Financing', desc: 'Sellers can offer owner financing and skip the bank.' },
-            ].map((item) => (
-              <div key={item.title} className="p-6 border-brand-200 border-b lg:border-b-0 lg:border-r last:border-0">
-                <h4 className="text-brand-900 text-xl mb-2">{item.title}</h4>
-                <p className="text-brand-500 text-sm leading-relaxed">{item.desc}</p>
-              </div>
+      <section className="bg-white px-4 py-6">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="mb-3 text-xl text-brand-900">Shop by state</h2>
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {['Texas','Florida','Montana','Colorado','Tennessee','Oklahoma','Georgia','Arizona','California','Missouri'].map((state) => (
+              <Link key={state} href={`/listings?state=${state}`} className="flex-shrink-0 rounded-full bg-blue/10 px-4 py-2 text-sm font-semibold text-blue">
+                {state}
+              </Link>
             ))}
+            <Link href="/listings" className="flex-shrink-0 rounded-full bg-brand-900 px-4 py-2 text-sm font-semibold text-white">All states</Link>
           </div>
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
       <section className="bg-blue text-white">
-        <div className="grid lg:grid-cols-2">
-          <div className="px-4 py-12 sm:px-10 sm:py-16">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-teal">For owners</p>
-            <h2 className="mt-3 max-w-xl text-4xl text-white sm:text-5xl">List the land. Keep the conversation.</h2>
-            <p className="mt-4 max-w-xl text-white/80">
-              Post your parcel and buyers contact you directly. There is no listing fee and no commission from this site.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link href="/auth/register" className="rounded-md bg-white px-6 py-3 text-center font-semibold text-blue">
-                List your land
-              </Link>
-              <Link href="/listings" className="rounded-md border border-white/40 px-6 py-3 text-center font-semibold text-white">
-                Browse listings
-              </Link>
-            </div>
+        <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
+          <div className="px-4 py-10 sm:px-8">
+            <h2 className="text-3xl text-white sm:text-4xl">List the land. Keep the conversation.</h2>
+            <p className="mt-3 max-w-md text-white/80">No listing fee. Buyers contact you directly.</p>
+            <Link href="/auth/register" className="mt-5 inline-block rounded-md bg-white px-5 py-3 font-semibold text-blue">List your land</Link>
           </div>
-          <img src="/illustrations/cartoon-coast.jpg" alt="" className="h-56 w-full object-cover sm:h-72 lg:h-full" />
+          <img src="/illustrations/cartoon-coast.jpg" alt="" className="h-40 w-full object-cover sm:h-52 lg:h-full" />
         </div>
       </section>
     </>

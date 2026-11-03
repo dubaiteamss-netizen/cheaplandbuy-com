@@ -12,6 +12,18 @@ function pricePerAcre(price: number, acres: number, stored?: number) {
   return 0;
 }
 
+const TYPE_ART: Record<string, string> = {
+  'Ranch Land': '/illustrations/cartoon-ranch.jpg',
+  'Hunting Land': '/illustrations/cartoon-forest.jpg',
+  'Wooded / Timber Land': '/illustrations/cartoon-forest.jpg',
+  'Waterfront Property': '/illustrations/cartoon-coast.jpg',
+  'Mountain Property': '/illustrations/cartoon-mountain.jpg',
+  'Farmland / Agricultural': '/illustrations/cartoon-ranch.jpg',
+  'Recreational Land': '/illustrations/cartoon-forest.jpg',
+  'Desert Land': '/illustrations/hero-land.jpg',
+  'Residential Lots': '/illustrations/hero-land.jpg',
+};
+
 function isNewListing(createdAt: string) {
   const created = new Date(createdAt);
   return (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24) <= 14;
@@ -24,12 +36,14 @@ export default function ListingCard({
   featured = false,
 }: {
   listing: any;
-  variant?: 'card' | 'row' | 'premium';
+  variant?: 'card' | 'row' | 'premium' | 'tile';
   premium?: boolean;
   featured?: boolean;
 }) {
   const mode = variant === 'card' && (featured || premium) ? 'premium' : variant;
   const images: string[] = listing.images ?? [];
+  const photoSrc = images[0] || TYPE_ART[listing.type] || '/illustrations/hero-land.jpg';
+  const illustrated = !images[0];
   const price = listing.price ?? 0;
   const acres = listing.acres ?? 0;
   const ppa = pricePerAcre(price, acres, listing.price_per_acre);
@@ -45,14 +59,15 @@ export default function ListingCard({
       mode === 'row' ? (showLargePhoto ? 'h-72 sm:h-[240px] sm:w-[380px] flex-shrink-0' : 'h-44 sm:h-[168px] sm:w-56 flex-shrink-0') :
       'h-52'
     }`}>
-      {images[0] ? (
-        <img
-          src={images[0]}
-          alt={listing.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue to-teal" />
+      <img
+        src={photoSrc}
+        alt={illustrated ? `${listing.type} illustration` : listing.title}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+      />
+      {illustrated && (
+        <span className="absolute bottom-3 right-3 bg-white/95 text-[10px] font-semibold uppercase tracking-wide text-brand-700 px-2 py-1">
+          Illustration
+        </span>
       )}
       <div className="absolute top-3 left-3 flex gap-1.5">
         {premium && mode !== 'premium' && (
@@ -112,6 +127,28 @@ export default function ListingCard({
       )}
     </div>
   );
+
+  if (mode === 'tile') {
+    return (
+      <Link href={`/listings/${listing.id}`} className="group block h-full overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-sm">
+        <div className="relative h-36 sm:h-44">
+          <img src={photoSrc} alt={illustrated ? `${listing.type} illustration` : listing.title} className="h-full w-full object-cover" />
+          <div className="absolute left-2 top-2">
+            <FavoriteButton listingId={listing.id} size="sm" />
+          </div>
+          <div className="absolute inset-x-2 bottom-2 flex items-end justify-between gap-2">
+            <span className="rounded-lg bg-blue px-2 py-1 text-sm font-semibold text-white">{money(price)}</span>
+            <span className="rounded-lg bg-white px-2 py-1 text-xs font-semibold text-brand-900">{Number(acres).toLocaleString()} ac</span>
+          </div>
+        </div>
+        <div className="p-3">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-brand-900">{listing.title}</h3>
+          {place && <p className="mt-1 line-clamp-1 text-xs text-brand-500">{place}</p>}
+          <p className="mt-1 text-xs font-semibold text-teal">{ppa > 0 ? `${money(ppa)}/acre` : listing.type}</p>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link href={`/listings/${listing.id}`} className="group block h-full bg-white">
